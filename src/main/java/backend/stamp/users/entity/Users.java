@@ -10,6 +10,10 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -17,12 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id",nullable = false)
-    private Long id;
+    private Long userId;
 
 
 
@@ -62,7 +65,10 @@ public class Users {
     private List<Review> reviews = new ArrayList<>();
 
 
-
+    public Users(String nickname, String email) {
+        this.nickname = nickname;
+        this.email = email;
+    }
 
 
 }
