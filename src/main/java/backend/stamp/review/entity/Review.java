@@ -1,7 +1,7 @@
 package backend.stamp.review.entity;
 
 import backend.stamp.store.entity.Store;
-import backend.stamp.user.entity.User;
+import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,6 +46,6 @@ public class Review {
     //유저
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users user;
 
 }
