@@ -1,4 +1,4 @@
-package backend.stamp.user.entity;
+package backend.stamp.users.entity;
 
 public enum Gender {
     MALE,     // 남성

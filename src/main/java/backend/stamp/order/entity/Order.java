@@ -2,7 +2,7 @@ package backend.stamp.order.entity;
 
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.store.entity.Store;
-import backend.stamp.user.entity.User;
+import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,7 +41,7 @@ public class Order {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
-    private User user;
+    private Users user;
 
 
     @ManyToOne(fetch=FetchType.LAZY)
