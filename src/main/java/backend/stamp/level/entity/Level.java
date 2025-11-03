@@ -2,7 +2,7 @@ package backend.stamp.level.entity;
 
 
 import backend.stamp.badge.entity.Badge;
-import backend.stamp.user.entity.User;
+import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +28,7 @@ public class Level {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private User user;
+    private Users user;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

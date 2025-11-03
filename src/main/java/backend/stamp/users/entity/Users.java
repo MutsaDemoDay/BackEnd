@@ -1,4 +1,4 @@
-package backend.stamp.user.entity;
+package backend.stamp.users.entity;
 
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.favstore.entity.FavStore;
@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id",nullable = false)
