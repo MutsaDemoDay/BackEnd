@@ -39,18 +39,18 @@ public class KakaoService {
         return kakaoClient.getMemberInfo(token);
     }
     @Transactional
-    public KakaoUser register(String email, String name){
+    public KakaoUser register(String email, String nickname){
 
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
-        if (name == null || name.isEmpty()) {
+        if (nickname == null || nickname.isEmpty()) {
             throw new IllegalArgumentException("Nickname cannot be null or empty");
         }
 
         Users users = usersRepository.findByEmail(email)
                 .orElseGet(() -> {
-                    Users newUser = new Users(name, email);
+                    Users newUser = new Users(nickname, email);
                     return usersRepository.save(newUser);
                 });
 
@@ -59,7 +59,7 @@ public class KakaoService {
         return KakaoUser.builder()
                 .id(users.getUserId())
                 .email(users.getEmail())
-                .name(users.getName())
+                .name(users.getNickname())
                 .accessToken(accessToken)
                 .build();
     }
