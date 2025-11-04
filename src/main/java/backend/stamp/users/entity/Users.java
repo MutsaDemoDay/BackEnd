@@ -1,4 +1,5 @@
 package backend.stamp.users.entity;
+import backend.stamp.stamp.entity.Stamp;
 import jakarta.persistence.*;
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.favstore.entity.FavStore;
@@ -58,6 +59,8 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Stamp> stamps = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
