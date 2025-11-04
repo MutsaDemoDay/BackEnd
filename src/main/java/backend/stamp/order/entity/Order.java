@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Order {
 
 
@@ -41,7 +40,7 @@ public class Order {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
-    private Users user;
+    private Users users;
 
 
     @ManyToOne(fetch=FetchType.LAZY)

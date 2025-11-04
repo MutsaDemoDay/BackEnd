@@ -11,7 +11,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 public class StoreMenu {
 
     @Id

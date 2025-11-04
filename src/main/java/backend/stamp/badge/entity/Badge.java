@@ -11,7 +11,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 public class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

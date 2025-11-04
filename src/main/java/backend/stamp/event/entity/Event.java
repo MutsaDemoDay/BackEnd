@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Event {
 
     @Id
@@ -37,7 +36,6 @@ public class Event {
 
     //조회수
     @Column(nullable = false)
-    @Builder.Default
     private int viewed = 0;//기본값
 
 }
