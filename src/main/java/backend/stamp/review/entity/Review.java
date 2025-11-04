@@ -14,13 +14,12 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Review {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="review_id")
-    private String id;
+    private Long id;
 
 
     //별점
@@ -46,6 +45,6 @@ public class Review {
     //유저
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private Users users;
 
 }

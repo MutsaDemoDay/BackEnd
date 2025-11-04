@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 public class Level {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -28,10 +27,9 @@ public class Level {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private Users user;
+    private Users users;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<Badge> badges = new ArrayList<>();
 
 }
