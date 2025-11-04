@@ -20,7 +20,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +44,6 @@ public class Users {
 
 
     @Column(nullable = false)
-    @Builder.Default
     private Integer stampSum = 0;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
