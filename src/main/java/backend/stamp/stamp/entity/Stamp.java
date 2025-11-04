@@ -2,6 +2,8 @@ package backend.stamp.stamp.entity;
 
 
 import backend.stamp.order.entity.Order;
+import backend.stamp.store.entity.Store;
+import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,17 @@ public class Stamp {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="order_id",nullable = false)
     private Order order;
+    //유저
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id",nullable = false)
+    private Users users;
+
+    //가게
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="store_id",nullable = false)
+    private Store store;
+
+
 
     @Column(name = "name",nullable = false)
     private String name;

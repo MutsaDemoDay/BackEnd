@@ -38,11 +38,12 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Stamp> stamps= new ArrayList<>();
 
+    //user
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private Users users;
 
-
+    //stamp
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="store_id", nullable = false)
     private Store store;

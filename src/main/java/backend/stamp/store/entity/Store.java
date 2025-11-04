@@ -4,6 +4,7 @@ import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.manager.entity.Manager;
 import backend.stamp.order.entity.Order;
 import backend.stamp.review.entity.Review;
+import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.storemenu.entity.StoreMenu;
 import jakarta.persistence.*;
 import lombok.*;
@@ -63,6 +64,11 @@ public class Store {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<Manager> managers = new ArrayList<>();
+    private List<Stamp> stamps = new ArrayList<>();
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Manager manager;
 
 }
