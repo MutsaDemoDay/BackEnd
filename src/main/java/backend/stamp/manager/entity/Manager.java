@@ -22,31 +22,27 @@ public class Manager {
     @Column(name="manager_id",nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private String nickname;
-
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, unique = true)
+    private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phone;
-
-
-    @Column(nullable = false)
-    private String email;
-
 
     @Column(nullable = false)
     private String address;
 
-//사업자 등록 번호
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String businessNum;
 
-    @OneToMany(mappedBy = "manager")
+    @OneToMany(mappedBy = "manager",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Store> stores = new ArrayList<>();
+
 
 }
 
