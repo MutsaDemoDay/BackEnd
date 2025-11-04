@@ -1,5 +1,5 @@
 package backend.stamp.users.entity;
-
+import jakarta.persistence.*;
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.level.entity.Level;
@@ -10,19 +10,21 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id",nullable = false)
-    private Long id;
+    private Long userId;
 
 
 
@@ -42,7 +44,6 @@ public class Users {
 
 
     @Column(nullable = false)
-    @Builder.Default
     private Integer stampSum = 0;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
@@ -62,7 +63,8 @@ public class Users {
     private List<Review> reviews = new ArrayList<>();
 
 
-
-
-
+    public Users(String nickname, String email) {
+        this.nickname = nickname;
+        this.email = email;
+    }
 }

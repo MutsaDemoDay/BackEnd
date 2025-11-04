@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Coupon {
 
     @Id
@@ -31,6 +30,6 @@ public class Coupon {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id",nullable = false)
-    private Users user;
+    private Users users;
 
 }
