@@ -1,6 +1,7 @@
 package backend.stamp.store.entity;
 
 import backend.stamp.favstore.entity.FavStore;
+import backend.stamp.manager.entity.Manager;
 import backend.stamp.order.entity.Order;
 import backend.stamp.review.entity.Review;
 import backend.stamp.storemenu.entity.StoreMenu;
@@ -61,5 +62,8 @@ public class Store {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<Manager> managers = new ArrayList<>();
 
 }
