@@ -6,6 +6,7 @@ import backend.stamp.order.entity.Order;
 import backend.stamp.review.entity.Review;
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.storemenu.entity.StoreMenu;
+import backend.stamp.users.entity.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,6 +50,12 @@ public class Store {
 
     @Column(length = 1000)
     private String stampImageUrl;
+
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+
 
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
