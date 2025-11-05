@@ -1,6 +1,5 @@
-package backend.stamp.ai.ai;
+package backend.stamp.ai.ai.subdtos;
 
-import backend.stamp.store.entity.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -11,6 +10,6 @@ public record RecommendationCategory(
         String category,
 
         @JsonProperty("stores")
-        List<Store> stores
+        List<StoreName> stores
 
 ) {}

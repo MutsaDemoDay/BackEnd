@@ -2,7 +2,9 @@ package backend.stamp.ai.service;
 import backend.stamp.ai.ai.AiApiResponse;
 import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.AiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class AiService {
 
     private final WebClient webClient;
