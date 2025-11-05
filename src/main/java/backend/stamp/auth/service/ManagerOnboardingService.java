@@ -55,7 +55,8 @@ public class ManagerOnboardingService {
                 request.getCategory(),
                 // 나머지 List 필드는 null로 초기화
                 null, null, null, null, null, null,
-                manager // Manager 연결
+                manager, // Manager 연결,
+                null,null
         );
         Store savedStore = storeRepository.save(newStore);
 

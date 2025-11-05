@@ -8,4 +8,6 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findByNameContaining(String keyword);
 
+    List<Store> findByEventApplyIsNotNull();
+    List<Store> findTop10ByOrderByJoinDateDesc();
 }
