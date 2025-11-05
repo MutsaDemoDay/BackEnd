@@ -2,6 +2,7 @@ package backend.stamp.ai.ai;
 import backend.stamp.ai.ai.store.EventStore;
 import backend.stamp.ai.ai.store.NewStore;
 import backend.stamp.ai.ai.store.PopularStore;
+import backend.stamp.ai.ai.subdtos.UserLocation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

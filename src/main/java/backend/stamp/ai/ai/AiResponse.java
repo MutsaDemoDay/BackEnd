@@ -1,5 +1,6 @@
 package backend.stamp.ai.ai;
 
+import backend.stamp.ai.ai.subdtos.RecommendationCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
