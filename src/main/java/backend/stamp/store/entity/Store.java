@@ -1,5 +1,6 @@
 package backend.stamp.store.entity;
 
+import backend.stamp.businesshour.entity.BusinessHour;
 import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.manager.entity.Manager;
 import backend.stamp.order.entity.Order;
@@ -38,9 +39,8 @@ public class Store {
 
     private String phone;
 
-    private LocalTime openTime;
-
-    private LocalTime closeTime;
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BusinessHour> businessHours = new ArrayList<>();
 
     @Column(length = 1000)
     private String storeUrl;
@@ -51,6 +51,8 @@ public class Store {
     @Column(length = 1000)
     private String stampImageUrl;
 
+    @Column(length = 1000)
+    private String storeImageUrl;
 
     @Enumerated(EnumType.STRING)
     private Category category;
