@@ -4,15 +4,13 @@ import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.store.EventStore;
 import backend.stamp.ai.ai.store.NewStore;
 import backend.stamp.ai.ai.store.PopularStore;
-import backend.stamp.order.OrderRepository;
+import backend.stamp.order.repository.OrderRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
