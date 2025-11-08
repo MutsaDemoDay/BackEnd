@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @Entity
-
+@Builder
 @Table(name="stores")
 @Getter
 @Setter
@@ -37,6 +37,9 @@ public class Store {
 
     @Column(nullable = false)
     private String address;
+
+    private Double latitude;
+    private Double longitude;
 
     private String phone;
 

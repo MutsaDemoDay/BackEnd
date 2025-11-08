@@ -28,6 +28,7 @@ public class AuthController {
     private final LoginService loginService;
     private final LogoutService logoutService;
     private final ManagerOnboardingService managerOnboardingService;
+    private final TokenReissueService tokenReissueService;
 
     @GetMapping("/login")
     public ResponseEntity<?> redirectLoginPage(
@@ -104,6 +105,14 @@ public class AuthController {
                 .message("매장 등록이 완료되었습니다.")
                 .data(response)
                 .build();
+    }
+
+    @PostMapping("/token")
+    public ApplicationResponse<TokenReissueResponse> reissueToken(
+            @Valid @RequestBody TokenReissueRequest request) {
+
+        TokenReissueResponse response = tokenReissueService.reissueToken(request);
+        return ApplicationResponse.ok(response);
     }
 
 }

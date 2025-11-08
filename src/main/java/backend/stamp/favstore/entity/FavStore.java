@@ -6,6 +6,7 @@ import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Builder
 @Entity
 @Table(name="fav_stores")
 @Getter
