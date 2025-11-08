@@ -46,8 +46,15 @@ public class Users {
     @Column(name = "longitude")
     private Double longitude;
 
+    //유저의 stamp 개수
     @Column(nullable = false)
     private Integer stampSum = 0;
+
+
+    //유저의 쿠폰 개수
+    @Column(nullable = false)
+    private Integer couponNum = 0;
+
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Coupon> coupons = new ArrayList<>();

@@ -115,8 +115,14 @@ public class StampService {
             // 쿠폰 발급 로직 -> couponService에서 별도 구현 !
             couponService.createCoupon(user, store);
 
+
+            //유저의 스탬프판 수 증가 ( 수정 필요)
+            user.setCouponNum(user.getCouponNum() + 1);
+            usersRepository.save(user);
+
             // 초과된 스탬프는 다음 판으로 넘김
             currentCount = currentCount - maxCount;
+
 
         }
 
@@ -134,4 +140,6 @@ public class StampService {
 
 
     //내가 현재 가진 스탬프 히스토리 조회
+
+    //
 }
