@@ -40,6 +40,7 @@ public class Manager {
     @Column(nullable = false, unique = true)
     private String businessNum;
 
+    @Builder.Default
     @OneToMany(mappedBy = "manager",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Store> stores = new ArrayList<>();
 
