@@ -1,17 +1,20 @@
 package backend.stamp.auth.controller;
 import backend.stamp.auth.dto.request.*;
+import backend.stamp.auth.dto.response.ManagerOnboardingResponse;
 import backend.stamp.auth.dto.response.SignUpResponse;
 import backend.stamp.auth.dto.response.TokenReissueResponse;
 import backend.stamp.auth.kakao.KakaoInfo;
 import backend.stamp.auth.kakao.KakaoUser;
 import backend.stamp.auth.service.*;
 import backend.stamp.global.exception.ApplicationResponse;
+import backend.stamp.global.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
@@ -24,6 +27,7 @@ public class AuthController {
     private final ManagerSignUpService managerSignUpService;
     private final LoginService loginService;
     private final LogoutService logoutService;
+    private final ManagerOnboardingService managerOnboardingService;
 
     @GetMapping("/login")
     public ResponseEntity<?> redirectLoginPage(
@@ -88,6 +92,18 @@ public class AuthController {
 
         // 응답 스펙이 없으므로 Void를 반환하고, 클라이언트에게 토큰 삭제를 유도합니다.
         return ApplicationResponse.ok(null);
+    }
+
+    @PostMapping("/manager/onboarding")
+    public ApplicationResponse<ManagerOnboardingResponse> completeManagerOnboarding(
+            @Valid @RequestBody ManagerOnboardingRequest request) {
+
+        ManagerOnboardingResponse response = managerOnboardingService.completeOnboarding(request);
+        return ApplicationResponse.<ManagerOnboardingResponse>builder()
+                .code(ErrorCode.SUCCESS.getCode())
+                .message("매장 등록이 완료되었습니다.")
+                .data(response)
+                .build();
     }
 
 }
