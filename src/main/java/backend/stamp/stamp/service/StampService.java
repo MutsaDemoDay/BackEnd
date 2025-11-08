@@ -1,11 +1,11 @@
 package backend.stamp.stamp.service;
 
+import backend.stamp.coupon.entity.Coupon;
+import backend.stamp.coupon.repository.CouponRepository;
 import backend.stamp.coupon.service.CouponService;
 import backend.stamp.order.entity.Order;
 import backend.stamp.order.repository.OrderRepository;
-import backend.stamp.stamp.dto.StampAddResponseDto;
-import backend.stamp.stamp.dto.StampCreateRequestDto;
-import backend.stamp.stamp.dto.StampCreateResponseDto;
+import backend.stamp.stamp.dto.*;
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.stamp.repository.StampRepository;
 import backend.stamp.store.entity.Store;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class StampService {
     private final UsersRepository usersRepository;
     private final OrderRepository orderRepository;
     private final CouponService couponService;
-
+    private final CouponRepository couponRepository;
     //스탬프판 새로 등록 ( by 가게 검색 )
     @Transactional
     public StampCreateResponseDto createStamp(Long userId, StampCreateRequestDto requestDto) {
@@ -139,7 +141,40 @@ public class StampService {
     }
 
 
-    //내가 현재 가진 스탬프 히스토리 조회
+    //내가 현재 가진 스탬프 히스토리 조회 ( 과거 )
 
-    //
+    @Transactional(readOnly = true)
+    public List<StampHistoryResponseDto> getStampHistory(Long userId) {
+        // 유저 조회
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        // 유저의 쿠폰 목록 조회
+        List<Coupon> coupons = couponRepository.findByUsers(user);
+
+        // DTO 변환
+        return coupons.stream()
+                .map(StampHistoryResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    // 내가 현재 가진 스탬프 리스트 조회
+    @Transactional(readOnly = true)
+    public List<MyStampResponseDto> getMyStamps(Long userId) {
+
+        // 유저 조회
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        //유저의 스탬프 목록 조회
+        List<Stamp> stamps = stampRepository.findByUsers(user);
+
+        return stamps.stream()
+                .map(MyStampResponseDto::from)
+                .collect(Collectors.toList());
+
+    }
+
+    // 스탬프 개별 조회
+
 }
