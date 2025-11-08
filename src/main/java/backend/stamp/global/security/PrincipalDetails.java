@@ -13,6 +13,12 @@ public class PrincipalDetails implements UserDetails {
         this.users = users;
     }
 
+    //인증된 user 객체 반환
+    public Users getUser() {
+        return users;
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList(); // 또는 사용자 권한 목록

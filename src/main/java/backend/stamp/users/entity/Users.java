@@ -37,7 +37,7 @@ public class Users {
     private String nickname;
 
 
-    @Column(name = "password", nullable = false, unique = true, length = 255)
+    @Column(name = "password", nullable = true, unique = true, length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)

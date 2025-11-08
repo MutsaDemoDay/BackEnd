@@ -26,7 +26,7 @@ public class Order {
 
     //총 주문금액
     @Column(length = 1000, nullable = false)
-    private Long totalPrice;
+    private Integer totalPrice;
 
     @Column(length=1000,nullable = false)
     private Long MenuCount;
