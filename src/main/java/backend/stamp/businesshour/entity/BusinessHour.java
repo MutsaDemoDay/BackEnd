@@ -12,7 +12,6 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class BusinessHour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
