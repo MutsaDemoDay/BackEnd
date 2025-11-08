@@ -1,5 +1,6 @@
 package backend.stamp.coupon.entity;
 
+import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Coupon {
 
     @Id
@@ -22,14 +24,22 @@ public class Coupon {
     @Column(length=500,nullable = false)
     private String name;
 
+
     @Column(nullable = false)
     private LocalDateTime expiredDate;
 
-    @Column(nullable = false)
-    private String qrCodeUrl;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id",nullable = false)
     private Users users;
 
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="store_id",nullable = false)
+    private Store store;
+
+    //사용완료 처리
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean used = false;
 }

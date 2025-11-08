@@ -16,6 +16,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Stamp {
 
     @Id
@@ -24,8 +25,9 @@ public class Stamp {
     private Long id;
 
     //주문
+    //nullable =true  -> 빈 스탬프판일때 예외 방지
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="order_id",nullable = false)
+    @JoinColumn(name="order_id",nullable = true)
     private Order order;
     //유저
     @ManyToOne(fetch=FetchType.LAZY)
@@ -45,11 +47,12 @@ public class Stamp {
     @Column(name = "created_date")
     private LocalDateTime date;
 
-    @Column(name = "max_count", nullable = false)
-    private Integer maxCount;
+    //현재 스탬프 개수
+    @Column(name = "current_count", nullable = false)
+    private Integer currentCount = 0;//초깃값 초기화
 
-    @Column(name = "reward",nullable = false)
-    private String reward;
+
+
 
 
 

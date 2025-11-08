@@ -1,6 +1,7 @@
 package backend.stamp.store.entity;
 
 import backend.stamp.businesshour.entity.BusinessHour;
+import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.manager.entity.Manager;
 import backend.stamp.order.entity.Order;
@@ -48,11 +49,30 @@ public class Store {
     @Column(length = 500)
     private String sns;
 
-    @Column(length = 1000)
-    private String stampImageUrl;
 
     @Column(length = 1000)
     private String storeImageUrl;
+
+    @Column(length = 1000)
+    private String stampImageUrl;
+
+    //적립 금액 기준
+
+    @Column(name = "required_amount",nullable = false)
+    private Integer requiredAmount;
+
+//리워드 가게별로 정하니까 ..
+    @Column(name = "reward",nullable = false)
+    private String reward;
+
+    //스탬프 템플릿 내에 보여지는 리워드
+    @Column(name = "stamp_reward",nullable = false)
+    private String stampReward;
+
+    //스탬프 maxCount 가게별로 정하니까
+    @Column(name = "max_count", nullable = false)
+    private Integer maxCount;
+
 
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -74,6 +94,9 @@ public class Store {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Stamp> stamps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<Coupon> coupons = new ArrayList<>();
 
 
     @ManyToOne(fetch = FetchType.LAZY)
