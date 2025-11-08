@@ -44,6 +44,10 @@ public class StampService {
             throw new IllegalArgumentException("이미 이 매장의 스탬프가 등록되어 있습니다.");
         }
 
+        //유저의 스탬프판 수 증가
+        users.setStampSum(users.getStampSum() + 1);
+        usersRepository.save(users);
+
         //new 스탬프 엔티티 생성
 
         Stamp stamp = Stamp.builder()
@@ -129,4 +133,5 @@ public class StampService {
     }
 
 
+    //내가 현재 가진 스탬프 히스토리 조회
 }
