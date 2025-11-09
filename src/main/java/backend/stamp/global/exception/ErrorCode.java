@@ -15,6 +15,7 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, 403, "제한된 접근입니다."),
     KAKAO_TOKEN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 404, "토큰 발급에서 오류가 발생했습니다."),
 
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "요청하신 가게 정보를 찾을 수 없습니다."),
 
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),

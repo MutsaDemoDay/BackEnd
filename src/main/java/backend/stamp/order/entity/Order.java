@@ -26,7 +26,7 @@ public class Order {
 
     //총 주문금액
     @Column(length = 1000, nullable = false)
-    private Long totalPrice;
+    private Integer totalPrice;
 
     @Column(length=1000,nullable = false)
     private Long MenuCount;
@@ -38,11 +38,12 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Stamp> stamps= new ArrayList<>();
 
+    //user
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private Users users;
 
-
+    //stamp
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="store_id", nullable = false)
     private Store store;

@@ -1,10 +1,12 @@
 package backend.stamp.global.security;
 
 
+import backend.stamp.account.entity.Account;
+import backend.stamp.account.repository.AccountRepository;
+import backend.stamp.auth.entity.RefreshToken;
+import backend.stamp.auth.repository.RefreshTokenRepository;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
-import backend.stamp.users.entity.Users;
-import backend.stamp.users.repository.UsersRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
@@ -28,26 +31,55 @@ public class TokenProvider {
     private String secretKey;
 
     private SecretKey key;
-    private final UsersRepository usersRepository;
+    private final AccountRepository accountRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private static final long accessTokenExpirationTime = 7 * 24 * 60 * 60 * 1000L;
+    private static final long refreshTokenExpirationTime = 30 * 24 * 60 * 60 * 1000L; //30일
 
     @PostConstruct
     protected void init() {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
-    public String createAccessToken(Users users) {
+    public String createAccessToken(Account account) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + accessTokenExpirationTime);
 
         return Jwts.builder()
-                .setSubject(users.getEmail())
-                .claim("userId", users.getUserId())
+                .setSubject(account.getLoginId())
+                .claim("accountId", account.getAccountId())
+                .claim("userType", account.getUserType().name())
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    /**
+     * Refresh Token을 생성합니다.
+     */
+    public String createRefreshToken(Account account) {
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + refreshTokenExpirationTime);
+        String token = Jwts.builder()
+                .setSubject(account.getLoginId())
+                .claim("accountId", account.getAccountId())
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // Refresh Token DB 저장
+        refreshTokenRepository.deleteByAccountId(account.getAccountId());
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(token)
+                .accountId(account.getAccountId())
+                .build();
+        refreshTokenRepository.save(refreshToken);
+
+        return token;
     }
 
     public boolean validateToken(String token) {
@@ -63,7 +95,7 @@ public class TokenProvider {
         }
     }
 
-    public String getEmail(String token) {
+    public String getLoginId(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -73,10 +105,17 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        String email = getEmail(token);
-        Users users = usersRepository.findByEmail(email)
+        String loginId = getLoginId(token);
+
+        Account account = accountRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        PrincipalDetails principalDetails = new PrincipalDetails(users);
-        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+
+        PrincipalDetails principalDetails = new PrincipalDetails(account);
+
+        return new UsernamePasswordAuthenticationToken(
+                principalDetails,
+                null,
+                principalDetails.getAuthorities()
+        );
     }
 }

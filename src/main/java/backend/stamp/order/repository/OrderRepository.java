@@ -1,4 +1,4 @@
-package backend.stamp.order;
+package backend.stamp.order.repository;
 
 import backend.stamp.order.entity.Order;
 import backend.stamp.store.entity.Store;
