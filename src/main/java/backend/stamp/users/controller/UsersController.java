@@ -29,7 +29,7 @@ public class UsersController {
     public ResponseEntity<List<CouponResponseDto>> getMyCoupons(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
 
-        Long userId = userDetails.getUser().getUserId();
+        Long userId = userDetails.getAccount().getAccountId();
         return ResponseEntity.ok(couponService.getUserCoupons(userId));
     }
 
@@ -39,7 +39,7 @@ public class UsersController {
     public ResponseEntity<List<MyStampResponseDto>> getMyStamps(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
 
-        Long userId = userDetails.getUser().getUserId();
+        Long userId = userDetails.getAccount().getAccountId();
         List<MyStampResponseDto> myStamps = stampService.getMyStamps(userId);
         return ResponseEntity.ok(myStamps);
     }
@@ -49,7 +49,7 @@ public class UsersController {
     public ResponseEntity<List<StampHistoryResponseDto>> getMyStampHistory(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Long userId = principalDetails.getUser().getUserId();
+        Long userId = principalDetails.getAccount().getAccountId();
         return ResponseEntity.ok(stampService.getStampHistory(userId));
     }
 }

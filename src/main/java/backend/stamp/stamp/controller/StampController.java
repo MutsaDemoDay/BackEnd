@@ -24,7 +24,7 @@ public class StampController {
     public ResponseEntity<StampCreateResponseDto> createStamp(@AuthenticationPrincipal PrincipalDetails userDetail, @RequestBody StampCreateRequestDto requestDto) {
 
         //로그인한 유저 식별용 갖고 오기
-        Long userId = userDetail.getUser().getUserId();
+        Long userId = userDetail.getAccount().getAccountId();
 
         return ResponseEntity.ok(stampService.createStamp(userId,requestDto));
 
@@ -34,7 +34,7 @@ public class StampController {
     @PostMapping("/add")
     public ResponseEntity<StampAddResponseDto> addStamp(@AuthenticationPrincipal PrincipalDetails userDetail,@RequestBody StampAddRequestDto requestDto) {
        //유저
-        Long userId = userDetail.getUser().getUserId();
+        Long userId = userDetail.getAccount().getAccountId();
         Long storeId = requestDto.getStoreId();
         Long orderId = requestDto.getOrderId();
 
