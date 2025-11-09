@@ -32,15 +32,26 @@ public class QRCodeService {
     private final UsersRepository usersRepository;
     private final StoreRepository storeRepository;
 
+    /**
+     * QR 코드를 storeCode로 변환
+     * @param file
+     * @return
+     * @throws Exception
+     */
     public String decodeQRCode(MultipartFile file) throws Exception {
         BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
         LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-
         Result result = new MultiFormatReader().decode(bitmap);
         return result.getText(); // ex: "store_102"
     }
 
+    /**
+     * 적립 로직
+     * @param storeCode
+     * @param userId
+     * @throws ApplicationException
+     */
     public void addStamp(String storeCode, Long userId) throws ApplicationException {
         Optional<Store> storeOpt = storeRepository.findByName(storeCode);
         Users user = usersRepository.findById(userId)
