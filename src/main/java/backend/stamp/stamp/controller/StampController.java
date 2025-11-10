@@ -33,13 +33,13 @@ public class StampController {
     //스탬프 적립
     @PostMapping("/add")
     public ResponseEntity<StampAddResponseDto> addStamp(@AuthenticationPrincipal PrincipalDetails userDetail,@RequestBody StampAddRequestDto requestDto) {
-       //유저
+        //유저
         Long userId = userDetail.getUser().getUserId();
         Long storeId = requestDto.getStoreId();
         Long orderId = requestDto.getOrderId();
 
         StampAddResponseDto response = stampService.addStamp(userId, storeId, orderId);
-    //서비스 호출
+        //서비스 호출
 
         return ResponseEntity.ok(response);
 
