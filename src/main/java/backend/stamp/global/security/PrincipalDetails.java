@@ -1,6 +1,7 @@
 package backend.stamp.global.security;
 
 import backend.stamp.account.entity.Account;
+import backend.stamp.users.entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,7 @@ import java.util.Collections;
 
 public class PrincipalDetails implements UserDetails {
     private Account account;
-
+    private Users user;
     public PrincipalDetails(Account account) {
         this.account = account;
     }
@@ -64,5 +65,7 @@ public class PrincipalDetails implements UserDetails {
     public Account getAccount() {
         return this.account;
     }
-
+    public Users getUser() {
+        return user;
+    }
 }
