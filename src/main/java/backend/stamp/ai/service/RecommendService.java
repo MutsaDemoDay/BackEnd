@@ -4,6 +4,7 @@ import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.store.EventStore;
 import backend.stamp.ai.ai.store.NewStore;
 import backend.stamp.ai.ai.store.PopularStore;
+import backend.stamp.ai.ai.subdtos.VisitStatics;
 import backend.stamp.order.repository.OrderRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -33,21 +34,21 @@ public class RecommendService {
                 .toList();
 
         List<Store> topStores = orderRepository.findTop10StoresByOrderCount(PageRequest.of(0, 10));
-
         List<PopularStore> popularStores = topStores.stream()
                 .map(store -> PopularStore.fromEntity(
                         store,
                         orderRepository.countByStoreId(store.getId()) // 주문 수 조회
                 ))
                 .toList();
+        List<VisitStatics> statics = orderRepository.findVisitStaticsByUserId(request.getUserId());
         return new AiRequest(
                 request.getUserId(),
                 request.getLocation(),
                 eventStores,
                 newStores,
-                popularStores
+                popularStores,
+                statics
         );
     }
-
 
 }
