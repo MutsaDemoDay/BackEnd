@@ -32,7 +32,6 @@ public class RecommendService {
                 .stream()
                 .map(NewStore::fromEntity)
                 .toList();
-
         List<Store> topStores = orderRepository.findTop10StoresByOrderCount(PageRequest.of(0, 10));
         List<PopularStore> popularStores = topStores.stream()
                 .map(store -> PopularStore.fromEntity(
@@ -41,7 +40,8 @@ public class RecommendService {
                 ))
                 .toList();
         List<VisitStatics> statics = orderRepository.findVisitStaticsByUserId(request.getUserId());
-        return new AiRequest(
+
+        AiRequest aiRequest = new AiRequest(
                 request.getUserId(),
                 request.getLocation(),
                 eventStores,
@@ -49,6 +49,8 @@ public class RecommendService {
                 popularStores,
                 statics
         );
+        System.out.println("결과 확인:"+aiRequest);
+        return aiRequest;
     }
 
 }

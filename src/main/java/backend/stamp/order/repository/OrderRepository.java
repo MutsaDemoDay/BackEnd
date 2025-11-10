@@ -17,10 +17,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT COUNT(o) FROM Order o WHERE o.store.id = :storeId")
     int countByStoreId(@Param("storeId") Long storeId);
 
-    @Query("SELECT new backend.stamp.ai.ai.subdtos.VisitStatics(" +
-            "o.users.id, o.store.id, COUNT(o)) " +
-            "FROM Order o " +
-            "WHERE o.users.id = :userId " +
-            "GROUP BY o.users.id, o.store.id")
+    @Query("""
+        SELECT new backend.stamp.ai.ai.subdtos.VisitStatics(
+            o.users.id,
+            o.store.address,
+            COUNT(o)
+        )
+        FROM Order o
+        WHERE o.users.id = :userId
+        GROUP BY o.users.id, o.store.address
+    """)
     List<VisitStatics> findVisitStaticsByUserId(@Param("userId") Long userId);
 }
