@@ -22,4 +22,12 @@ public record ApplicationResponse<T>(
                 .data(data)
                 .build();
     }
+    public static <T> ApplicationResponse<T> error(T data) {
+        return ApplicationResponse.<T>builder()
+                .timestamp(LocalDateTime.now())
+                .code(ErrorCode.INTERNAL_SERVER_EXCEPTION.getCode())
+                .message(ErrorCode.INTERNAL_SERVER_EXCEPTION.getMessage())
+                .data(data)
+                .build();
+    }
 }
