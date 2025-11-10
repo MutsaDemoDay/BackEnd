@@ -17,23 +17,23 @@ public class Account {
     @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "login_id", nullable = false, unique = true, length = 255)
+    @Column(name = "login_id", unique = true, length = 255)
     private String loginId;
 
-    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @Column(name = "email", unique = true, length = 255)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @Column(name = "password", length = 255)
     private String password;
 
-    @Column(name = "user_type", nullable = false, length = 20)
+    @Column(name = "user_type", length = 20)
     @Enumerated(EnumType.STRING) // USER, MANAGER 타입을 저장
     private UserType userType;
 
-    @Column(name = "phone", nullable = false, length = 20)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
 }
