@@ -51,9 +51,4 @@ public class Stamp {
     @Column(name = "current_count", nullable = false)
     private Integer currentCount = 0;//초깃값 초기화
 
-
-
-
-
-
 }

@@ -1,5 +1,6 @@
 package backend.stamp.account.entity;
 
+import backend.stamp.manager.entity.Manager;
 import jakarta.persistence.*;
 import lombok.*;
 
