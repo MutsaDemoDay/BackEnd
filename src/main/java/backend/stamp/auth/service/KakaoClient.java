@@ -53,20 +53,11 @@ public class KakaoClient {
         // 요청 보내기 및 응답 수신
         String response = webClient.post()
                 .uri(kakaoTokenUri)
-                .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
+                .header("Content-type", "application/x-www-form-urlencoded")
                 .body(BodyInserters.fromFormData(params))
-                .retrieve()
-                .onStatus(
-                        status -> status.is4xxClientError() || status.is5xxServerError(),
-                        clientResponse -> clientResponse.bodyToMono(String.class).map(errorBody -> {
-                            System.out.println("❌ 카카오 에러 응답 바디: " + errorBody);
-                            throw new RuntimeException("카카오 토큰 요청 실패: " + errorBody);
-                        })
-                )
+                .retrieve() // 데이터 받는 방식
                 .bodyToMono(String.class)
-                .block();
-
-        System.out.println("✅ 카카오 토큰 응답 원본: " + response);
+                .block(); // 비동기식
 
         // 수신된 응답 Mapping
         ObjectMapper objectMapper = new ObjectMapper();
@@ -76,7 +67,6 @@ public class KakaoClient {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println("오류확인2......"+kakaoToken);
 
         return kakaoToken;
     }
