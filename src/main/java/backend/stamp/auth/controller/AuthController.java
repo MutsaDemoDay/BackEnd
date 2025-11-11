@@ -44,10 +44,8 @@ public class AuthController {
     }
 
     @GetMapping("/kakao")
-    public ApplicationResponse<KakaoUser> loginKakao(
-            @RequestParam(name="code") String authorizationCode,
-            @RequestParam(name="redirectUri", required = false) String redirecUri){
-        KakaoInfo info = kakaoService.loginKakao(authorizationCode, redirecUri);
+    public ApplicationResponse<KakaoUser> loginKakao(@RequestParam(name="code") String authorizationCode){
+        KakaoInfo info = kakaoService.loginKakao(authorizationCode);
         return ApplicationResponse.ok(kakaoService.register(info.kakao_account().email(), info.properties().nickname()));
     }
 

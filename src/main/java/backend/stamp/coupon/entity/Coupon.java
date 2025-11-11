@@ -18,28 +18,26 @@ public class Coupon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="coupon_id",nullable = false)
+    @Column(name="coupon_id")
     private Long id;
 
-    @Column(length=500,nullable = false)
+    @Column(length=500)
     private String name;
 
 
-    @Column(nullable = false)
     private LocalDateTime expiredDate;
 
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id",nullable = false)
+    @JoinColumn(name="user_id")
     private Users users;
 
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="store_id",nullable = false)
+    @JoinColumn(name="store_id")
     private Store store;
 
     //사용완료 처리
-    @Column(nullable = false)
     @Builder.Default
     private boolean used = false;
 }
