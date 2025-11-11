@@ -12,6 +12,7 @@ import backend.stamp.users.entity.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.List;
 
 
 @Entity
-@Builder
 @Table(name="stores")
 @Getter
 @Setter
@@ -64,7 +64,6 @@ public class Store {
     @Column(name = "required_amount",nullable = false)
     private Integer requiredAmount;
 
-//리워드 가게별로 정하니까 ..
     @Column(name = "reward",nullable = false)
     private String reward;
 
@@ -79,9 +78,6 @@ public class Store {
 
     @Enumerated(EnumType.STRING)
     private Category category;
-
-
-
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
@@ -105,5 +101,9 @@ public class Store {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id", nullable = false)
     private Manager manager;
+
+    //ai 호출용
+    private LocalDate joinDate; // 가게가 서비스에 가입한 날짜
+    private Integer eventApply; // 이벤트: e.g. 경험치 2배 부여
 
 }
