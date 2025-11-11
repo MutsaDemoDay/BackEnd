@@ -52,6 +52,8 @@ public class Stamp {
     private Integer currentCount = 0;//초깃값 초기화
 
 
+    //즐겨찾기 등록
+    private boolean isFavorite;
 
 
 

@@ -3,6 +3,8 @@ package backend.stamp.stamp.service;
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.coupon.repository.CouponRepository;
 import backend.stamp.coupon.service.CouponService;
+import backend.stamp.global.exception.ApplicationException;
+import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.order.entity.Order;
 import backend.stamp.order.repository.OrderRepository;
 import backend.stamp.stamp.dto.*;
@@ -175,6 +177,28 @@ public class StampService {
 
     }
 
-    // 스탬프 개별 조회
+    // 스탬프 즐겨찾기 설정
+
+    @Transactional(readOnly = true)
+    public void createFavoriteStamp(Long userId, Long stampId)
+    {
+        Users users =usersRepository.findById(userId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+        Stamp stamp =stampRepository.findById(stampId)
+                .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
+
+        if(!stamp.getUsers().equals(users)) {
+            throw new ApplicationException(ErrorCode.FORBIDDEN);
+        }
+
+        if(stamp.isFavorite()) {
+            throw new ApplicationException(ErrorCode.INTERNAL_SERVER_EXCEPTION);
+        }
+
+        stamp.setFavorite(true);
+    }
+
+    //스탬프 삭제
+
 
 }

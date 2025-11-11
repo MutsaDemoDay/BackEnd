@@ -1,6 +1,7 @@
 package backend.stamp.stamp.controller;
 
 
+import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
 import backend.stamp.stamp.dto.StampAddRequestDto;
 import backend.stamp.stamp.dto.StampAddResponseDto;
@@ -46,5 +47,25 @@ public class StampController {
 
     }
 
+
+    //스탬프 즐겨찾기 설정
+    @PostMapping("/{stampId}/favorite")
+    public ResponseEntity<ApplicationResponse<Void>> createFavoriteStamp(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long stampId) {
+        Long userId = userDetail.getAccount().getAccountId();
+        stampService.createFavoriteStamp(userId, stampId);
+        return ResponseEntity.ok(ApplicationResponse.ok(null));
+    }
+
+    //스탬프 삭제
+    @DeleteMapping("/{stampId}")
+    public ResponseEntity<ApplicationResponse<Void>> deleteStamp(
+            @AuthenticationPrincipal PrincipalDetails userDetail,
+            @PathVariable Long stampId) {
+
+        Long userId = userDetail.getAccount().getAccountId();
+        stampService.deleteStamp(userId, stampId);
+
+        return ResponseEntity.ok(ApplicationResponse.ok(null));
+    }
 
 }

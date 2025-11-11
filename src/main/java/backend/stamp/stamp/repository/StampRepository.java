@@ -22,4 +22,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
 
     //유저로 조회
     List<Stamp> findByUsers(Users users);
+
+    //즐겨찾기 확인
+    boolean existsByUserAndStamp(Users user, Stamp stamp);
 }

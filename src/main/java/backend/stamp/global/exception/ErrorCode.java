@@ -17,6 +17,9 @@ public enum ErrorCode {
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "요청하신 가게 정보를 찾을 수 없습니다."),
 
+    STAMP_NOT_FOUND(HttpStatus.NOT_FOUND, 405, "요청하신 스탬프 정보를 찾을 수 없습니다."),
+
+
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다.");
 
