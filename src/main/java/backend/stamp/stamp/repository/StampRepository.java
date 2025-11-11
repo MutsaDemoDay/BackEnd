@@ -18,4 +18,6 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
 
     //주문으로 스탬프 적립 여부 확인용
     boolean existsByOrder(Order order);
+
+    Optional<Stamp> findByStoreAndUsers(Store store, Users users);
 }

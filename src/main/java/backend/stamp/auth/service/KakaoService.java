@@ -43,12 +43,14 @@ public class KakaoService {
                 "&response_type=code";
     }
 
-    public KakaoInfo loginKakao(String authorizationCode, String redirectUri){
+    public KakaoInfo loginKakao(String authorizationCode){
         System.out.println("카카오 인가 코드: " + authorizationCode);
-        System.out.println("Redirect URI: " + redirectUri);
-        KakaoToken token = kakaoClient.getKakaoAccessToken(authorizationCode, redirectUri);
+        System.out.println("Redirect URI: " + kakaoRedirectUri);
+        KakaoToken token = kakaoClient.getKakaoAccessToken(authorizationCode, kakaoRedirectUri);
         return kakaoClient.getMemberInfo(token);
     }
+
+
     @Transactional
     public KakaoUser register(String email, String nickname){
 
