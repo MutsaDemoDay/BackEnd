@@ -55,6 +55,7 @@ public class QRCodeService {
         // 기존에 해당 유저가 해당 가게에서 쌓은 스탬프 가져오기 (optional)
         Stamp stamp = stampRepository.findByStoreAndUsers(store, user)
                 .orElse(new Stamp());
+        int stmp = stampCount(store, recentOrder);
 
         if (stamp.getId() == null) {
             stamp.setStore(store);
@@ -65,11 +66,17 @@ public class QRCodeService {
             stamp.setName(store.getName());
         }
 
-        stamp.setCurrentCount(stamp.getCurrentCount() + 1);
+        stamp.setCurrentCount(stamp.getCurrentCount() + stmp);
         stampRepository.save(stamp);
 
         user.setStampSum(user.getStampSum() + 1);
         usersRepository.save(user);
+    }
+    public int stampCount(Store store, Order order){
+        int price = order.getTotalPrice();
+        int maxCount = store.getMaxCount();
+        int stampCount = price/maxCount;
+        return stampCount;
     }
 
     /**
