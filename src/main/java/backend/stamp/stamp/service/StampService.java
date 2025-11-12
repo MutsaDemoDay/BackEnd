@@ -114,6 +114,9 @@ public class StampService {
         int currentCount = stamp.getCurrentCount() + addCount;
         int maxCount = store.getMaxCount();
 
+        //유저 누적 스탬프 수 계산 로직
+        user.setTotalStampSum(user.getTotalStampSum() + addCount);
+
         // 8)  maxCount 초과 시 쿠폰 발급 + 스탬프 초기화
         if (currentCount >= maxCount) {
             // 쿠폰 발급 로직 -> couponService에서 별도 구현 !
@@ -136,6 +139,9 @@ public class StampService {
         //해당 주문과 연결
         stamp.setOrder(order);
         stampRepository.save(stamp);
+
+        //누적 스탬프 수 반영한 유저 정보 저장
+        usersRepository.save(user);
 
         // 10)  응답 DTO 반환
         return StampAddResponseDto.from(stamp);
@@ -179,7 +185,7 @@ public class StampService {
 
     // 스탬프 즐겨찾기 설정
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void createFavoriteStamp(Long userId, Long stampId)
     {
         Users users =usersRepository.findById(userId)
@@ -187,18 +193,70 @@ public class StampService {
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
+        //소유자 확인
         if(!stamp.getUsers().equals(users)) {
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
 
         if(stamp.isFavorite()) {
-            throw new ApplicationException(ErrorCode.INTERNAL_SERVER_EXCEPTION);
+            throw new ApplicationException(ErrorCode.ALREADY_FAVORITE);
         }
 
         stamp.setFavorite(true);
     }
 
+    @Transactional
     //스탬프 삭제
+    public void deleteStamp(Long userId, Long stampId)
+    {
 
+        //유저 확인
+        Users users =usersRepository.findById(userId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        //스탬프 확인
+        Stamp stamp =stampRepository.findById(stampId)
+                .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
+
+        //스탬프 소유자 확인
+        if (!stamp.getUsers().getUserId().equals(userId)) {
+            throw new ApplicationException(ErrorCode.FORBIDDEN);
+        }
+
+        //유저 스탬프판 수 감소시키기 (유저 정보 업뎃)
+        int currentStampSum = users.getStampSum();
+        if (currentStampSum > 0) {
+            users.setStampSum(currentStampSum - 1);
+            usersRepository.save(users);
+        }
+        stampRepository.delete(stamp);
+
+
+    }
+
+    @Transactional
+    //스탬프 개별조회
+    public MyStampResponseDto getStampDetail(Long userId,Long stampId)
+    {
+
+        //유저 확인
+        Users users =usersRepository.findById(userId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        //스탬프 확인
+        Stamp stamp =stampRepository.findById(stampId)
+                .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
+
+        //스탬프 소유자 확인
+        if (!stamp.getUsers().getUserId().equals(userId)) {
+            throw new ApplicationException(ErrorCode.FORBIDDEN);
+        }
+
+
+
+        //스탬프 DTO 변환
+        return MyStampResponseDto.from(stamp);
+
+    }
 
 }

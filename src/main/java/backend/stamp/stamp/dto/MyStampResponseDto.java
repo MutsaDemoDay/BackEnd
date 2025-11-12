@@ -11,6 +11,7 @@ import lombok.*;
 
 //내 스탬프 (현재) 관리 목록 조회
 public class MyStampResponseDto {
+    private Long stampId;
 private String storeName;
 private String StampImageUrl;
 private Integer currentCount;
@@ -18,6 +19,7 @@ private Integer maxCount;
 
 public static MyStampResponseDto from(Stamp stamp) {
     return MyStampResponseDto.builder()
+            .stampId(stamp.getId())
             .storeName(stamp.getStore().getName())
             .StampImageUrl(stamp.getStore().getStampImageUrl())
             .currentCount(stamp.getCurrentCount())

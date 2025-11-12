@@ -19,7 +19,7 @@ public enum ErrorCode {
 
     STAMP_NOT_FOUND(HttpStatus.NOT_FOUND, 405, "요청하신 스탬프 정보를 찾을 수 없습니다."),
 
-
+    ALREADY_FAVORITE(HttpStatus.BAD_REQUEST, 406, "이미 즐겨찾기로 설정된 스탬프입니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다.");

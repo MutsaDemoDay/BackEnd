@@ -47,13 +47,17 @@ public class Users {
     private Double longitude;
 
     //유저의 stamp 개수
-    @Column(nullable = false)
+    @Builder.Default
     private Integer stampSum = 0;
 
 
     //유저의 쿠폰 개수
-    @Column(nullable = false)
+    @Builder.Default
     private Integer couponNum = 0;
+
+    //유저의 총 스탬프 개수 ( 모든 가게 스탬프 총합 )
+    @Builder.Default
+    private Integer totalStampSum = 0;
 
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
@@ -62,7 +66,7 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<FavStore> favStores = new ArrayList<>();
 
-    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private Level level;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
@@ -82,4 +86,6 @@ public class Users {
                 .stampSum(0)
                 .build();
     }
+
+
 }

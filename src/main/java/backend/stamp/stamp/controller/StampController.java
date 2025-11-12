@@ -3,11 +3,10 @@ package backend.stamp.stamp.controller;
 
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
-import backend.stamp.stamp.dto.StampAddRequestDto;
-import backend.stamp.stamp.dto.StampAddResponseDto;
-import backend.stamp.stamp.dto.StampCreateRequestDto;
-import backend.stamp.stamp.dto.StampCreateResponseDto;
+import backend.stamp.stamp.dto.*;
 import backend.stamp.stamp.service.StampService;
+import feign.Response;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,5 +66,16 @@ public class StampController {
 
         return ResponseEntity.ok(ApplicationResponse.ok(null));
     }
+
+    //스탬프 개별조회
+    @GetMapping("/{stampId}")
+    public ResponseEntity<ApplicationResponse<MyStampResponseDto>> getStampDetail(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long stampId) {
+        Long userId = userDetail.getAccount().getAccountId();
+
+        //값 받아오기
+        MyStampResponseDto responseDto = stampService.getStampDetail(userId, stampId);
+        return ResponseEntity.ok(ApplicationResponse.ok(responseDto));
+    }
+
 
 }

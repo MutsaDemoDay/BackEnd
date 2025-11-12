@@ -40,6 +40,8 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name="store_id",nullable = false)
     private Store store;
 
+    private LocalDateTime usedDate;
+
     //사용완료 처리
     @Column(nullable = false)
     @Builder.Default

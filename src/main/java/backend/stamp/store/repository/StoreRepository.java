@@ -13,4 +13,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findByEventApplyIsNotNull();
     List<Store> findTop10ByOrderByJoinDateDesc();
     Optional<Store> findByName(String name);
+
+    boolean existsByVerificationCode(String code);
 }
