@@ -9,4 +9,5 @@ import lombok.Getter;
 public class ManagerOnboardingResponse {
 
     private final Long storeId;
+    private final String verificationCode;
 }

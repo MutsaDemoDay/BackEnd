@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Random;
 
 
 @Service
@@ -25,6 +26,9 @@ public class ManagerOnboardingService {
     private final ManagerRepository managerRepository;
     private final StoreRepository storeRepository;
     private final BusinessHourRepository businessHourRepository;
+
+    //랜덤코드 생성용
+    private final Random random = new Random();
 
     public ManagerOnboardingResponse completeOnboarding(ManagerOnboardingRequest request) {
         Account currentAccount = SecurityUtil.getCurrentAccount();
@@ -36,28 +40,26 @@ public class ManagerOnboardingService {
                 ? currentAccount.getPhone()
                 : request.getStoreTel();
 
-        Store newStore = new Store(
-                null, // id
-                request.getStoreName(),
-                request.getAddress(),
-                request.getLatitude(),
-                request.getLongitude(),
-                finalStorePhone,
-                null, // businessHours
-                null, // storeUrl <- DTO에서 제외됨
-                null, // sns <- DTO에서 제외됨
-                request.getStoreImageUrl(),
-                request.getStampImageUrl(),
-                request.getRequiredAmount(),
-                request.getReward(),
-                "10개 적립 시 무료 커피", // stampReward <- DTO에 없으므로 임시값 할당
-                10, // maxCount <- DTO에 없으므로 임시값 할당
-                request.getCategory(),
-                // 나머지 List 필드는 null로 초기화
-                null, null, null, null, null, null,
-                manager, // Manager 연결,
-                null,null
-        );
+        //4자리 고유코드 생성
+        String verificationCode = generateUniqueCode();
+
+        Store newStore = Store.builder()
+                .name(request.getStoreName())
+                .address(request.getAddress())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .phone(finalStorePhone)
+                .storeImageUrl(request.getStoreImageUrl())
+                .stampImageUrl(request.getStampImageUrl())
+                .requiredAmount(request.getRequiredAmount())
+                .reward(request.getReward())
+                .stampReward("10개 적립 시 무료 커피") // DTO에 없으므로 임시값
+                .maxCount(10)
+                .category(request.getCategory())
+                .verificationCode(verificationCode)
+                .manager(manager)
+                .build();
+
         Store savedStore = storeRepository.save(newStore);
 
         businessHourRepository.deleteByStore(savedStore);
@@ -79,6 +81,14 @@ public class ManagerOnboardingService {
 
         return ManagerOnboardingResponse.builder()
                 .storeId(savedStore.getId())
+                .verificationCode(verificationCode)
                 .build();
+    }
+    private String generateUniqueCode() {
+        String code;
+        do {
+            code = String.format("%04d", random.nextInt(10000)); // 0000~9999
+        } while (storeRepository.existsByVerificationCode(code));
+        return code;
     }
 }

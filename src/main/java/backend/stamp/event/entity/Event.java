@@ -1,10 +1,14 @@
 package backend.stamp.event.entity;
 
 
+import backend.stamp.coupon.entity.Coupon;
+import backend.stamp.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="events")
@@ -33,6 +37,10 @@ public class Event {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<Store> stores = new ArrayList<>();
+
 
     //조회수
     @Column(nullable = false)

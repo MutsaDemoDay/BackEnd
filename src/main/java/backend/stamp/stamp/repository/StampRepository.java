@@ -6,6 +6,7 @@ import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface StampRepository extends JpaRepository<Stamp, Long> {
@@ -19,5 +20,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     //주문으로 스탬프 적립 여부 확인용
     boolean existsByOrder(Order order);
 
-    Optional<Stamp> findByStoreAndUsers(Store store, Users users);
+    //유저로 조회
+    List<Stamp> findByUsers(Users users);
+
 }
