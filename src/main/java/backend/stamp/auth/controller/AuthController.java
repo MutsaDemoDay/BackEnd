@@ -29,6 +29,7 @@ public class AuthController {
     private final LogoutService logoutService;
     private final ManagerOnboardingService managerOnboardingService;
     private final TokenReissueService tokenReissueService;
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public ResponseEntity<?> redirectLoginPage(
@@ -89,8 +90,11 @@ public class AuthController {
     public ApplicationResponse<Void> logout() {
         logoutService.logout();
 
-        // 응답 스펙이 없으므로 Void를 반환하고, 클라이언트에게 토큰 삭제를 유도합니다.
-        return ApplicationResponse.ok(null);
+        return ApplicationResponse.<Void>builder()
+                .code(ErrorCode.LOGOUT_SUCCESS.getCode())
+                .message(ErrorCode.LOGOUT_SUCCESS.getMessage())
+                .data(null)
+                .build();
     }
 
     @PostMapping("/manager/onboarding")
@@ -112,5 +116,18 @@ public class AuthController {
         TokenReissueResponse response = tokenReissueService.reissueToken(request);
         return ApplicationResponse.ok(response);
     }
+
+    @PostMapping("/email/send")
+    public ApplicationResponse<String> sendEmail(@Valid @RequestBody EmailSendRequest request) {
+        emailService.sendVerificationCode(request.getEmail());
+        return ApplicationResponse.ok("인증번호가 전송되었습니다.");
+    }
+
+    @PostMapping("/email/verify")
+    public ApplicationResponse<String> verifyEmailCode(@Valid @RequestBody EmailVerifyRequest request) {
+        emailService.verifyCodeOrThrow(request.getEmail(), request.getCode());
+        return ApplicationResponse.ok("이메일 인증이 완료되었습니다.");
+    }
+
 
 }
