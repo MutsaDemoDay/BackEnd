@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record PopularStore(
 
-        @JsonProperty("store_id")
-        String storeId,
+        @JsonProperty("store_address")
+        String storeAddress,
 
         @JsonProperty("visit_count")
         int visitCount
@@ -14,7 +14,7 @@ public record PopularStore(
 ) {
         public static PopularStore fromEntity(Store store, int visitCount) {
                 return new PopularStore(
-                        store.getId().toString(),
+                        store.getAddress(),
                         visitCount
                 );
         }

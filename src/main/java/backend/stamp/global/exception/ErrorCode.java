@@ -9,6 +9,8 @@ public enum ErrorCode {
     //100: Success
     SUCCESS(HttpStatus.OK, 100, "정상적으로 생성되었습니다."),
 
+    LOGOUT_SUCCESS(HttpStatus.OK, 200, "로그아웃 되었습니다."),
+
     // 400: Bad Request
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 400, "사용자가 없습니다."),
     INVALID_JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 토큰입니다"),
@@ -22,7 +24,12 @@ public enum ErrorCode {
     ALREADY_FAVORITE(HttpStatus.BAD_REQUEST, 406, "이미 즐겨찾기로 설정된 스탬프입니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
-    INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다.");
+    INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
+
+    // 이메일 관련 추가 에러 코드 (기존 형식과 동일)
+    EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 503, "이메일 전송에 실패했습니다."),
+    EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, 504, "요청하신 이메일의 인증번호가 존재하지 않습니다."),
+    INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, 505, "이메일 인증번호가 일치하지 않습니다.");
 
 
     private final HttpStatus httpStatus;

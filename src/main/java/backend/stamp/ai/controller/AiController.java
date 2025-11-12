@@ -4,6 +4,7 @@ import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.AiResponse;
 import backend.stamp.ai.service.AiService;
 import backend.stamp.ai.service.RecommendService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -14,9 +15,18 @@ import reactor.core.publisher.Mono;
 public class AiController {
     private final AiService aiService;
     private final RecommendService recommendService;
+    private final ObjectMapper objectMapper;
+
     @PostMapping("/call")
     public Mono<AiResponse> callAi(@RequestBody AiRequest partialRequest) {
         AiRequest fullRequest = recommendService.buildFullAiRequest(partialRequest);
+
+        try {
+            System.out.println("AI 요청 JSON 직전 = " +
+                    objectMapper.writeValueAsString(fullRequest));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return aiService.callAiServer(fullRequest);
     }
 }
