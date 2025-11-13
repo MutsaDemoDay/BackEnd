@@ -1,22 +1,14 @@
 name: Remote Deploy
 
 on:
-  workflow_run:
-    workflows: ["Deploy Spring Boot"]
-    types:
-      - completed
+  push:
+    branches: ["feat/deploy"]
 
 jobs:
   remote-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check workflow status
-        if: ${{ github.event.workflow_run.conclusion != 'success' }}
-        run: |
-          echo "Previous workflow failed. Skipping remote deploy."
-          exit 1
-
       - name: SSH Remote Deploy
         uses: appleboy/ssh-action@v1.1.0
         with:
