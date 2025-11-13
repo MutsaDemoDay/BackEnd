@@ -1,9 +1,10 @@
 name: Remote Deploy
 
 on:
-  push:
-    branches:
-      - feat/deploy
+  workflow_run:
+    workflows: ["Deploy Spring Boot"]
+    types:
+      - completed
 
 jobs:
   remote-deploy:
