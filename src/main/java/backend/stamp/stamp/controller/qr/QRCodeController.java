@@ -2,6 +2,7 @@ package backend.stamp.stamp.controller.qr;
 
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.stamp.service.qr.QRCodeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,10 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
+
 @RequestMapping("/api/v1/qr")
+
+@Tag(name = "QrCode( Qr코드 관련 )", description = "QrCode( Qr코드 관련 ) API")
 public class QRCodeController {
     private final QRCodeService qrservice;
     @PostMapping("/scan")

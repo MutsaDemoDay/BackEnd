@@ -8,6 +8,7 @@ import backend.stamp.auth.kakao.KakaoUser;
 import backend.stamp.auth.service.*;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
+
+@Tag(name = "Auth", description = "Auth 관련 API")
 public class AuthController {
     private final KakaoService kakaoService;
     private final UserSignUpService userSignUpService;

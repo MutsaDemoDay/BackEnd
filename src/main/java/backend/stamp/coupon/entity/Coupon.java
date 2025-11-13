@@ -1,5 +1,6 @@
 package backend.stamp.coupon.entity;
 
+import backend.stamp.global.entity.BaseEntity;
 import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;

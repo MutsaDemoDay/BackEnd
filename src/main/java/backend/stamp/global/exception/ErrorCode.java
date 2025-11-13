@@ -21,7 +21,23 @@ public enum ErrorCode {
 
     STAMP_NOT_FOUND(HttpStatus.NOT_FOUND, 405, "요청하신 스탬프 정보를 찾을 수 없습니다."),
 
-    ALREADY_FAVORITE(HttpStatus.BAD_REQUEST, 406, "이미 즐겨찾기로 설정된 스탬프입니다."),
+    ALREADY_FAVORITE_STAMP(HttpStatus.BAD_REQUEST, 406, "이미 즐겨찾기로 설정된 스탬프입니다."),
+
+    ALREADY_FAVORITE_STORE(HttpStatus.BAD_REQUEST, 407, "이미 즐겨찾기로 설정된 가게입니다."),
+
+    NOT_FAVORITE_STAMP(HttpStatus.BAD_REQUEST, 408, "해당 스탬프가 즐겨찾기 상태가 아닙니다."),
+
+    FAVORITE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, 409, "해당 매장이 즐겨찾기 상태가 아닙니다."),
+
+    DUPLICATE_STAMP(HttpStatus.BAD_REQUEST, 410, "해당 매장의 스탬프판이 이미 등록되어 있습니다."),
+
+    ORDER_NOT_FOUND(HttpStatus.BAD_REQUEST,411,"요청하신 주문 정보를 찾을 수 없습니다."),
+
+    ORDER_NOT_IN_STORE(HttpStatus.BAD_REQUEST, 412, "해당 주문은 선택한 매장의 주문이 아닙니다."),
+
+    STAMP_ALREADY_ADDED_FOR_ORDER(HttpStatus.BAD_REQUEST, 413, "이미 이 주문에 대해 스탬프가 적립되었습니다."),
+    STAMP_BOARD_NOT_FOUND_FOR_STORE(HttpStatus.NOT_FOUND, 414, "해당 매장의 스탬프판이 없습니다."),
+
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
