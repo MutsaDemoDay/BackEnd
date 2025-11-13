@@ -22,5 +22,6 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
 
     //유저로 조회
     List<Stamp> findByUsers(Users users);
+    Optional<Stamp> findByStoreAndUsers(Store store, Users user);
 
 }
