@@ -57,7 +57,7 @@ public class KakaoClient {
                 .body(BodyInserters.fromFormData(params))
                 .retrieve() // 데이터 받는 방식
                 .bodyToMono(String.class)
-                .block(); // 비동기 방
+                .block(); // 비동기식
 
         // 수신된 응답 Mapping
         ObjectMapper objectMapper = new ObjectMapper();

@@ -3,6 +3,7 @@ import backend.stamp.ai.ai.store.EventStore;
 import backend.stamp.ai.ai.store.NewStore;
 import backend.stamp.ai.ai.store.PopularStore;
 import backend.stamp.ai.ai.subdtos.UserLocation;
+import backend.stamp.ai.ai.subdtos.VisitStatics;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AiRequest {
     @JsonProperty("user_id")
-    private String userId;
+    private Long userId;
 
     @JsonProperty("location")
     private UserLocation location;
@@ -29,4 +30,9 @@ public class AiRequest {
 
     @JsonProperty("popular_stores")
     private List<PopularStore> popularStores;
+
+    @JsonProperty("visit_statics")
+    private List<VisitStatics> visitStatics;
+
+
 }

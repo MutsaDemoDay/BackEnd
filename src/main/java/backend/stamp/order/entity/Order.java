@@ -17,8 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="order_id", nullable = false)
@@ -29,13 +27,13 @@ public class Order {
     private Integer totalPrice;
 
     @Column(length=1000,nullable = false)
-    private Long MenuCount;
+    private Long menuCount;
 
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Stamp> stamps= new ArrayList<>();
 
     //user

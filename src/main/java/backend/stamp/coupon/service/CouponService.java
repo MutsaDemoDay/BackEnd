@@ -1,6 +1,7 @@
 package backend.stamp.coupon.service;
 
 
+import backend.stamp.coupon.dto.CouponResponseDto;
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.coupon.repository.CouponRepository;
 import backend.stamp.store.entity.Store;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +44,18 @@ public class CouponService {
 
     }
 
+
+    //나의 쿠폰 조회
+    @Transactional(readOnly = true)
+    public List<CouponResponseDto> getUserCoupons(Long userId) {
+        List<Coupon> coupons = couponRepository.findByUsers_UserId(userId);
+        return coupons.stream()
+                .map(CouponResponseDto::from)
+                .toList();
+    }
+
     //쿠폰 사용완료 처리
+
 
 }
 

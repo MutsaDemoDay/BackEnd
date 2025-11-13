@@ -27,11 +27,14 @@ public class Users {
     @Column(name="user_id",nullable = false)
     private Long userId;
 
+    @Column(name = "email", unique = true, length = 255)
+    private String email;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_fk", nullable = false, unique = true) // accountId 대신 명확히 account_fk로 명시
+    @JoinColumn(name = "account_fk", unique = true) // accountId 대신 명확히 account_fk로 명시
     private Account account;
 
-    @Column(name = "nickname", nullable = false, unique = true, length = 255)
+    @Column(name = "nickname", unique = true, length = 255)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -46,8 +49,19 @@ public class Users {
     @Column(name = "longitude")
     private Double longitude;
 
-    @Column(nullable = false)
+    //유저의 stamp 개수
+    @Builder.Default
     private Integer stampSum = 0;
+
+
+    //유저의 쿠폰 개수
+    @Builder.Default
+    private Integer couponNum = 0;
+
+    //유저의 총 스탬프 개수 ( 모든 가게 스탬프 총합 )
+    @Builder.Default
+    private Integer totalStampSum = 0;
+
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Coupon> coupons = new ArrayList<>();
@@ -55,7 +69,7 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<FavStore> favStores = new ArrayList<>();
 
-    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private Level level;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
@@ -75,4 +89,6 @@ public class Users {
                 .stampSum(0)
                 .build();
     }
+
+
 }
