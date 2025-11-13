@@ -1,10 +1,9 @@
 name: Remote Deploy
 
 on:
-  workflow_run:
-    workflows: ["Deploy Spring Boot", "Deploy AI Service"]
-    types:
-      - completed
+  push:
+    branches:
+      - feat/deploy
 
 jobs:
   remote-deploy:
