@@ -80,7 +80,6 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
         // 인증정보 주고받도록 허용
         config.setAllowCredentials(true);
         // 허용할 주소
