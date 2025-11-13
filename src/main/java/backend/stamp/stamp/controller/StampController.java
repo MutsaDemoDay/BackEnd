@@ -1,12 +1,12 @@
 package backend.stamp.stamp.controller;
 
 
+import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
-import backend.stamp.stamp.dto.StampAddRequestDto;
-import backend.stamp.stamp.dto.StampAddResponseDto;
-import backend.stamp.stamp.dto.StampCreateRequestDto;
-import backend.stamp.stamp.dto.StampCreateResponseDto;
+import backend.stamp.stamp.dto.*;
 import backend.stamp.stamp.service.StampService;
+import feign.Response;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,7 +24,7 @@ public class StampController {
     public ResponseEntity<StampCreateResponseDto> createStamp(@AuthenticationPrincipal PrincipalDetails userDetail, @RequestBody StampCreateRequestDto requestDto) {
 
         //로그인한 유저 식별용 갖고 오기
-        Long userId = userDetail.getUser().getUserId();
+        Long userId = userDetail.getAccount().getAccountId();
 
         return ResponseEntity.ok(stampService.createStamp(userId,requestDto));
 
@@ -34,7 +34,7 @@ public class StampController {
     @PostMapping("/add")
     public ResponseEntity<StampAddResponseDto> addStamp(@AuthenticationPrincipal PrincipalDetails userDetail,@RequestBody StampAddRequestDto requestDto) {
        //유저
-        Long userId = userDetail.getUser().getUserId();
+        Long userId = userDetail.getAccount().getAccountId();
         Long storeId = requestDto.getStoreId();
         Long orderId = requestDto.getOrderId();
 
@@ -44,6 +44,37 @@ public class StampController {
         return ResponseEntity.ok(response);
 
 
+    }
+
+
+    //스탬프 즐겨찾기 설정
+    @PostMapping("/{stampId}/favorite")
+    public ResponseEntity<ApplicationResponse<Void>> createFavoriteStamp(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long stampId) {
+        Long userId = userDetail.getAccount().getAccountId();
+        stampService.createFavoriteStamp(userId, stampId);
+        return ResponseEntity.ok(ApplicationResponse.ok(null));
+    }
+
+    //스탬프 삭제
+    @DeleteMapping("/{stampId}")
+    public ResponseEntity<ApplicationResponse<Void>> deleteStamp(
+            @AuthenticationPrincipal PrincipalDetails userDetail,
+            @PathVariable Long stampId) {
+
+        Long userId = userDetail.getAccount().getAccountId();
+        stampService.deleteStamp(userId, stampId);
+
+        return ResponseEntity.ok(ApplicationResponse.ok(null));
+    }
+
+    //스탬프 개별조회
+    @GetMapping("/{stampId}")
+    public ResponseEntity<ApplicationResponse<MyStampResponseDto>> getStampDetail(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long stampId) {
+        Long userId = userDetail.getAccount().getAccountId();
+
+        //값 받아오기
+        MyStampResponseDto responseDto = stampService.getStampDetail(userId, stampId);
+        return ResponseEntity.ok(ApplicationResponse.ok(responseDto));
     }
 
 

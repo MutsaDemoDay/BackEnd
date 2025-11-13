@@ -14,30 +14,36 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Coupon {
+public class Coupon extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="coupon_id")
+    @Column(name="coupon_id",nullable = false)
     private Long id;
 
-    @Column(length=500)
+    @Column(length=500,nullable = false)
     private String name;
 
+    @Column(nullable = false)
 
     private LocalDateTime expiredDate;
 
 
+
+
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id",nullable = false)
     private Users users;
 
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="store_id")
+    @JoinColumn(name="store_id",nullable = false)
     private Store store;
 
+    private LocalDateTime usedDate;
+
     //사용완료 처리
+    @Column(nullable = false)
     @Builder.Default
     private boolean used = false;
 }

@@ -21,7 +21,7 @@ public class Stamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="stamp_id")
+    @Column(name="stamp_id", nullable = false)
     private Long id;
 
     //주문
@@ -31,24 +31,31 @@ public class Stamp {
     private Order order;
     //유저
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id",nullable = false)
     private Users users;
 
     //가게
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="store_id")
+    @JoinColumn(name="store_id",nullable = false)
     private Store store;
 
 
 
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     private String name;
 
     @Column(name = "created_date")
     private LocalDateTime date;
 
     //현재 스탬프 개수
-    @Column(name = "current_count")
+    @Column(name = "current_count", nullable = false)
     private Integer currentCount = 0;//초깃값 초기화
+
+
+    //즐겨찾기 등록
+    private boolean isFavorite;
+
+
+
 
 }

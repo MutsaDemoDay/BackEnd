@@ -40,3 +40,6 @@ src/main/resources/application.properties
 application.properties
 src/main/resources/application-mj.properties
 application-mj.properties
+
+application-sy.properties
+application-*.properties

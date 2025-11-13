@@ -2,6 +2,7 @@ package backend.stamp.store.entity;
 
 import backend.stamp.businesshour.entity.BusinessHour;
 import backend.stamp.coupon.entity.Coupon;
+import backend.stamp.event.entity.Event;
 import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.manager.entity.Manager;
 import backend.stamp.order.entity.Order;
@@ -9,6 +10,7 @@ import backend.stamp.review.entity.Review;
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.storemenu.entity.StoreMenu;
 import backend.stamp.users.entity.Gender;
+import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Store {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -75,6 +78,8 @@ public class Store {
     @Column(name = "max_count", nullable = false)
     private Integer maxCount;
 
+    @Column(name = "verification_code", nullable = false, unique = true, length = 4)
+    private String verificationCode;
 
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -101,6 +106,12 @@ public class Store {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id", nullable = false)
     private Manager manager;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
 
     //ai 호출용
     private LocalDate joinDate; // 가게가 서비스에 가입한 날짜
