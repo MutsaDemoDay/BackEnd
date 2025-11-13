@@ -27,14 +27,14 @@ public class Users {
     @Column(name="user_id",nullable = false)
     private Long userId;
 
-    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @Column(name = "email", unique = true, length = 255)
     private String email;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_fk", nullable = false, unique = true) // accountId 대신 명확히 account_fk로 명시
+    @JoinColumn(name = "account_fk", unique = true) // accountId 대신 명확히 account_fk로 명시
     private Account account;
 
-    @Column(name = "nickname", nullable = false, unique = true, length = 255)
+    @Column(name = "nickname", unique = true, length = 255)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
