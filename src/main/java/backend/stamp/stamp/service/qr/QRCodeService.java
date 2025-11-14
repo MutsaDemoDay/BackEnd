@@ -48,19 +48,19 @@ public class QRCodeService {
     public void addStamp(Long storeId, Long userId) throws ApplicationException {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALIDE_QRCODE));
-        Users user = usersRepository.findById(userId)
+        Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        Order recentOrder = orderRepository.findTopByUsersAndStoreOrderByOrderDateDesc(user, store)
+        Order recentOrder = orderRepository.findTopByUsersAndStoreOrderByOrderDateDesc(users, store)
                 .orElse(null); // 주문 없어도 null 허용
         // 기존에 해당 유저가 해당 가게에서 쌓은 스탬프 가져오기 (optional)
-        Stamp stamp = stampRepository.findByStoreAndUsers(store, user)
+        Stamp stamp = stampRepository.findByStoreAndUsers(store, users)
                 .orElse(new Stamp());
         int stmp = stampCount(store, recentOrder);
 
         if (stamp.getId() == null) {
             stamp.setStore(store);
             stamp.setOrder(recentOrder);
-            stamp.setUsers(user);
+            stamp.setUsers(users);
             stamp.setCurrentCount(0);
             stamp.setDate(LocalDateTime.now());
             stamp.setName(store.getName());
@@ -69,8 +69,8 @@ public class QRCodeService {
         stamp.setCurrentCount(stamp.getCurrentCount() + stmp);
         stampRepository.save(stamp);
 
-        user.setStampSum(user.getStampSum() + 1);
-        usersRepository.save(user);
+        users.setStampSum(users.getStampSum() + 1);
+        usersRepository.save(users);
     }
     public int stampCount(Store store, Order order){
         int price = order.getTotalPrice();
