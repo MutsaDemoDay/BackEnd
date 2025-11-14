@@ -48,7 +48,7 @@ public class CouponService {
     //나의 쿠폰 조회
     @Transactional(readOnly = true)
     public List<CouponResponseDto> getUserCoupons(Long userId) {
-        List<Coupon> coupons = couponRepository.findByUsers_UserId(userId);
+        List<Coupon> coupons = couponRepository.findByUsers_Account_AccountId(userId);
         return coupons.stream()
                 .map(CouponResponseDto::from)
                 .toList();

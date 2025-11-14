@@ -32,4 +32,8 @@ public class StoreMenu {
     @JoinColumn(name="store_id", nullable = false)
     private Store store;
 
+
+    //대표 메뉴 3개 설정
+    @Column(name = "representative_order")
+    private Integer representativeOrder;
 }

@@ -5,7 +5,10 @@ import backend.stamp.coupon.service.CouponService;
 import backend.stamp.global.security.PrincipalDetails;
 import backend.stamp.stamp.dto.MyStampResponseDto;
 import backend.stamp.stamp.dto.StampHistoryResponseDto;
+import backend.stamp.stamp.service.StampDetailService;
 import backend.stamp.stamp.service.StampService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,12 +22,15 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 
+@Tag(name = "User ( 유저 정보 관련 )", description = "User(유저 정보 관련) API")
 public class UsersController {
 
     private final CouponService couponService;
-    private final StampService stampService;
+    private final StampDetailService stampDetailService;
 
     // 내 쿠폰 조회
+    @Operation(summary = "내 쿠폰 조회 api", description = "유저가 자신의 쿠폰 목록을 조회합니다.")
+
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponseDto>> getMyCoupons(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
@@ -33,23 +39,26 @@ public class UsersController {
         return ResponseEntity.ok(couponService.getUserCoupons(userId));
     }
 
-    //내 현재 쿠폰 목록 조회
+    //내 현재 스탬프 목록 조회
 
+    @Operation(summary = "유저의 현재 스탬프 목록 조회 api", description = "유저가 자신의 스탬프 목록을 조회합니다.")
     @GetMapping("/stamps")
     public ResponseEntity<List<MyStampResponseDto>> getMyStamps(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
 
         Long userId = userDetails.getAccount().getAccountId();
-        List<MyStampResponseDto> myStamps = stampService.getMyStamps(userId);
+        List<MyStampResponseDto> myStamps = stampDetailService.getMyStamps(userId);
         return ResponseEntity.ok(myStamps);
     }
 
     // 내 스탬프 히스토리 조회
+
+    @Operation(summary = "내 스탬프 히스토리 조회 api", description = "유저가 자신의 스탬프 히스토리를 조회합니다.")
     @GetMapping("/stamps/history")
     public ResponseEntity<List<StampHistoryResponseDto>> getMyStampHistory(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         Long userId = principalDetails.getAccount().getAccountId();
-        return ResponseEntity.ok(stampService.getStampHistory(userId));
+        return ResponseEntity.ok(stampDetailService.getStampHistory(userId));
     }
 }

@@ -17,6 +17,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     //유저의 스탬프판 조회
     Optional<Stamp> findByUsersAndStore(Users users, Store store);
 
+    Optional<Stamp> findByStoreAndUsers(Store store, Users users);
     //주문으로 스탬프 적립 여부 확인용
     boolean existsByOrder(Order order);
 
