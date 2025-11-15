@@ -36,9 +36,6 @@ public class ManagerOnboardingService {
         Manager manager = managerRepository.findByAccount(currentAccount)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        String finalStorePhone = request.getUseManagerPhoneNumber()
-                ? currentAccount.getPhone()
-                : request.getStoreTel();
 
         //4자리 고유코드 생성
         String verificationCode = generateUniqueCode();
@@ -48,7 +45,7 @@ public class ManagerOnboardingService {
                 .address(request.getAddress())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
-                .phone(finalStorePhone)
+                .phone(request.getPhone())
                 .storeImageUrl(request.getStoreImageUrl())
                 .stampImageUrl(request.getStampImageUrl())
                 .requiredAmount(request.getRequiredAmount())

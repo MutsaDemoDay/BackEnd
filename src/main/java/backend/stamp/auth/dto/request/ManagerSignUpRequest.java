@@ -2,7 +2,6 @@ package backend.stamp.auth.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,16 +15,10 @@ public class ManagerSignUpRequest {
     private String loginId;
 
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-            message = "비밀번호는 최소 8자, 영문과 숫자가 모두 포함되어야 합니다.")
     private String password;
 
     @NotBlank(message = "비밀번호 확인은 필수 입력값입니다.")
     private String passwordConfirm;
-
-    @NotBlank(message = "전화번호는 필수 입력값입니다.")
-    @Pattern(regexp = "^010[0-9]{8}$", message = "유효한 휴대폰 번호 형식이 아닙니다.")
-    private String phone;
 
     @NotBlank(message = "이메일은 필수 입력값입니다.")
     @Email(message = "유효한 이메일 형식이 아닙니다.")
