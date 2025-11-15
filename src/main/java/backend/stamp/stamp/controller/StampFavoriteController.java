@@ -1,6 +1,7 @@
 package backend.stamp.stamp.controller;
 
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
 import backend.stamp.stamp.service.StampFavoriteService;
@@ -25,8 +26,8 @@ public class StampFavoriteController {
 
     @PostMapping("/{stampId}/favorite")
     public ResponseEntity<ApplicationResponse<Void>> createFavoriteStamp(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long stampId) {
-        Long userId = userDetail.getAccount().getAccountId();
-        stampFavoriteService.createFavoriteStamp(userId, stampId);
+        Account account = userDetail.getAccount();
+        stampFavoriteService.createFavoriteStamp(account, stampId);
         return ResponseEntity.ok(ApplicationResponse.ok(null));
     }
 
@@ -37,9 +38,8 @@ public class StampFavoriteController {
     public ResponseEntity<ApplicationResponse<Void>> deleteFavoriteStamp(
             @AuthenticationPrincipal PrincipalDetails userDetail,
             @PathVariable Long stampId
-    ) {
-        Long userId = userDetail.getAccount().getAccountId();
-        stampFavoriteService.deleteFavoriteStamp(userId, stampId);
+    ) { Account account = userDetail.getAccount();
+        stampFavoriteService.deleteFavoriteStamp(account, stampId);
         return ResponseEntity.ok(ApplicationResponse.ok(null));
     }
 

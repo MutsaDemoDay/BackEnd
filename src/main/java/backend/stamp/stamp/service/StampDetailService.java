@@ -1,6 +1,7 @@
 package backend.stamp.stamp.service;
 
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.coupon.repository.CouponRepository;
 import backend.stamp.global.exception.ApplicationException;
@@ -28,10 +29,10 @@ public class StampDetailService {
     //내가 현재 가진 스탬프 히스토리 조회 ( 과거 )
 
     @Transactional(readOnly = true)
-    public List<StampHistoryResponseDto> getStampHistory(Long userId) {
+    public List<StampHistoryResponseDto> getStampHistory(Account account) {
         // 유저 조회
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         // 유저의 쿠폰 목록 조회
         List<Coupon> coupons = couponRepository.findByUsers(users);
@@ -44,11 +45,11 @@ public class StampDetailService {
 
     // 내가 현재 가진 스탬프 리스트 조회
     @Transactional(readOnly = true)
-    public List<MyStampResponseDto> getMyStamps(Long userId) {
+    public List<MyStampResponseDto> getMyStamps(Account account) {
 
         // 유저 조회
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         //유저의 스탬프 목록 조회
@@ -63,12 +64,12 @@ public class StampDetailService {
 
     @Transactional
     //스탬프 개별조회
-    public MyStampResponseDto getStampDetail(Long userId,Long stampId)
+    public MyStampResponseDto getStampDetail(Account account,Long stampId)
     {
 
         //유저 확인
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         //스탬프 확인
@@ -76,7 +77,7 @@ public class StampDetailService {
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
         //스탬프 소유자 확인
-        if (!stamp.getUsers().getAccount().getAccountId().equals(userId)) {
+        if (!stamp.getUsers().getAccount().equals(account)) {
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
 

@@ -47,4 +47,14 @@ public class Coupon extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private boolean used = false;
+
+    //쿠폰 사용 완료 처리 날짜
+    private LocalDateTime usedAt;
+
+    //사용완료 처리 메소드
+    public void use() {
+        this.used = true;
+        this.usedAt = LocalDateTime.now();
+    }
+
 }

@@ -1,5 +1,6 @@
 package backend.stamp.favstore.repository;
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
@@ -20,4 +21,5 @@ public interface FavStoreRepository extends JpaRepository<FavStore, Long> {
     List<Long> findFavStoreIdsByUsers_UserId(Long userId);
 
 
+    List<Long> findFavStoreIdsByUsers_Account(Account account);
 }

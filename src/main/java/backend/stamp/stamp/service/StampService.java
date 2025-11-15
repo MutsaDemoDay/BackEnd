@@ -1,5 +1,6 @@
 package backend.stamp.stamp.service;
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.coupon.repository.CouponRepository;
 import backend.stamp.coupon.service.CouponService;
@@ -35,10 +36,10 @@ public class StampService {
 
     //스탬프판 새로 등록 ( by 가게 검색 )
     @Transactional
-    public StampCreateResponseDto createStamp(Long userId, StampCreateRequestDto requestDto) {
+    public StampCreateResponseDto createStamp(Account account, StampCreateRequestDto requestDto) {
         //유저 조회
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         //매장 조회
         Store store =storeRepository.findById(requestDto.getStoreId())
@@ -72,10 +73,10 @@ public class StampService {
     }
 
     //스탬프 적립
-    public StampAddResponseDto addStamp(Long userId, Long storeId, Long orderId)
+    public StampAddResponseDto addStamp(Account account, Long storeId, Long orderId)
     { // 1) 유저 조회
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         // 2) 매장 조회
@@ -154,19 +155,19 @@ public class StampService {
 
     @Transactional
     //스탬프 삭제
-    public void deleteStamp(Long userId, Long stampId)
+    public void deleteStamp(Account account, Long stampId)
     {
 
         //유저 확인
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         //스탬프 확인
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
         //스탬프 소유자 확인
-        if (!stamp.getUsers().getAccount().getAccountId().equals(userId)) {
+        if (!stamp.getUsers().getAccount().equals(account)) {
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
 
