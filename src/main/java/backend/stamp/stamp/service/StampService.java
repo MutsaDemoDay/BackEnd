@@ -74,7 +74,13 @@ public class StampService {
 
     //스탬프 적립
     public StampAddResponseDto addStamp(Account account, Long storeId, Long orderId)
-    { // 1) 유저 조회
+    {
+        //추가 )) npe 오류 방지용 로그인 여부 체크 로직 추가
+        if (account == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        // 1) 유저 조회
 
         Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
@@ -88,8 +94,11 @@ public class StampService {
                 .orElseThrow(() -> new ApplicationException(ErrorCode.ORDER_NOT_FOUND));
 
        // + 추가 ))주문이 해당 매장의 주문이 맞는지 검증
-        if (!order.getStore().getId().equals(store.getId())) {
-            throw new  ApplicationException(ErrorCode.ORDER_NOT_IN_STORE);
+        if (order.getStore() == null ||
+                order.getStore().getId() == null ||
+                !order.getStore().getId().equals(store.getId())) {
+
+            throw new ApplicationException(ErrorCode.ORDER_NOT_IN_STORE);
         }
 
         //+ 추가 ))이미 이주문으로 스탬프 적립된적 있는지 확인
@@ -157,6 +166,10 @@ public class StampService {
     //스탬프 삭제
     public void deleteStamp(Account account, Long stampId)
     {
+        //계정 체크
+        if (account == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
 
         //유저 확인
 
@@ -166,10 +179,16 @@ public class StampService {
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
-        //스탬프 소유자 확인
-        if (!stamp.getUsers().getAccount().equals(account)) {
+        //스탬프 소유자 확인 (npe 오류 수정버전)
+        Users stampOwner = stamp.getUsers();
+
+        if (stampOwner == null ||
+                stampOwner.getAccount() == null ||
+                !stampOwner.getAccount().getAccountId().equals(account.getAccountId())) {
+
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
+
 
         //유저 스탬프판 수 감소시키기 (유저 정보 업뎃)
         int currentStampSum = users.getStampSum();

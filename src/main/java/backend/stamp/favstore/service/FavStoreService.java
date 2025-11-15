@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,55 +87,31 @@ public class FavStoreService {
 
     //즐겨찾기 매장 리스트 조회
 
-    public List<FavStoreListResponseDto> getMyFavStores(Account account, double userLat, double userLon) {
-
+    public List<FavStoreListResponseDto> getMyFavStores(Account account) {
+    //계정 체크 (npe 방지)
         if (account == null) {
             throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
 
+        //유저 조회
         Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        List<Store> stores = storeRepository.findAll();
         //유저의 즐겨찾기 매장 확인
-        List<Long> favStoreIds = favStoreRepository.findFavStoreIdsByUsers_Account(account);
 
-        return stores.stream()
-                .map(store -> {
+        List<FavStore> favStores = favStoreRepository.findByUsers(users);
 
-                    Double lat = store.getLatitude();
-                    Double lon = store.getLongitude();
+        //유저의 즐겨찾기 매장이 없는경우
+        if (favStores == null || favStores.isEmpty()) {
+            return List.of();
+        }
 
-                    double distanceMeters;
-                    String formattedDistance;
-                    if (lat == null || lon == null) {
-                        distanceMeters = Double.MAX_VALUE;
-                        formattedDistance = "위치 정보 없음";
-                    } else {
-                        distanceMeters = DistanceUtil.calculateDistance(userLat, userLon, lat, lon);
-                        formattedDistance = DistanceFormatter.formatDistance(distanceMeters);
-                    }
 
-                    boolean isFavorite = favStoreIds.contains(store.getId());
-                    return new Object[]{
-                            distanceMeters,
-                            FavStoreListResponseDto.builder()
-                                    .storeId(store.getId())
-                                    .storeName(store.getName())
-                                    .storeCategory(store.getCategory())
-                                    .storeAddress(store.getAddress())
-                                    .storeImageUrl(store.getStoreImageUrl())
-                                    .distance(formattedDistance)
-                                    .isFavorite(isFavorite)
-                                    .build()
-                    };
 
-                })
-                .sorted(Comparator.comparing(obj -> (Double) obj[0]))
+        //DTO 변환
 
-                // ✔ 마지막에 DTO만 추출
-                .map(obj -> (FavStoreListResponseDto) obj[1])
-
-                .toList();
+        return favStores.stream()
+                .map(store->FavStoreListResponseDto.from(store.getStore(),true)) // DTO 변환
+                .collect(Collectors.toList());
 
     }
 }

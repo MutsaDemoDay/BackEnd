@@ -28,18 +28,28 @@ public class StampFavoriteService {
     @Transactional
     public void createFavoriteStamp(Account account, Long stampId)
     {
+        // 인증/계정 체크
+        if (account == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
         Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
-        //소유자 확인
-        if(!stamp.getUsers().getAccount().equals(account)) {
+//스탬프 소유자 체크
+        Users stampOwner = stamp.getUsers();
+
+        if (stampOwner == null ||
+                stampOwner.getAccount() == null ||
+                !stampOwner.getAccount().getAccountId().equals(account.getAccountId())) {
+
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
-
-        if(stamp.isFavorite()) {
+        // 이미 즐겨찾기인 경우
+        if (stamp.isFavorite()) {
             throw new ApplicationException(ErrorCode.ALREADY_FAVORITE_STAMP);
         }
 
@@ -50,18 +60,26 @@ public class StampFavoriteService {
     @Transactional
     public void deleteFavoriteStamp(Account account, Long stampId)
     {
-
+        //계정 체크
+        if (account == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
 
         Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
+        //스탬프 소유자 체크
+        Users stampOwner = stamp.getUsers();
+
         // 소유자 확인
-        if (!stamp.getUsers().getAccount().equals(account)) {
+        if (stampOwner == null ||
+                stampOwner.getAccount() == null ||
+                !stampOwner.getAccount().getAccountId().equals(account.getAccountId())) {
+
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
-
         // 이미 즐겨찾기가 아닌 경우
         if (!stamp.isFavorite()) {
             throw new ApplicationException(ErrorCode.NOT_FAVORITE_STAMP);

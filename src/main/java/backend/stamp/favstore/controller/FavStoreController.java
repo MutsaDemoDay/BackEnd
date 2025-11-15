@@ -52,14 +52,12 @@ public class FavStoreController {
 
     //즐겨찾기 매장 리스트 조회
     @Operation(summary = "매장 즐겨찾기 리스트 조회 api", description = "즐겨찾기 매장 리스트를 조회합니다.")
-
-
     @GetMapping
-    public ResponseEntity<ApplicationResponse<List<FavStoreListResponseDto>>> getMyFavStores(@AuthenticationPrincipal PrincipalDetails userDetail, @RequestParam double userLat,@RequestParam double userLon)
+    public ResponseEntity<ApplicationResponse<List<FavStoreListResponseDto>>> getMyFavStores(@AuthenticationPrincipal PrincipalDetails userDetail)
     {
         Account account = userDetail.getAccount();
 
-        List<FavStoreListResponseDto> response = favStoreService.getMyFavStores(account,userLat,userLon);
+        List<FavStoreListResponseDto> response = favStoreService.getMyFavStores(account);
         return ResponseEntity.ok(
                 ApplicationResponse.ok(response));
     }
