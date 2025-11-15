@@ -31,9 +31,6 @@ public class Account {
     @Enumerated(EnumType.STRING) // USER, MANAGER 타입을 저장
     private UserType userType;
 
-    @Column(name = "phone", length = 20)
-    private String phone;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 

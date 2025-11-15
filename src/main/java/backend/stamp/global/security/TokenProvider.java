@@ -36,6 +36,7 @@ public class TokenProvider {
 
     private static final long accessTokenExpirationTime = 7 * 24 * 60 * 60 * 1000L;
     private static final long refreshTokenExpirationTime = 30 * 24 * 60 * 60 * 1000L; //30일
+    private static final long resetTokenExpirationTime = 60 * 60 * 1000L; //1시간
 
     @PostConstruct
     protected void init() {
@@ -117,5 +118,28 @@ public class TokenProvider {
                 null,
                 principalDetails.getAuthorities()
         );
+    }
+
+    public String createResetToken(Account account) {
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + resetTokenExpirationTime);
+
+        return Jwts.builder()
+                .setSubject(account.getLoginId())
+                .claim("accountId", account.getAccountId())
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public Long getAccountId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("accountId", Long.class);
     }
 }

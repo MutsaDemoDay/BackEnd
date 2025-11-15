@@ -1,8 +1,6 @@
 package backend.stamp.auth.controller;
 import backend.stamp.auth.dto.request.*;
-import backend.stamp.auth.dto.response.ManagerOnboardingResponse;
-import backend.stamp.auth.dto.response.SignUpResponse;
-import backend.stamp.auth.dto.response.TokenReissueResponse;
+import backend.stamp.auth.dto.response.*;
 import backend.stamp.auth.kakao.KakaoInfo;
 import backend.stamp.auth.kakao.KakaoUser;
 import backend.stamp.auth.service.*;
@@ -33,6 +31,11 @@ public class AuthController {
     private final ManagerOnboardingService managerOnboardingService;
     private final TokenReissueService tokenReissueService;
     private final EmailService emailService;
+    private final UserFindService userFindService;
+    private final ManagerFindService managerFindService;
+    private final UserPasswordService userPasswordService;
+    private final ManagerPasswordService managerPasswordService;
+    private final ResetPasswordService resetPasswordService;
 
     @GetMapping("/login")
     public ResponseEntity<?> redirectLoginPage(
@@ -85,10 +88,6 @@ public class AuthController {
         return ApplicationResponse.ok(response);
     }
 
-    /**
-     * 로그아웃 API
-     * Access Token을 포함하여 요청하며, 서버에서 Refresh Token을 무효화합니다.
-     */
     @PostMapping("/logout")
     public ApplicationResponse<Void> logout() {
         logoutService.logout();
@@ -132,5 +131,37 @@ public class AuthController {
         return ApplicationResponse.ok("이메일 인증이 완료되었습니다.");
     }
 
+    @PostMapping("/user/findId")
+    public ApplicationResponse<FindIdResponse> findUserId(@Valid @RequestBody FindUserIdRequest request) {
+        FindIdResponse response = userFindService.findUserId(request);
+        return ApplicationResponse.ok(response);
+    }
+
+    @PostMapping("/user/findPassword")
+    public ApplicationResponse<FindPasswordResponse> findUserPassword(@Valid @RequestBody FindUserPasswordRequest request) {
+        FindPasswordResponse response = userPasswordService.findUserPassword(request);
+        return ApplicationResponse.ok(response);
+    }
+
+    @PostMapping("/manager/findId")
+    public ApplicationResponse<FindIdResponse> findManagerId(@Valid @RequestBody FindManagerIdRequest request) {
+        FindIdResponse response = managerFindService.findManagerId(request);
+        return ApplicationResponse.ok(response);
+    }
+
+    @PostMapping("/manager/findPassword")
+    public ApplicationResponse<FindPasswordResponse> findManagerPassword(@Valid @RequestBody FindManagerPasswordRequest request) {
+        FindPasswordResponse response = managerPasswordService.findManagerPassword(request);
+        return ApplicationResponse.ok(response);
+    }
+
+    @PatchMapping("/resetPassword")
+    public ApplicationResponse<Void> resetPassword(
+            @RequestHeader("resetToken") String resetToken,
+            @Valid @RequestBody ResetPasswordRequest request) {
+
+        resetPasswordService.resetPassword(resetToken, request);
+        return ApplicationResponse.ok(null);
+    }
 
 }

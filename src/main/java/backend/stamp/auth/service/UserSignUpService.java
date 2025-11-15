@@ -32,16 +32,13 @@ public class UserSignUpService {
     public SignUpResponse signUp(UserSignUpRequest request) {
 
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            // TODO: ErrorCode.PASSWORD_MISMATCH 로 변경 필요
-            throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
+            throw new ApplicationException(ErrorCode.PASSWORD_MISMATCH);
         }
         if (accountRepository.findByLoginId(request.getLoginId()).isPresent()) {
-            // TODO: ErrorCode.DUPLICATE_LOGIN_ID 로 변경 필요
-            throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
+            throw new ApplicationException(ErrorCode.DUPLICATE_LOGIN_ID);
         }
         if (accountRepository.findByEmail(request.getEmail()).isPresent()) {
-            // TODO: ErrorCode.DUPLICATE_EMAIL 로 변경 필요
-            throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
+            throw new ApplicationException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -52,7 +49,6 @@ public class UserSignUpService {
                 request.getEmail(),
                 encodedPassword,
                 UserType.USER,
-                request.getPhone(),
                 LocalDateTime.now()
         );
         newAccount = accountRepository.save(newAccount);

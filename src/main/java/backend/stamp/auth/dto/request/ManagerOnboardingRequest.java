@@ -28,12 +28,7 @@ public class ManagerOnboardingRequest {
     private Double latitude;
     private Double longitude;
 
-    @NotNull(message = "대표 번호 사용 여부는 필수입니다.")
-    private Boolean useManagerPhoneNumber; // 휴대폰 번호와 동일 여부
-
-    // useManagerPhoneNumber가 false일 때만 사용
-    @Pattern(regexp = "^\\d{2,4}-\\d{3,4}-\\d{4}$", message = "유효한 전화번호 형식(XXX-XXXX-XXXX)이 아닙니다.")
-    private String storeTel;
+    private String phone;
 
     @NotEmpty(message = "영업시간 정보는 최소 하나 이상 필요합니다.")
     @Valid

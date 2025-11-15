@@ -27,9 +27,6 @@ public class Manager {
     @JoinColumn(name = "account_fk", nullable = false, unique = true)
     private Account account;
 
-    @Column(nullable = false, unique = true)
-    private String nickname;
-
     @Column(nullable = false)
     private String address;
 
