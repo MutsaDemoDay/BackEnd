@@ -38,6 +38,10 @@ public enum ErrorCode {
     STAMP_ALREADY_ADDED_FOR_ORDER(HttpStatus.BAD_REQUEST, 413, "이미 이 주문에 대해 스탬프가 적립되었습니다."),
     STAMP_BOARD_NOT_FOUND_FOR_STORE(HttpStatus.NOT_FOUND, 414, "해당 매장의 스탬프판이 없습니다."),
 
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 415, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+    DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, 416, "이미 사용 중인 아이디입니다."),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, 417, "이미 사용 중인 이메일 주소입니다."),
+
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
