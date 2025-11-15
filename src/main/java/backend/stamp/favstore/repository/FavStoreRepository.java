@@ -21,5 +21,6 @@ public interface FavStoreRepository extends JpaRepository<FavStore, Long> {
     List<Long> findFavStoreIdsByUsers_UserId(Long userId);
 
 
+    List<FavStore> findByUsers(Users users);
     List<Long> findFavStoreIdsByUsers_Account(Account account);
 }

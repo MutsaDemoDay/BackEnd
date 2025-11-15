@@ -15,4 +15,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByName(String name);
     Optional<Store> findById(Long id);
     boolean existsByVerificationCode(String code);
+    //실제 매장 정보 조회
+    List<Store> findByIdIn(List<Long> ids);
+
 }
