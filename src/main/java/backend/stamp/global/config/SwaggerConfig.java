@@ -30,7 +30,11 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/"))
+                .addServersItem(new Server().url("http://localhost:8080")
+                        .description("Local"))
+                .addServersItem(new Server()
+                        .url("https://daango.store")
+                        .description("Production"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);
