@@ -27,9 +27,6 @@ public class Users {
     @Column(name="user_id",nullable = false)
     private Long userId;
 
-    @Column(name = "email", unique = true, length = 255)
-    private String email;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_fk", unique = true) // accountId 대신 명확히 account_fk로 명시
     private Account account;
