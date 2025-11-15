@@ -46,6 +46,8 @@ public enum ErrorCode {
     COUPON_NOT_FOUND(HttpStatus.BAD_REQUEST,418,"해당 쿠폰을 찾을 수 없습니다."),
     INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, 419,"매장 인증 코드가 올바르지 않습니다."),
     COUPON_ALREADY_USED( HttpStatus.BAD_REQUEST,420, "이미 사용된 쿠폰입니다."),
+    STORE_CREATED_DATE_NOT_FOUND(HttpStatus.BAD_REQUEST,421,"매장의 등록 날짜가 생성되지 않았습니다."),
+    EVENT_NOT_FOUND(HttpStatus.BAD_REQUEST,422,"등록된 이벤트가 없습니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
