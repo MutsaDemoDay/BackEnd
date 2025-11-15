@@ -57,8 +57,9 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
         );
-        http.addFilterBefore(exceptionFilter, JwtFilter.class);
+
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(exceptionFilter, JwtFilter.class);
 
         // 요청 URI별 권한 설정
         http.authorizeHttpRequests((authorize) ->
