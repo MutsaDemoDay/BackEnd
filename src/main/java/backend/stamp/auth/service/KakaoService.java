@@ -67,30 +67,25 @@ public class KakaoService {
         Users user;
 
         if (existingAccount.isEmpty()) {
-            //Account가 없는 경우: 소셜 회원가입 처리
 
             String tempLoginId = "kakao_" + UUID.randomUUID().toString().substring(0, 8);
             String tempPassword = passwordEncoder.encode(UUID.randomUUID().toString());
 
-            // 필수 필드인 전화번호를 알 수 없으므로 임시 값 설정 ("00000000000")
 
             account = new Account(
-                    null, // accountId
+                    null,
                     tempLoginId,
-                    email, // Account에 email 저장
-                    tempPassword, // 임시 비밀번호
-                    UserType.USER, // 유저 타입 설정
-                    "00000000000", // 임시 전화번호
+                    email,
+                    tempPassword,
+                    UserType.USER,
                     LocalDateTime.now()
             );
             account = accountRepository.save(account);
 
-            // Users 엔티티 생성 및 Account 연결
             user = Users.createSocialUser(nickname, account);
             user = usersRepository.save(user);
 
         } else {
-            //Account가 이미 있는 경우: 로그인 처리
             account = existingAccount.get();
             user = usersRepository.findByAccount(account)
                     .orElseThrow(() -> new IllegalStateException("Account exists but corresponding User not found."));
