@@ -2,21 +2,18 @@ package backend.stamp.store.entity;
 
 import backend.stamp.businesshour.entity.BusinessHour;
 import backend.stamp.coupon.entity.Coupon;
-import backend.stamp.event.entity.Event;
+import backend.stamp.eventstore.entity.EventStore;
 import backend.stamp.favstore.entity.FavStore;
+import backend.stamp.global.entity.BaseEntity;
 import backend.stamp.manager.entity.Manager;
 import backend.stamp.order.entity.Order;
 import backend.stamp.review.entity.Review;
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.storemenu.entity.StoreMenu;
-import backend.stamp.users.entity.Gender;
-import backend.stamp.users.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Store {
+public class Store extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="store_id")
@@ -108,9 +105,8 @@ public class Store {
     private Manager manager;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<EventStore> EventStores = new ArrayList<>();
 
 
     //ai 호출용

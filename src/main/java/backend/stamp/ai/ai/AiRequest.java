@@ -1,5 +1,5 @@
 package backend.stamp.ai.ai;
-import backend.stamp.ai.ai.store.EventStore;
+import backend.stamp.ai.ai.store.EventStoreDto;
 import backend.stamp.ai.ai.store.NewStore;
 import backend.stamp.ai.ai.store.PopularStore;
 import backend.stamp.ai.ai.subdtos.UserLocation;
@@ -23,7 +23,7 @@ public class AiRequest {
     private UserLocation location;
 
     @JsonProperty("event_stores")
-    private List<EventStore> eventStores;
+    private List<EventStoreDto> eventStoreDtos;
 
     @JsonProperty("new_stores")
     private List<NewStore> newStores;

@@ -1,8 +1,7 @@
 package backend.stamp.event.entity;
 
 
-import backend.stamp.coupon.entity.Coupon;
-import backend.stamp.store.entity.Store;
+import backend.stamp.eventstore.entity.EventStore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Event {
 
     @Id
@@ -23,27 +23,25 @@ public class Event {
     @Column(name="event_id")
     private Long id;
 
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EventType eventType;
+
     @Column(nullable = false)
     private String title;
 
     @Column(length=1000, nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private LocalDateTime startDate;
-
-    @Column(nullable = false)
-    private LocalDateTime endDate;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Store> stores = new ArrayList<>();
+    private List<EventStore> EventStores = new ArrayList<>();
 
 
-    //조회수
-    @Column(nullable = false)
-    private int viewed = 0;//기본값
+
+    public void addStore(EventStore eventStore) {
+        EventStores.add(eventStore);
+    }
 
 }
