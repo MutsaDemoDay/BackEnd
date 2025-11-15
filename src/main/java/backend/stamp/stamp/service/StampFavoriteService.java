@@ -1,6 +1,7 @@
 package backend.stamp.stamp.service;
 
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.order.repository.OrderRepository;
@@ -25,16 +26,16 @@ public class StampFavoriteService {
     // 스탬프 즐겨찾기 설정
 
     @Transactional
-    public void createFavoriteStamp(Long userId, Long stampId)
+    public void createFavoriteStamp(Account account, Long stampId)
     {
-        Users users = usersRepository.findByAccount_AccountId(userId)
+        Users users = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
         //소유자 확인
-        if(!stamp.getUsers().getAccount().getAccountId().equals(userId)) {
+        if(!stamp.getUsers().getAccount().equals(account)) {
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
 
@@ -47,17 +48,17 @@ public class StampFavoriteService {
 
     //스탬프 즐겨찾기 취소
     @Transactional
-    public void deleteFavoriteStamp(Long userId, Long stampId)
+    public void deleteFavoriteStamp(Account account, Long stampId)
     {
 
-        Users users = usersRepository.findByAccount_AccountId(userId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
+        Users users = usersRepository.findByAccount(account)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         Stamp stamp =stampRepository.findById(stampId)
                 .orElseThrow(()->new ApplicationException(ErrorCode.STAMP_NOT_FOUND));
 
         // 소유자 확인
-        if (!stamp.getUsers().getAccount().getAccountId().equals(userId)) {
+        if (!stamp.getUsers().getAccount().equals(account)) {
             throw new ApplicationException(ErrorCode.FORBIDDEN);
         }
 

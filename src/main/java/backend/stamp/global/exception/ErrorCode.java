@@ -14,6 +14,8 @@ public enum ErrorCode {
     // 400: Bad Request
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, 400, "사용자가 없습니다."),
     INVALID_JWT_EXCEPTION(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 토큰입니다"),
+    AUTHENTICATION_REQUIRED(HttpStatus.UNAUTHORIZED, 402, "로그인이 필요합니다."),
+
     FORBIDDEN(HttpStatus.FORBIDDEN, 403, "제한된 접근입니다."),
     KAKAO_TOKEN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 404, "토큰 발급에서 오류가 발생했습니다."),
 
@@ -41,7 +43,9 @@ public enum ErrorCode {
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 415, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
     DUPLICATE_LOGIN_ID(HttpStatus.BAD_REQUEST, 416, "이미 사용 중인 아이디입니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, 417, "이미 사용 중인 이메일 주소입니다."),
-
+    COUPON_NOT_FOUND(HttpStatus.BAD_REQUEST,418,"해당 쿠폰을 찾을 수 없습니다."),
+    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, 419,"매장 인증 코드가 올바르지 않습니다."),
+    COUPON_ALREADY_USED( HttpStatus.BAD_REQUEST,420, "이미 사용된 쿠폰입니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),

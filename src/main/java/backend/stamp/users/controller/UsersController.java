@@ -1,5 +1,6 @@
 package backend.stamp.users.controller;
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.coupon.dto.CouponResponseDto;
 import backend.stamp.coupon.service.CouponService;
 import backend.stamp.global.security.PrincipalDetails;
@@ -46,8 +47,8 @@ public class UsersController {
     public ResponseEntity<List<MyStampResponseDto>> getMyStamps(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
 
-        Long userId = userDetails.getAccount().getAccountId();
-        List<MyStampResponseDto> myStamps = stampDetailService.getMyStamps(userId);
+        Account account = userDetails.getAccount();
+        List<MyStampResponseDto> myStamps = stampDetailService.getMyStamps(account);
         return ResponseEntity.ok(myStamps);
     }
 
@@ -58,7 +59,7 @@ public class UsersController {
     public ResponseEntity<List<StampHistoryResponseDto>> getMyStampHistory(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Long userId = principalDetails.getAccount().getAccountId();
-        return ResponseEntity.ok(stampDetailService.getStampHistory(userId));
+        Account account = principalDetails.getAccount();
+        return ResponseEntity.ok(stampDetailService.getStampHistory(account));
     }
 }

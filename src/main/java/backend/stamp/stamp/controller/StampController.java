@@ -1,6 +1,7 @@
 package backend.stamp.stamp.controller;
 
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
 import backend.stamp.stamp.dto.*;
@@ -34,9 +35,9 @@ public class StampController {
     public ResponseEntity<StampCreateResponseDto> createStamp(@AuthenticationPrincipal PrincipalDetails userDetail, @RequestBody StampCreateRequestDto requestDto) {
 
         //로그인한 유저 식별용 갖고 오기
-        Long userId = userDetail.getAccount().getAccountId();
+        Account account = userDetail.getAccount();
 
-        return ResponseEntity.ok(stampService.createStamp(userId,requestDto));
+        return ResponseEntity.ok(stampService.createStamp(account,requestDto));
 
     }
 
@@ -46,11 +47,11 @@ public class StampController {
     @PostMapping("/add")
     public ResponseEntity<StampAddResponseDto> addStamp(@AuthenticationPrincipal PrincipalDetails userDetail,@RequestBody StampAddRequestDto requestDto) {
        //유저
-        Long userId = userDetail.getAccount().getAccountId();
+        Account account = userDetail.getAccount();
         Long storeId = requestDto.getStoreId();
         Long orderId = requestDto.getOrderId();
 
-        StampAddResponseDto response = stampService.addStamp(userId, storeId, orderId);
+        StampAddResponseDto response = stampService.addStamp(account, storeId, orderId);
     //서비스 호출
 
         return ResponseEntity.ok(response);
@@ -66,8 +67,8 @@ public class StampController {
             @AuthenticationPrincipal PrincipalDetails userDetail,
             @PathVariable Long stampId) {
 
-        Long userId = userDetail.getAccount().getAccountId();
-        stampService.deleteStamp(userId, stampId);
+        Account account = userDetail.getAccount();
+        stampService.deleteStamp(account, stampId);
 
         return ResponseEntity.ok(ApplicationResponse.ok(null));
     }
@@ -77,10 +78,10 @@ public class StampController {
     @Operation(summary = "스탬프 개별조회 api", description = "유저가 자신의 스탬프를 개별적으로 조회합니다.")
     @GetMapping("/{stampId}")
     public ResponseEntity<ApplicationResponse<MyStampResponseDto>> getStampDetail(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long stampId) {
-        Long userId = userDetail.getAccount().getAccountId();
+        Account account = userDetail.getAccount();
 
         //값 받아오기
-        MyStampResponseDto responseDto = stampDetailService.getStampDetail(userId, stampId);
+        MyStampResponseDto responseDto = stampDetailService.getStampDetail(account, stampId);
         return ResponseEntity.ok(ApplicationResponse.ok(responseDto));
     }
 

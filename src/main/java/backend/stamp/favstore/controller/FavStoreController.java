@@ -1,5 +1,6 @@
 package backend.stamp.favstore.controller;
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.favstore.dto.FavStoreListResponseDto;
 import backend.stamp.favstore.service.FavStoreService;
 import backend.stamp.global.exception.ApplicationResponse;
@@ -30,10 +31,10 @@ public class FavStoreController {
     public ResponseEntity<ApplicationResponse<Void>> createFavStore(@AuthenticationPrincipal PrincipalDetails userDetail,  @PathVariable Long storeId) {
 
         //유저 조회
-        Long userId =userDetail.getAccount().getAccountId();
+        Account account =userDetail.getAccount();
 
         //매장 조회
-        favStoreService.createFavStore(userId,storeId);
+        favStoreService.createFavStore(account,storeId);
         return ResponseEntity.ok(ApplicationResponse.ok(null));
 
     }
@@ -43,8 +44,8 @@ public class FavStoreController {
     @DeleteMapping("/{storeId}")
     public ResponseEntity<ApplicationResponse<Void>> deleteFavStore(@AuthenticationPrincipal PrincipalDetails userDetail, @PathVariable Long storeId) {
 
-        Long userId = userDetail.getAccount().getAccountId();
-        favStoreService.deleteFavStore(userId, storeId);
+        Account account = userDetail.getAccount();
+        favStoreService.deleteFavStore(account, storeId);
 
         return ResponseEntity.ok(ApplicationResponse.ok(null));
     }
@@ -56,9 +57,9 @@ public class FavStoreController {
     @GetMapping
     public ResponseEntity<ApplicationResponse<List<FavStoreListResponseDto>>> getMyFavStores(@AuthenticationPrincipal PrincipalDetails userDetail, @RequestParam double userLat,@RequestParam double userLon)
     {
-        Long userId = userDetail.getAccount().getAccountId();
+        Account account = userDetail.getAccount();
 
-        List<FavStoreListResponseDto> response = favStoreService.getMyFavStores(userId,userLat,userLon);
+        List<FavStoreListResponseDto> response = favStoreService.getMyFavStores(account,userLat,userLon);
         return ResponseEntity.ok(
                 ApplicationResponse.ok(response));
     }
