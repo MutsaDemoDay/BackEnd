@@ -27,9 +27,9 @@ public class QRCodeController {
         return ApplicationResponse.ok("스탬프가 정상적으로 적립되었습니다.");
     }
     @GetMapping("/generate")
-    public ApplicationResponse<String> generateQRCode(@RequestParam("storeCode") String storeCode) {
+    public ApplicationResponse<String> generateQRCode(@RequestParam("email") String email) {
         try {
-            String base64Image = qrservice.generateQRCode(storeCode);
+            String base64Image = qrservice.generateQRCode(email);
             return ApplicationResponse.ok(base64Image);
         } catch (Exception e) {
             return ApplicationResponse.error("QR 생성 실패: " + e.getMessage());

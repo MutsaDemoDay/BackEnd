@@ -5,6 +5,8 @@ import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +25,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
 
     //유저로 조회
     List<Stamp> findByUsers(Users users);
+    @Query("SELECT s.users.userId FROM Stamp s WHERE s.store.name = :storeName")
+    List<Long> findUserIdsByStoreName(@Param("storeName") String storeName);
 
 }
