@@ -27,15 +27,6 @@ public class Manager {
     @JoinColumn(name = "account_fk", nullable = false, unique = true)
     private Account account;
 
-    @Column(nullable = false)
-    private String address;
-
-    @Column(name = "latitude")
-    private Double latitude;
-
-    @Column(name = "longitude")
-    private Double longitude;
-
     @Column(nullable = false, unique = true)
     private String businessNum;
 

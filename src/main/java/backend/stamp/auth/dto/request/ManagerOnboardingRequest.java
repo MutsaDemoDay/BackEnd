@@ -22,12 +22,6 @@ public class ManagerOnboardingRequest {
 
     private Category category;
 
-    @NotBlank(message = "주소는 필수 입력값입니다.")
-    private String address;
-
-    private Double latitude;
-    private Double longitude;
-
     private String phone;
 
     @NotEmpty(message = "영업시간 정보는 최소 하나 이상 필요합니다.")
