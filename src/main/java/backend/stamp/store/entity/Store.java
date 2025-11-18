@@ -32,10 +32,10 @@ public class Store extends BaseEntity {
     private Long id;
 
 
-    @Column(name = "store_name",nullable = false)
+    @Column(name = "store_name")
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String address;
 
     private Double latitude;
@@ -61,21 +61,21 @@ public class Store extends BaseEntity {
 
     //적립 금액 기준
 
-    @Column(name = "required_amount",nullable = false)
+    @Column(name = "required_amount")
     private Integer requiredAmount;
 
-    @Column(name = "reward",nullable = false)
+    @Column(name = "reward")
     private String reward;
 
     //스탬프 템플릿 내에 보여지는 리워드
-    @Column(name = "stamp_reward",nullable = false)
+    @Column(name = "stamp_reward")
     private String stampReward;
 
     //스탬프 maxCount 가게별로 정하니까
-    @Column(name = "max_count", nullable = false)
+    @Column(name = "max_count")
     private Integer maxCount;
 
-    @Column(name = "verification_code", nullable = false, unique = true, length = 4)
+    @Column(name = "verification_code", unique = true, length = 4)
     private String verificationCode;
 
     @Enumerated(EnumType.STRING)
