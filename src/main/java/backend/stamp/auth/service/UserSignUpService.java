@@ -55,10 +55,7 @@ public class UserSignUpService {
 
         Users newUser = Users.builder()
                 .account(newAccount)
-                .address(request.getAddress())
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
-                .nickname("임시닉네임_" + newAccount.getLoginId())
+                .nickname(request.getNickname())
                 .stampSum(0)
                 .build();
         newUser = usersRepository.save(newUser);

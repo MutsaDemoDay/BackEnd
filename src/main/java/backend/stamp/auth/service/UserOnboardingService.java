@@ -34,7 +34,9 @@ public class UserOnboardingService {
         Users user = usersRepository.findByAccount(currentAccount)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        user.setNickname(request.getNickname());
+        user.setAddress(request.getAddress());
+        user.setLatitude(request.getLatitude());
+        user.setLongitude(request.getLongitude());
         user.setGender(request.getGender());
 
         List<Long> safeFavStoreIds = Optional.ofNullable(request.getFavStoreId())

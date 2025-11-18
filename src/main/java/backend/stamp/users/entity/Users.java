@@ -31,7 +31,7 @@ public class Users {
     @JoinColumn(name = "account_fk", unique = true) // accountId 대신 명확히 account_fk로 명시
     private Account account;
 
-    @Column(name = "nickname", unique = true, length = 255)
+    @Column(name = "nickname", length = 255)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
