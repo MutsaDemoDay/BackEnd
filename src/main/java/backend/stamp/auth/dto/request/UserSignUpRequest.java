@@ -24,9 +24,7 @@ public class UserSignUpRequest {
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
-    @NotBlank(message = "주소는 필수 입력값입니다.")
-    private String address;
+    @NotBlank(message = "닉네임은 필수 입력값입니다.")
+    private String nickname;
 
-    private Double latitude;
-    private Double longitude;
 }

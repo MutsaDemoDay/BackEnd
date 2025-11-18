@@ -14,12 +14,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class UserOnboardingRequest {
-    @NotBlank(message = "닉네임은 필수 입력값입니다.")
-    @Size(min = 2, max = 15, message = "닉네임은 2자 이상 15자 이하로 입력해주세요.")
-    private String nickname;
 
     @NotNull(message = "성별은 필수 입력값입니다.")
     private Gender gender;
+
+    @NotBlank(message = "주소는 필수 입력값입니다.")
+    private String address;
+
+    private Double latitude;
+    private Double longitude;
 
     private List<Long> favStoreId;
 }
