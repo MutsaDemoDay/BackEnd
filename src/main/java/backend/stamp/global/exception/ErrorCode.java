@@ -55,8 +55,11 @@ public enum ErrorCode {
     // 이메일 관련 추가 에러 코드 (기존 형식과 동일)
     EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 503, "이메일 전송에 실패했습니다."),
     EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, 504, "요청하신 이메일의 인증번호가 존재하지 않습니다."),
-    INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, 505, "이메일 인증번호가 일치하지 않습니다.");
+    INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, 505, "이메일 인증번호가 일치하지 않습니다."),
 
+
+    // object 업로드 실패
+    OBJECT_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 600, "이미지 업로드에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final Integer code;

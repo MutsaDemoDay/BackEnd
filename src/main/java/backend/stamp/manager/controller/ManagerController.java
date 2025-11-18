@@ -1,0 +1,40 @@
+package backend.stamp.manager.controller;
+
+
+import backend.stamp.manager.dto.StampSettingRequest;
+import backend.stamp.manager.service.ManagerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/stamps")
+
+@Tag(name = "점주 페이지", description = "점주 페이지 API")
+public class ManagerController {
+    private final ManagerService managerService;
+    @PostMapping(value = "/settings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> setStamp(
+            @RequestPart("data") String data,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        StampSettingRequest request = mapper.readValue(data, StampSettingRequest.class);
+        managerService.setStamp(request, image);
+        return ResponseEntity.ok("스탬프 설정 완료");
+    }
+//    @GetMapping()
+//    public ResponseEntity<> stampSetting(){
+//
+//    }
+//    @GetMapping()
+//    public ResponseEntity<> getCustomers(){
+//
+//    }
+}
