@@ -38,10 +38,6 @@ public class UserPasswordService {
         Users user = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        if (!user.getNickname().equals(request.getNickname())) {
-            throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
-        }
-
         String resetToken = tokenProvider.createResetToken(account);
 
         ResetToken resetTokenEntity = ResetToken.builder()
