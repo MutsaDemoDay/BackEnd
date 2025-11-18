@@ -80,15 +80,15 @@ public class QRCodeService {
     }
 
     /**
-     * 점주 QR코드 생성 로직
-     * @param storeCode
+     * 유저 QR코드 생성 로직
+     * @param email
      * @return
      * @throws Exception
      */
 
-    public String generateQRCode(String storeCode) throws Exception {
+    public String generateQRCode(String email) throws Exception {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(storeCode, BarcodeFormat.QR_CODE, 300, 300);
+        BitMatrix bitMatrix = qrCodeWriter.encode(email, BarcodeFormat.QR_CODE, 300, 300);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "png", baos);
