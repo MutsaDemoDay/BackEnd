@@ -25,8 +25,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
 
     //유저로 조회
     List<Stamp> findByUsers(Users users);
-
-//    @Query("SELECT DISTINCT s.user.id FROM Stamp s WHERE s.store.id = :storeId")
-//    List<Long> findDistinctUserIdsByStoreId(@Param("storeId") Long storeId);
+    @Query("SELECT s.users.userId FROM Stamp s WHERE s.store.name = :storeName")
+    List<Long> findUserIdsByStoreName(@Param("storeName") String storeName);
 
 }

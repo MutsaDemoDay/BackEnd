@@ -13,7 +13,10 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByAccount(Account account);
     Optional<Users>findByAccount_AccountId(Long accountId);
 
-//    @Query("SELECT u.nickname FROM User u WHERE u.id IN :userIds")
-//    List<String> findNicknamesByUserIds(@Param("userIds") List<Long> userIds);
+    @Query("SELECT u FROM Users u " +
+            "LEFT JOIN FETCH u.account " +
+            "LEFT JOIN FETCH u.level " +
+            "WHERE u.userId = :userId")
+    Optional<Users> findUserWithAccountAndLevel(@Param("userId") Long userId);
 
 }

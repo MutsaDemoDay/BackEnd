@@ -1,7 +1,9 @@
 package backend.stamp.manager.service;
 
+import backend.stamp.account.entity.Account;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
+import backend.stamp.level.entity.Level;
 import backend.stamp.manager.dto.StampCustomerResponse;
 import backend.stamp.manager.dto.StampSettingRequest;
 import backend.stamp.manager.dto.StampSettingResponse;
@@ -9,12 +11,14 @@ import backend.stamp.manager.object.ObjectStorageService;
 import backend.stamp.stamp.repository.StampRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
+import backend.stamp.users.entity.Users;
 import backend.stamp.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,8 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerService {
     private final StoreRepository storeRepository;
-    private final StampRepository stampRepository;
     private final UsersRepository usersRepository;
+    private final StampRepository stampRepository;
     private final ObjectStorageService objectStorageService;
     public String setStamp(StampSettingRequest request, MultipartFile image){
         Store store = storeRepository.findByName(request.storeName())
@@ -56,17 +60,37 @@ public class ManagerService {
         );
     }
 
-//    public StampCustomerResponse getCustomers(String name){
-//        Store store = storeRepository.findByName(name)
-//                .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
-//        // id
-//        List<Long> userIds = stampRepository.findDistinctUserIdsByStoreId(store.getId());
-//        if (userIds.isEmpty()) {
-//            return List.of();
-//        }
-//        // 닉네임
-//        List<String> nicknames = usersRepository.findNicknamesByUserIds(userIds);
-//        // 가입일
-//        // 레벨
-//    }
+
+    public List<StampCustomerResponse> getCustomers(String storeName) {
+
+        // 1. 스토어 존재하는지 체크
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        // 2. 해당 store에 찍은 모든 userId 조회
+        List<Long> userIds = stampRepository.findUserIdsByStoreName(storeName);
+
+        // 3. userId 각각의 상세 정보 조회
+        List<StampCustomerResponse> list = new ArrayList<>();
+
+        for (Long userId : userIds) {
+
+            Users user = usersRepository.findUserWithAccountAndLevel(userId)
+                    .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+            Account account = user.getAccount();
+            Level level = user.getLevel();
+
+            list.add(
+                    new StampCustomerResponse(
+                            user.getUserId(),
+                            user.getNickname(),
+                            account != null ? account.getCreatedAt() : null,
+                            level != null ? level.getLevel() : null
+                    )
+            );
+        }
+
+        return list;
+    }
 }

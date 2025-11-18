@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stamps")
@@ -51,10 +53,10 @@ public class ManagerController {
         StampSettingResponse response = managerService.getStamp(storeName);
         return ResponseEntity.ok(response);
     }
-//    @GetMapping("/customers")
-//    public ApplicationResponse<StampCustomerResponse> getCustomers(@RequestParam String storeName){
-//        StampCustomerResponse response = managerService.getCustomers(storeName);
-//        return ApplicationResponse.ok(response);
-//
-//    }
+    @GetMapping("/customers")
+    public ApplicationResponse<List<StampCustomerResponse>> getCustomers(@RequestParam String storeName){
+        List<StampCustomerResponse> response = managerService.getCustomers(storeName);
+        return ApplicationResponse.ok(response);
+
+    }
 }
