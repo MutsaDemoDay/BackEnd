@@ -28,6 +28,7 @@ public class EventService {
     private final StoreRepository storeRepository;
 
     // 이벤트 신청가능한 카테고리 조회
+
     public EventCategoryListResponseDto getAvailableCategories(Account account)
     {
 
@@ -94,6 +95,7 @@ public class EventService {
                 .availableCategories(dtoList)
                 .build();
     }
+
 
     }
 

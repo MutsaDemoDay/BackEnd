@@ -6,6 +6,7 @@ import backend.stamp.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -36,6 +37,13 @@ public class EventStore {
 
     @Column(nullable = false)
     private LocalDateTime appliedAt; // 참여 신청 날짜
+
+    @Column(nullable = false)
+    private LocalDate startDate;//이벤트 시작 날짜
+
+    @Column(nullable = false)
+    private LocalDate endDate;//이벤트 끝난 날짜
+
 
     @Column(nullable = false)
     private boolean active; // 참여중인지 여부

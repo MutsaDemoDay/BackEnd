@@ -69,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/member/**").authenticated()
-                        // 이외의 모든 요청은 인증 정보 필요
+                        // 이외의 모든 요청은 인증 정보 필요 없음
                         .anyRequest().permitAll());
 
         // JWT 관련 환경 설정
