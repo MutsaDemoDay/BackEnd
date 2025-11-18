@@ -35,6 +35,7 @@ public class Store extends BaseEntity {
     @Column(name = "store_name")
     private String name;
 
+    @Column
     private String address;
 
     private Double latitude;
@@ -100,7 +101,7 @@ public class Store extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "manager_id", nullable = false)
     private Manager manager;
 
 

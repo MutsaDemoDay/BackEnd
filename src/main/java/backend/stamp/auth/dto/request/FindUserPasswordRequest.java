@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FindUserPasswordRequest {
-    private String nickname;
     private String loginId;
     private String email;
 }

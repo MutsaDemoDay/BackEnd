@@ -8,6 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FindUserIdRequest {
-    private String nickname;
     private String email;
 }

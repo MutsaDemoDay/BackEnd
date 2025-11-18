@@ -28,10 +28,6 @@ public class UserFindService {
         Users user = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        if (!user.getNickname().equals(request.getNickname())) {
-            throw new ApplicationException(ErrorCode.USER_NOT_FOUND);
-        }
-
         return FindIdResponse.builder()
                 .loginId(account.getLoginId())
                 .createdAt(account.getCreatedAt().toLocalDate())
