@@ -3,6 +3,7 @@ package backend.stamp.manager.controller;
 
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.manager.dto.StampSettingRequest;
+import backend.stamp.manager.dto.StampSettingResponse;
 import backend.stamp.manager.service.ManagerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,10 +31,11 @@ public class ManagerController {
         String imgUrl = managerService.setStamp(request, image);
         return ResponseEntity.ok(ApplicationResponse.ok(imgUrl));
     }
-//    @GetMapping()
-//    public ResponseEntity<> stampSetting(){
-//
-//    }
+    @GetMapping("/settings")
+    public ResponseEntity<?> getSetting(@RequestParam String storeName) {
+        StampSettingResponse response = managerService.getStamp(storeName);
+        return ResponseEntity.ok(response);
+    }
 //    @GetMapping()
 //    public ResponseEntity<> getCustomers(){
 //

@@ -3,6 +3,7 @@ package backend.stamp.manager.service;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.manager.dto.StampSettingRequest;
+import backend.stamp.manager.dto.StampSettingResponse;
 import backend.stamp.manager.object.ObjectStorageService;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -34,5 +35,17 @@ public class ManagerService {
         }
         storeRepository.save(store);
         return imageUrl;
+    }
+
+    public StampSettingResponse getStamp(String name){
+        Store store = storeRepository.findByName(name)
+                .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        return new StampSettingResponse(
+                store.getName(),
+                store.getRequiredAmount(),
+                store.getReward(),
+                store.getMaxCount(),
+                store.getStampImageUrl()
+        );
     }
 }
