@@ -1,6 +1,7 @@
 package backend.stamp.manager.controller;
 
 
+import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.manager.dto.StampSettingRequest;
 import backend.stamp.manager.service.ManagerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,8 +27,8 @@ public class ManagerController {
     ) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         StampSettingRequest request = mapper.readValue(data, StampSettingRequest.class);
-        managerService.setStamp(request, image);
-        return ResponseEntity.ok("스탬프 설정 완료");
+        String imgUrl = managerService.setStamp(request, image);
+        return ResponseEntity.ok(ApplicationResponse.ok(imgUrl));
     }
 //    @GetMapping()
 //    public ResponseEntity<> stampSetting(){

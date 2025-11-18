@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ManagerService {
     private final StoreRepository storeRepository;
     private final ObjectStorageService objectStorageService;
-    public void setStamp(StampSettingRequest request, MultipartFile image){
+    public String setStamp(StampSettingRequest request, MultipartFile image){
         Store store = storeRepository.findByName(request.storeName())
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
         //이미지
@@ -33,5 +33,6 @@ public class ManagerService {
             store.setStampImageUrl(imageUrl);
         }
         storeRepository.save(store);
+        return imageUrl;
     }
 }

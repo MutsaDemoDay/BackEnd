@@ -1,5 +1,6 @@
 package backend.stamp.manager.object;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -32,12 +33,17 @@ public class NcpObjectStorageConfig {
 
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
+        ClientConfiguration clientConfig = new ClientConfiguration();
+        clientConfig.setSignerOverride("S3SignerType");
+
         return AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(
                         new AwsClientBuilder.EndpointConfiguration(endpoint, region)
                 )
-                .withPathStyleAccessEnabled(true)  // NCP 설정
+                .withPathStyleAccessEnabled(true)
+                .withClientConfiguration(clientConfig)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .disableChunkedEncoding()  // NCP 설정
                 .build();
     }
 }
