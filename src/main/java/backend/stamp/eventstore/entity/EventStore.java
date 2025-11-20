@@ -48,4 +48,9 @@ public class EventStore {
     @Column(nullable = false)
     private boolean active; // 참여중인지 여부
 
+    @PrePersist
+    public void prePersist() {
+        this.appliedAt = LocalDateTime.now();
+    }
+
 }
