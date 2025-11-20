@@ -40,6 +40,7 @@ public class EventStoreService {
         //오늘날짜 조회
         LocalDate today = LocalDate.now();
 
+
         //DB 리스트 조회
         List<EventStore> eventStores = eventStoreRepository.findAll();
 
