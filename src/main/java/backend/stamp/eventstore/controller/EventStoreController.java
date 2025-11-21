@@ -9,6 +9,10 @@ import backend.stamp.eventstore.service.EventStoreService;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +34,14 @@ public class EventStoreController {
 
     //지난 이벤트 조회
     @Operation(summary = "지난 이벤트 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지난 이벤트 조회 성공",
+                    content = @Content(schema = @Schema(implementation = EndedEventListResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "422", description = "등록된 이벤트가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
     @GetMapping("/ended")
     public ApplicationResponse<List<EndedEventListResponseDto>> getEndedCategories(@AuthenticationPrincipal PrincipalDetails userDetails) {
         Account account = userDetails.getAccount();
@@ -39,7 +51,15 @@ public class EventStoreController {
     }
 
     //현재 진행중인 이벤트 글 개별조회
-    @Operation(summary = "현재 진행중인 이벤트 글 개별조회( 점주 / 유저 다 )" )
+    @Operation(summary = "현재 진행중인 이벤트 글 개별조회( 점주 / 유저 공통 )" )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "진행 중 이벤트 조회 성공",
+                    content = @Content(schema = @Schema(implementation = OngoingEventResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "422", description = "등록된 이벤트가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
     @GetMapping("/ongoing/{eventType}")
     public ApplicationResponse<OngoingEventResponseDto> getOngoingEvents(@AuthenticationPrincipal PrincipalDetails userDetails, @PathVariable("eventType") EventType eventType) {
         Account account = userDetails.getAccount();

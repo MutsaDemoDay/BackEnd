@@ -3,6 +3,7 @@ package backend.stamp.users.controller;
 import backend.stamp.account.entity.Account;
 import backend.stamp.coupon.dto.CouponResponseDto;
 import backend.stamp.coupon.service.CouponService;
+import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
 import backend.stamp.stamp.dto.MyStampResponseDto;
 import backend.stamp.stamp.dto.StampHistoryListResponseDto;
@@ -10,6 +11,10 @@ import backend.stamp.stamp.dto.StampHistoryResponseDto;
 import backend.stamp.stamp.service.StampDetailService;
 import backend.stamp.stamp.service.StampService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +37,12 @@ public class UsersController {
 
     // 내 쿠폰 조회
     @Operation(summary = "내 쿠폰 조회 api", description = "유저가 자신의 쿠폰 목록을 조회합니다.")
-
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "내 쿠폰 조회 성공",
+                    content = @Content(schema = @Schema(implementation = CouponResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponseDto>> getMyCoupons(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
@@ -44,6 +54,14 @@ public class UsersController {
     //내 현재 스탬프 목록 조회
 
     @Operation(summary = "유저의 현재 스탬프 목록 조회 api", description = "유저가 자신의 스탬프 목록을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "스탬프 목록 조회 성공",
+                    content = @Content(schema = @Schema(implementation = MyStampResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "400", description = "사용자가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
     @GetMapping("/stamps")
     public ResponseEntity<List<MyStampResponseDto>> getMyStamps(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
@@ -56,6 +74,14 @@ public class UsersController {
     // 내 스탬프 히스토리 조회
 
     @Operation(summary = "내 스탬프 히스토리 조회 api", description = "유저가 자신의 스탬프 히스토리를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "스탬프 히스토리 조회 성공",
+                    content = @Content(schema = @Schema(implementation = StampHistoryListResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "400", description = "사용자가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
     @GetMapping("/stamps/history")
     public ResponseEntity<StampHistoryListResponseDto> getMyStampHistory(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
