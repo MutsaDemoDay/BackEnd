@@ -1,5 +1,6 @@
 package backend.stamp.eventstore.repository;
 
+import backend.stamp.event.entity.EventType;
 import backend.stamp.eventstore.entity.EventStore;
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,8 @@ public interface EventStoreRepository extends JpaRepository<EventStore, Long> {
             @Param("event") Event event,
             @Param("today") LocalDate today
     );
+
+    //현재 진행중인 애들 갖고와 !!
+    List<EventStore> findByEvent_EventTypeAndActive(EventType type, boolean active);
+
 }

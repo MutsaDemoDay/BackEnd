@@ -5,6 +5,7 @@ import backend.stamp.coupon.dto.CouponResponseDto;
 import backend.stamp.coupon.service.CouponService;
 import backend.stamp.global.security.PrincipalDetails;
 import backend.stamp.stamp.dto.MyStampResponseDto;
+import backend.stamp.stamp.dto.StampHistoryListResponseDto;
 import backend.stamp.stamp.dto.StampHistoryResponseDto;
 import backend.stamp.stamp.service.StampDetailService;
 import backend.stamp.stamp.service.StampService;
@@ -56,7 +57,7 @@ public class UsersController {
 
     @Operation(summary = "내 스탬프 히스토리 조회 api", description = "유저가 자신의 스탬프 히스토리를 조회합니다.")
     @GetMapping("/stamps/history")
-    public ResponseEntity<List<StampHistoryResponseDto>> getMyStampHistory(
+    public ResponseEntity<StampHistoryListResponseDto> getMyStampHistory(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         Account account = principalDetails.getAccount();

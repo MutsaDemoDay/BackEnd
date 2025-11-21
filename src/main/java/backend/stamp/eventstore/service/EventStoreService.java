@@ -3,7 +3,11 @@ package backend.stamp.eventstore.service;
 import backend.stamp.account.entity.Account;
 import backend.stamp.event.dto.EventCategoryListResponseDto;
 import backend.stamp.event.entity.Event;
+import backend.stamp.event.entity.EventType;
+import backend.stamp.event.repository.EventRepository;
 import backend.stamp.eventstore.dto.EndedEventListResponseDto;
+import backend.stamp.eventstore.dto.JoinStoreResponseDto;
+import backend.stamp.eventstore.dto.OngoingEventResponseDto;
 import backend.stamp.eventstore.entity.EventStore;
 import backend.stamp.eventstore.repository.EventStoreRepository;
 import backend.stamp.global.exception.ApplicationException;
@@ -28,6 +32,7 @@ import java.util.List;
 public class EventStoreService {
 
     private final EventStoreRepository eventStoreRepository;
+    private final EventRepository eventRepository;
 
     //지난 이벤트 조회
     public List<EndedEventListResponseDto> getEndedEventList(Account account) {
@@ -57,5 +62,48 @@ public class EventStoreService {
                 .map(EndedEventListResponseDto::from)
                 .toList();
     }
+
+
+    //현재 진행중인 이벤트 글 개별조회 ( eventType으로 분류하기 )
+    public OngoingEventResponseDto getOngoingEvents(Account account, EventType eventType)
+    {
+        //점주 / 유저 동시 조회
+        if(account == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        //현재 진행중인 이벤트 리스트 조회
+        List <EventStore> stores = eventStoreRepository
+                .findByEvent_EventTypeAndActive(eventType, true);
+
+        List<JoinStoreResponseDto> joinStores = stores.stream()
+                .map(es -> JoinStoreResponseDto.builder()
+                        .StoreId(es.getStore().getId())
+                        .storeName(es.getStore().getName())
+                        .storeAddress(es.getStore().getAddress())
+                        .menuNames(List.of(es.getMenu1(), es.getMenu2(), es.getMenu3()))
+                        .build())
+                .toList();
+
+        //이벤트 엔티티 자체 조회
+        Event event = eventRepository.findByEventType(eventType)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.EVENT_NOT_FOUND));
+
+        //이벤트 시작/ 끝 기간
+        LocalDate start = stores.get(0).getStartDate();
+        LocalDate end = stores.get(0).getEndDate();
+
+        return OngoingEventResponseDto.builder()
+                .eventId(event.getId())
+                .eventType(eventType)
+                .buttonDescription(event.getButtonDescription())
+                .inPageDescription(event.getInPageDescription())
+                .startDate(start)
+                .endDate(end)
+                .JoinStoreLists(joinStores)
+                .build();
+
+    }
+
 
 }

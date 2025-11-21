@@ -2,7 +2,9 @@ package backend.stamp.eventstore.controller;
 
 import backend.stamp.account.entity.Account;
 import backend.stamp.event.dto.EventCategoryListResponseDto;
+import backend.stamp.event.entity.EventType;
 import backend.stamp.eventstore.dto.EndedEventListResponseDto;
+import backend.stamp.eventstore.dto.OngoingEventResponseDto;
 import backend.stamp.eventstore.service.EventStoreService;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,4 +38,12 @@ public class EventStoreController {
         return ApplicationResponse.ok(response);
     }
 
+    //현재 진행중인 이벤트 글 개별조회
+    @Operation(summary = "현재 진행중인 이벤트 글 개별조회( 점주 / 유저 다 )" )
+    @GetMapping("/ongoing/{eventType}")
+    public ApplicationResponse<OngoingEventResponseDto> getOngoingEvents(@AuthenticationPrincipal PrincipalDetails userDetails, @PathVariable("eventType") EventType eventType) {
+        Account account = userDetails.getAccount();
+        OngoingEventResponseDto response = eventStoreService.getOngoingEvents(account,eventType);
+        return ApplicationResponse.ok(response);
+    }
 }
