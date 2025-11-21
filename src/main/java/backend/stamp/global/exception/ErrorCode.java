@@ -49,7 +49,7 @@ public enum ErrorCode {
     STORE_CREATED_DATE_NOT_FOUND(HttpStatus.BAD_REQUEST,421,"매장의 등록 날짜가 생성되지 않았습니다."),
     EVENT_NOT_FOUND(HttpStatus.BAD_REQUEST,422,"등록된 이벤트가 없습니다."),
     EVENT_ALREADY_APPLIED(HttpStatus.BAD_REQUEST, 423,"이미 이번 달에 해당 이벤트를 신청했습니다."),
-
+    INVALID_EVENT_MENUS(HttpStatus.BAD_REQUEST,424,"이벤트 신청을 위해서는 대표 메뉴 3개가 필요합니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),

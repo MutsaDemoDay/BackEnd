@@ -23,7 +23,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findByIdIn(List<Long> ids);
     Optional<Store> findByManager_Account(Account account);
 
-    Optional<Store> findByManager(Manager manager);
 
     // 1. 내 주변 가게 찾기 (거리순 정렬, limit 적용)
     @Query(value = "SELECT *, " +
@@ -53,4 +52,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             @Param("storeName") String storeName,
             @Param("latitude") Double latitude,
             @Param("longitude") Double longitude);
+    Optional<Store> findByManager(Manager manager);
+
 }

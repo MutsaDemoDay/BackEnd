@@ -48,6 +48,18 @@ public class EventStore {
     @Column(nullable = false)
     private boolean active; // 참여중인지 여부
 
+    //대표메뉴 1
+    @Column(name = "menu_1")
+    private String menu1;
+
+    //대표메뉴 2
+    @Column(name = "menu_2")
+    private String menu2;
+
+    //대표메뉴 3
+    @Column(name = "menu_3")
+    private String menu3;
+
     @PrePersist
     public void prePersist() {
         this.appliedAt = LocalDateTime.now();

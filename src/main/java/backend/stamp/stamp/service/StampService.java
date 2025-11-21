@@ -131,19 +131,16 @@ public class StampService {
         users.setTotalStampSum(users.getTotalStampSum() + addCount);
 
         // 8)  maxCount 초과 시 쿠폰 발급 + 스탬프 초기화
-        if (currentCount >= maxCount) {
-            // 쿠폰 발급 로직 -> couponService에서 별도 구현 !
+        // 여러 판 넘어갈 수 있으므로 while 사용
+        while (currentCount >= maxCount) {
+
+            // 쿠폰 발급
             couponService.createCoupon(users, store);
 
-
-            //유저의 스탬프판 수 증가 ( 수정 필요)
+            // 스탬프판 완료 개수 +1
             users.setCouponNum(users.getCouponNum() + 1);
-            usersRepository.save(users);
 
-            // 초과된 스탬프는 다음 판으로 넘김
-            currentCount = currentCount - maxCount;
-
-
+            currentCount -= maxCount;
         }
 
         // 9) 스탬프 업데이트 및 저장

@@ -2,15 +2,22 @@ package backend.stamp.eventstore.controller;
 
 import backend.stamp.account.entity.Account;
 import backend.stamp.event.dto.EventCategoryListResponseDto;
+import backend.stamp.event.entity.EventType;
 import backend.stamp.eventstore.dto.EndedEventListResponseDto;
+import backend.stamp.eventstore.dto.OngoingEventResponseDto;
 import backend.stamp.eventstore.service.EventStoreService;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +34,14 @@ public class EventStoreController {
 
     //지난 이벤트 조회
     @Operation(summary = "지난 이벤트 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지난 이벤트 조회 성공",
+                    content = @Content(schema = @Schema(implementation = EndedEventListResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "422", description = "등록된 이벤트가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
     @GetMapping("/ended")
     public ApplicationResponse<List<EndedEventListResponseDto>> getEndedCategories(@AuthenticationPrincipal PrincipalDetails userDetails) {
         Account account = userDetails.getAccount();
@@ -35,4 +50,20 @@ public class EventStoreController {
         return ApplicationResponse.ok(response);
     }
 
+    //현재 진행중인 이벤트 글 개별조회
+    @Operation(summary = "현재 진행중인 이벤트 글 개별조회( 점주 / 유저 공통 )" )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "진행 중 이벤트 조회 성공",
+                    content = @Content(schema = @Schema(implementation = OngoingEventResponseDto.class))),
+            @ApiResponse(responseCode = "402", description = "로그인이 필요합니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "422", description = "등록된 이벤트가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
+    })
+    @GetMapping("/ongoing/{eventType}")
+    public ApplicationResponse<OngoingEventResponseDto> getOngoingEvents(@AuthenticationPrincipal PrincipalDetails userDetails, @PathVariable("eventType") EventType eventType) {
+        Account account = userDetails.getAccount();
+        OngoingEventResponseDto response = eventStoreService.getOngoingEvents(account,eventType);
+        return ApplicationResponse.ok(response);
+    }
 }

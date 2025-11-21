@@ -5,6 +5,7 @@ import backend.stamp.account.entity.Account;
 import backend.stamp.event.dto.EventApplyResponseDto;
 import backend.stamp.event.dto.EventCategoryListResponseDto;
 import backend.stamp.event.dto.EventCategoryResponseDto;
+import backend.stamp.event.dto.EventMenuRequestDto;
 import backend.stamp.event.entity.Event;
 import backend.stamp.event.entity.EventType;
 import backend.stamp.event.repository.EventRepository;
@@ -103,7 +104,7 @@ public class EventService {
 
     //이벤트 신청
     @Transactional
-    public EventApplyResponseDto applyEvent(Account account, EventType eventType)
+    public EventApplyResponseDto applyEvent(Account account, EventType eventType, EventMenuRequestDto request)
     {
         if (account == null) {
             throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
@@ -123,14 +124,21 @@ public class EventService {
         LocalDate today = LocalDate.now();
 
         //이미 해당 달에 해당 이벤트를 신청했으면 예외 처리
-        List<EventStore> existingEvent = eventStoreRepository.findThisMonthAppliedEvent(store, event, today);
+        List<EventStore> existingEvent = eventStoreRepository
+                .findThisMonthAppliedEvent(store, event, today);
         if (!existingEvent.isEmpty()) {
             throw new ApplicationException(ErrorCode.EVENT_ALREADY_APPLIED);
+        }
+
+        //이벤트 대표메뉴 설정( 메뉴 3개 검증 )
+        if(request.getMenuNames()==null || request.getMenuNames().size()!=3){
+            throw new ApplicationException(ErrorCode.INVALID_EVENT_MENUS);
         }
 
         //이달의 끝나는 날짜 조회
 
         LocalDate endDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+
 
 
         // EventStore 생성
@@ -140,11 +148,15 @@ public class EventService {
                 .startDate(LocalDate.now())
                 .endDate(endDate)     //항상 매달의 마지막날
                 .active(true)
+                .menu1(request.getMenuNames().get(0))
+                .menu2(request.getMenuNames().get(1))
+                .menu3(request.getMenuNames().get(2))
                 .build();
 
         eventStoreRepository.save(eventStore);
 
         return EventApplyResponseDto.builder()
+                .eventStoreId(eventStore.getId())
                 .eventType(eventType)
                 .title(event.getTitle())
                 .message(eventType + " 이벤트가 성공적으로 신청되었습니다.")

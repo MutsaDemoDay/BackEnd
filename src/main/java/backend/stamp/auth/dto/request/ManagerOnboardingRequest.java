@@ -31,6 +31,12 @@ public class ManagerOnboardingRequest {
     @NotBlank(message = "스탬프 이미지 URL은 필수입니다.")
     private String stampImageUrl;
 
+
+    @NotNull(message = "스탬프의 최대 적립 개수는 필수입니다.")
+    @Min(value = 0, message = "최대 적립 개수는 0 이상이어야 합니다.")
+    private Integer maxCount;
+
+
     @NotNull(message = "최소 적립 금액 조건은 필수입니다.")
     @Min(value = 0, message = "최소 적립 금액은 0 이상이어야 합니다.")
     private Integer requiredAmount;
