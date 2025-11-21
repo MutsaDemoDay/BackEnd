@@ -156,6 +156,7 @@ public class EventService {
         eventStoreRepository.save(eventStore);
 
         return EventApplyResponseDto.builder()
+                .eventStoreId(eventStore.getId())
                 .eventType(eventType)
                 .title(event.getTitle())
                 .message(eventType + " 이벤트가 성공적으로 신청되었습니다.")

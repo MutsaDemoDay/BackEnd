@@ -47,6 +47,7 @@ public class ManagerOnboardingService {
         storeToUpdate.setPhone(request.getPhone());
         storeToUpdate.setStoreImageUrl(request.getStoreImageUrl());
         storeToUpdate.setStampImageUrl(request.getStampImageUrl());
+        storeToUpdate.setMaxCount(request.getMaxCount());
         storeToUpdate.setRequiredAmount(request.getRequiredAmount());
         storeToUpdate.setReward(request.getReward());
         storeToUpdate.setCategory(request.getCategory());
