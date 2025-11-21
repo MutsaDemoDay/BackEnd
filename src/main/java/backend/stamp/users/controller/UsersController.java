@@ -10,6 +10,8 @@ import backend.stamp.stamp.dto.StampHistoryListResponseDto;
 import backend.stamp.stamp.dto.StampHistoryResponseDto;
 import backend.stamp.stamp.service.StampDetailService;
 import backend.stamp.stamp.service.StampService;
+import backend.stamp.users.dto.UserLocalStoreResponseDto;
+import backend.stamp.users.service.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +36,7 @@ public class UsersController {
 
     private final CouponService couponService;
     private final StampDetailService stampDetailService;
+    private final UsersService usersService;
 
     // 내 쿠폰 조회
     @Operation(summary = "내 쿠폰 조회 api", description = "유저가 자신의 쿠폰 목록을 조회합니다.")
@@ -88,5 +91,17 @@ public class UsersController {
 
         Account account = principalDetails.getAccount();
         return ResponseEntity.ok(stampDetailService.getStampHistory(account));
+    }
+
+    //유저의 동네 매장 조회
+    @Operation(summary = "유저의 동네 매장 리스트 조회 api", description = "유저가 자신의 동네 매장 리스트를 조회합니다.")
+    @GetMapping("/stores/local")
+    public ApplicationResponse<List<UserLocalStoreResponseDto>> getMyLocalStores(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        Account account = principalDetails.getAccount();
+        List<UserLocalStoreResponseDto> stores = usersService.getMyLocalStores(account);
+
+
+        return ApplicationResponse.ok(stores);
+
     }
 }

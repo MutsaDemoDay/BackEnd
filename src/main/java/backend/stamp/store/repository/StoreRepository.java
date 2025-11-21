@@ -54,4 +54,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             @Param("longitude") Double longitude);
     Optional<Store> findByManager(Manager manager);
 
+    List<Store> findByAddressContaining(String gu);
+
+
 }
