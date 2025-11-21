@@ -1,6 +1,7 @@
 package backend.stamp.users.repository;
 
 import backend.stamp.account.entity.Account;
+import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
             "LEFT JOIN FETCH u.level " +
             "WHERE u.userId = :userId")
     Optional<Users> findUserWithAccountAndLevel(@Param("userId") Long userId);
+
+
 
 }
