@@ -91,7 +91,7 @@ public class StampDetailService {
     //스탬프 개별조회
     public MyStampResponseDto getStampDetail(Account account,Long stampId)
     {
-        //계정체크
+        //유저 계정체크
         if (account == null) {
             throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
