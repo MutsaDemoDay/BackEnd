@@ -25,6 +25,8 @@ public class Level {
 
     private String benefit;
 
+    private int level; //Lv.2
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private Users users;

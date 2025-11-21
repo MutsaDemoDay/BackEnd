@@ -37,27 +37,22 @@ public class ManagerOnboardingService {
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
 
+        Store storeToUpdate = storeRepository.findByManager(manager)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
         //4자리 고유코드 생성
         String verificationCode = generateUniqueCode();
 
-        Store newStore = Store.builder()
-                .name(request.getStoreName())
-                .address(request.getAddress())
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
-                .phone(request.getPhone())
-                .storeImageUrl(request.getStoreImageUrl())
-                .stampImageUrl(request.getStampImageUrl())
-                .requiredAmount(request.getRequiredAmount())
-                .reward(request.getReward())
-                .stampReward("10개 적립 시 무료 커피") // DTO에 없으므로 임시값
-                .maxCount(10)
-                .category(request.getCategory())
-                .verificationCode(verificationCode)
-                .manager(manager)
-                .build();
+        storeToUpdate.setName(request.getStoreName());
+        storeToUpdate.setPhone(request.getPhone());
+        storeToUpdate.setStoreImageUrl(request.getStoreImageUrl());
+        storeToUpdate.setStampImageUrl(request.getStampImageUrl());
+        storeToUpdate.setRequiredAmount(request.getRequiredAmount());
+        storeToUpdate.setReward(request.getReward());
+        storeToUpdate.setCategory(request.getCategory());
+        storeToUpdate.setVerificationCode(verificationCode);
 
-        Store savedStore = storeRepository.save(newStore);
+        Store savedStore = storeRepository.save(storeToUpdate);
 
         businessHourRepository.deleteByStore(savedStore);
 

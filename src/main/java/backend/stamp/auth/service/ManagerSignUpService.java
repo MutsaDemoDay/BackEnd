@@ -10,6 +10,8 @@ import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.global.security.TokenProvider;
 import backend.stamp.manager.entity.Manager;
 import backend.stamp.manager.repository.ManagerRepository;
+import backend.stamp.store.entity.Store;
+import backend.stamp.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 public class ManagerSignUpService {
     private final AccountRepository accountRepository;
     private final ManagerRepository managerRepository;
+    private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
@@ -53,11 +56,18 @@ public class ManagerSignUpService {
         Manager newManager = Manager.builder()
                 .account(savedAccount)
                 .businessNum(request.getBusinessNum())
+                .build();
+        Manager savedManager = managerRepository.save(newManager);
+
+        Store newStore = Store.builder()
                 .address(request.getAddress())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
+                .manager(savedManager)
                 .build();
-        Manager savedManager = managerRepository.save(newManager);
+
+        storeRepository.save(newStore);
+
 
         String accessToken = tokenProvider.createAccessToken(savedAccount);
         String refreshToken = tokenProvider.createRefreshToken(savedAccount);
