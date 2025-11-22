@@ -78,7 +78,9 @@ public class KakaoService {
                     email,
                     tempPassword,
                     UserType.USER,
-                    LocalDateTime.now()
+                    LocalDateTime.now(),
+                    false,
+                    false
             );
             account = accountRepository.save(account);
 

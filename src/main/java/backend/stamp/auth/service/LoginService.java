@@ -62,6 +62,8 @@ public class LoginService {
                 .userType(userType.name())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .userOnboarded(account.isUserOnboarded())
+                .managerOnboarded(account.isManagerOnboarded())
                 .build();
     }
 }

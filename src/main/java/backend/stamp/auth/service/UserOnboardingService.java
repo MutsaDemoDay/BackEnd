@@ -1,6 +1,7 @@
 package backend.stamp.auth.service;
 
 import backend.stamp.account.entity.Account;
+import backend.stamp.account.repository.AccountRepository;
 import backend.stamp.auth.dto.request.UserOnboardingRequest;
 import backend.stamp.favstore.entity.FavStore;
 import backend.stamp.favstore.repository.FavStoreRepository;
@@ -29,12 +30,16 @@ public class UserOnboardingService {
     private final FavStoreRepository favStoreRepository;
     private final StoreRepository storeRepository;
     private final ObjectStorageService objectStorageService;
+    private final AccountRepository accountRepository;
 
     public void completeOnboarding(UserOnboardingRequest request, MultipartFile profileImage) {
 
         Account currentAccount = SecurityUtil.getCurrentAccount();
 
-        Users user = usersRepository.findByAccount(currentAccount)
+        Account account = accountRepository.findById(currentAccount.getAccountId())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        Users user = usersRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         // 이미지 업로드
@@ -69,7 +74,10 @@ public class UserOnboardingService {
             favStoreRepository.saveAll(newFavStores);
         }
 
+        account.completeUserOnboarding();
+
         usersRepository.save(user);
+        accountRepository.save(account);
     }
 
 }
