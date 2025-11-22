@@ -55,6 +55,7 @@ public class StampDetailService {
 
         // DTO 변환
         return StampHistoryListResponseDto.builder()
+                .totalStampSum(users.getTotalStampSum())
                 .completedStampNum(stampList.size())
                 .completedStamps(stampList)
                 .build();
