@@ -9,12 +9,15 @@ import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.global.security.SecurityUtil;
 import backend.stamp.manager.entity.Manager;
+import backend.stamp.manager.object.ObjectStorageService;
 import backend.stamp.manager.repository.ManagerRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Random;
 
@@ -26,11 +29,13 @@ public class ManagerOnboardingService {
     private final ManagerRepository managerRepository;
     private final StoreRepository storeRepository;
     private final BusinessHourRepository businessHourRepository;
+    private final ObjectStorageService objectStorageService;
 
     //랜덤코드 생성용
     private final Random random = new Random();
 
-    public ManagerOnboardingResponse completeOnboarding(ManagerOnboardingRequest request) {
+    public ManagerOnboardingResponse completeOnboarding(ManagerOnboardingRequest request, MultipartFile storeImage,
+                                                        MultipartFile stampImage) {
         Account currentAccount = SecurityUtil.getCurrentAccount();
 
         Manager manager = managerRepository.findByAccount(currentAccount)
@@ -43,15 +48,31 @@ public class ManagerOnboardingService {
         //4자리 고유코드 생성
         String verificationCode = generateUniqueCode();
 
+        // 이미지 업로드
+        String storeImageUrl = null;
+        String stampImageUrl = null;
+
+        if (storeImage != null && !storeImage.isEmpty()) {
+            storeImageUrl = objectStorageService.uploadFile(storeImage);
+        }
+        if (stampImage != null && !stampImage.isEmpty()) {
+            stampImageUrl = objectStorageService.uploadFile(stampImage);
+        }
+
         storeToUpdate.setName(request.getStoreName());
         storeToUpdate.setPhone(request.getPhone());
-        storeToUpdate.setStoreImageUrl(request.getStoreImageUrl());
-        storeToUpdate.setStampImageUrl(request.getStampImageUrl());
         storeToUpdate.setMaxCount(request.getMaxCount());
         storeToUpdate.setRequiredAmount(request.getRequiredAmount());
         storeToUpdate.setReward(request.getReward());
         storeToUpdate.setCategory(request.getCategory());
         storeToUpdate.setVerificationCode(verificationCode);
+
+        if (storeImageUrl != null) {
+            storeToUpdate.setStoreImageUrl(storeImageUrl);
+        }
+        if (stampImageUrl != null) {
+            storeToUpdate.setStampImageUrl(stampImageUrl);
+        }
 
         Store savedStore = storeRepository.save(storeToUpdate);
 

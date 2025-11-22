@@ -6,15 +6,18 @@ import backend.stamp.auth.kakao.KakaoUser;
 import backend.stamp.auth.service.*;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.exception.ErrorCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -37,6 +40,7 @@ public class AuthController {
     private final UserPasswordService userPasswordService;
     private final ManagerPasswordService managerPasswordService;
     private final ResetPasswordService resetPasswordService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/login")
     public ResponseEntity<?> redirectLoginPage(
@@ -68,11 +72,15 @@ public class AuthController {
     }
 
     @Operation(summary = "유저 온보딩 api", description = "유저가 온보딩에서 추가 정보를 입력합니다.")
-    @PostMapping("/user/onboarding")
+    @PostMapping(value="/user/onboarding", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApplicationResponse<Void> completeUserOnboarding(
-            @Valid @RequestBody UserOnboardingRequest request) {
+            @RequestPart("data") @Valid String data,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+    ) throws JsonProcessingException {
 
-        userOnboardingService.completeOnboarding(request);
+        UserOnboardingRequest request = objectMapper.readValue(data, UserOnboardingRequest.class);
+
+        userOnboardingService.completeOnboarding(request, profileImage);
         return ApplicationResponse.ok(null);
     }
 
@@ -107,11 +115,19 @@ public class AuthController {
     }
 
     @Operation(summary = "점주 온보딩 api", description = "점주가 온보딩에서 자신의 매장 정보를 입력합니다.")
-    @PostMapping("/manager/onboarding")
+    @PostMapping(value = "/manager/onboarding", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApplicationResponse<ManagerOnboardingResponse> completeManagerOnboarding(
-            @Valid @RequestBody ManagerOnboardingRequest request) {
+            @RequestPart("data") @Valid String data,
+            @RequestPart(value = "storeImage", required = false) MultipartFile storeImage,
+            @RequestPart(value = "stampImage", required = false) MultipartFile stampImage
+    ) throws JsonProcessingException {
 
-        ManagerOnboardingResponse response = managerOnboardingService.completeOnboarding(request);
+        ManagerOnboardingRequest request =
+                objectMapper.readValue(data, ManagerOnboardingRequest.class);
+
+        ManagerOnboardingResponse response =
+                managerOnboardingService.completeOnboarding(request, storeImage, stampImage);
+
         return ApplicationResponse.<ManagerOnboardingResponse>builder()
                 .code(ErrorCode.SUCCESS.getCode())
                 .message("매장 등록이 완료되었습니다.")
