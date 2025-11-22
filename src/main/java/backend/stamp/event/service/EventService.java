@@ -135,6 +135,9 @@ public class EventService {
             throw new ApplicationException(ErrorCode.INVALID_EVENT_MENUS);
         }
 
+        //시작날짜 조회
+        LocalDate startDate = today.withDayOfMonth(1);
+
         //이달의 끝나는 날짜 조회
 
         LocalDate endDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
@@ -145,7 +148,7 @@ public class EventService {
         EventStore eventStore = EventStore.builder()
                 .store(store)
                 .event(event)
-                .startDate(LocalDate.now())
+                .startDate(startDate)
                 .endDate(endDate)     //항상 매달의 마지막날
                 .active(true)
                 .menu1(request.getMenuNames().get(0))
@@ -157,6 +160,7 @@ public class EventService {
 
         return EventApplyResponseDto.builder()
                 .eventStoreId(eventStore.getId())
+                .storeId(store.getId())
                 .eventType(eventType)
                 .title(event.getTitle())
                 .message(eventType + " 이벤트가 성공적으로 신청되었습니다.")

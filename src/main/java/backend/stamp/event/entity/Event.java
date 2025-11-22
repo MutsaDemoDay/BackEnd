@@ -43,6 +43,8 @@ public class Event {
     @Column(length=1000, nullable = false)
     private String inPageDescription;
 
+    //이벤트 버튼 이미지
+    private String buttonImageUrl;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<EventStore> EventStores = new ArrayList<>();
