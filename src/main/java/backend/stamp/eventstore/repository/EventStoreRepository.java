@@ -31,4 +31,7 @@ public interface EventStoreRepository extends JpaRepository<EventStore, Long> {
     //현재 진행중인 애들 갖고와 !!
     List<EventStore> findByEvent_EventTypeAndActive(EventType type, boolean active);
 
+    List<EventStore> findByActiveIsTrueAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            LocalDate start, LocalDate end);
+
 }

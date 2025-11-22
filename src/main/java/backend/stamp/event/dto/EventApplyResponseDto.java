@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 public class EventApplyResponseDto {
     private Long eventStoreId; //   이벤트신청목록
+    private Long storeId;// 신청한 가게의 아이디
     private EventType eventType;    // 신청한 이벤트 타입
     private String title;           // 이벤트 제목
     private String message;         // 응답 메시지
