@@ -7,6 +7,7 @@ import backend.stamp.favstore.repository.FavStoreRepository;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.global.security.SecurityUtil;
+import backend.stamp.manager.object.ObjectStorageService;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
 import backend.stamp.users.entity.Users;
@@ -14,6 +15,7 @@ import backend.stamp.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,18 +28,27 @@ public class UserOnboardingService {
     private final UsersRepository usersRepository;
     private final FavStoreRepository favStoreRepository;
     private final StoreRepository storeRepository;
+    private final ObjectStorageService objectStorageService;
 
-    public void completeOnboarding(UserOnboardingRequest request) {
+    public void completeOnboarding(UserOnboardingRequest request, MultipartFile profileImage) {
 
         Account currentAccount = SecurityUtil.getCurrentAccount();
 
         Users user = usersRepository.findByAccount(currentAccount)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
+        // 이미지 업로드
+        String profileImageUrl = null;
+
+        if (profileImage != null && !profileImage.isEmpty()) {
+            profileImageUrl = objectStorageService.uploadFile(profileImage);
+        }
+
         user.setAddress(request.getAddress());
         user.setLatitude(request.getLatitude());
         user.setLongitude(request.getLongitude());
         user.setGender(request.getGender());
+        user.setProfileImageUrl(profileImageUrl);
 
         List<Long> safeFavStoreIds = Optional.ofNullable(request.getFavStoreId())
                 .orElse(Collections.emptyList());

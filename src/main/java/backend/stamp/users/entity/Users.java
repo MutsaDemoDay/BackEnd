@@ -59,6 +59,8 @@ public class Users {
     @Builder.Default
     private Integer totalStampSum = 0;
 
+    private String profileImageUrl;
+
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Coupon> coupons = new ArrayList<>();
