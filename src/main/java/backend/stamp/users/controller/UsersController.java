@@ -2,6 +2,7 @@ package backend.stamp.users.controller;
 
 import backend.stamp.account.entity.Account;
 import backend.stamp.coupon.dto.CouponResponseDto;
+import backend.stamp.coupon.dto.CouponResponseListDto;
 import backend.stamp.coupon.service.CouponService;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
@@ -47,11 +48,10 @@ public class UsersController {
                     content = @Content(schema = @Schema(implementation = ApplicationResponse.class)))
     })
     @GetMapping("/coupons")
-    public ResponseEntity<List<CouponResponseDto>> getMyCoupons(
+    public ResponseEntity<CouponResponseListDto> getMyCoupons(
             @AuthenticationPrincipal PrincipalDetails userDetails) {
-
-        Long userId = userDetails.getAccount().getAccountId();
-        return ResponseEntity.ok(couponService.getUserCoupons(userId));
+Account account = userDetails.getAccount();
+        return ResponseEntity.ok(couponService.getUserCoupons(account));
     }
 
     //내 현재 스탬프 목록 조회
