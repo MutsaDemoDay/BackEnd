@@ -14,6 +14,8 @@ import java.util.List;
 
 public class StampHistoryListResponseDto {
 
+
+    private Integer totalStampSum;
     private Integer completedStampNum;
     List<StampHistoryResponseDto> completedStamps;
 
