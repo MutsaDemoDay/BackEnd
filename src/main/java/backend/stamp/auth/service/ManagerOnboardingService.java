@@ -1,6 +1,7 @@
 package backend.stamp.auth.service;
 
 import backend.stamp.account.entity.Account;
+import backend.stamp.account.repository.AccountRepository;
 import backend.stamp.auth.dto.request.ManagerOnboardingRequest;
 import backend.stamp.auth.dto.response.ManagerOnboardingResponse;
 import backend.stamp.businesshour.entity.BusinessHour;
@@ -30,6 +31,7 @@ public class ManagerOnboardingService {
     private final StoreRepository storeRepository;
     private final BusinessHourRepository businessHourRepository;
     private final ObjectStorageService objectStorageService;
+    private final AccountRepository accountRepository;
 
     //랜덤코드 생성용
     private final Random random = new Random();
@@ -38,7 +40,10 @@ public class ManagerOnboardingService {
                                                         MultipartFile stampImage) {
         Account currentAccount = SecurityUtil.getCurrentAccount();
 
-        Manager manager = managerRepository.findByAccount(currentAccount)
+        Account account = accountRepository.findById(currentAccount.getAccountId())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        Manager manager = managerRepository.findByAccount(account)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
 
@@ -92,6 +97,9 @@ public class ManagerOnboardingService {
                 .toList();
 
         businessHourRepository.saveAll(newBusinessHours);
+
+        account.completeManagerOnboarding();
+        accountRepository.save(account);
 
         return ManagerOnboardingResponse.builder()
                 .storeId(savedStore.getId())

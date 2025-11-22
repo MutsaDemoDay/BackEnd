@@ -49,7 +49,9 @@ public class ManagerSignUpService {
                 request.getEmail(),
                 encodedPassword,
                 UserType.MANAGER,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                false,
+                false
         );
         Account savedAccount = accountRepository.save(newAccount);
 

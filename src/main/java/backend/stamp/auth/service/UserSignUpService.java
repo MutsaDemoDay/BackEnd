@@ -49,7 +49,9 @@ public class UserSignUpService {
                 request.getEmail(),
                 encodedPassword,
                 UserType.USER,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                false,
+                false
         );
         newAccount = accountRepository.save(newAccount);
 
