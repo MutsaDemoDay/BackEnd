@@ -1,11 +1,16 @@
 package backend.stamp.manager.controller;
 
 
+import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ApplicationResponse;
+import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.manager.dto.StampCustomerResponse;
 import backend.stamp.manager.dto.StampSettingRequest;
 import backend.stamp.manager.dto.StampSettingResponse;
 import backend.stamp.manager.service.ManagerService;
+import backend.stamp.stamp.service.qr.QRCodeService;
+import backend.stamp.store.entity.Store;
+import backend.stamp.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +29,8 @@ import java.util.List;
 @Tag(name = "점주 페이지", description = "점주 페이지 API")
 public class ManagerController {
     private final ManagerService managerService;
+    private final QRCodeService qrCodeService;
+    private final StoreRepository storeRepository;
 
     /**
      * 점주가 stamp 설정값 세팅
@@ -58,8 +65,11 @@ public class ManagerController {
         List<StampCustomerResponse> response = managerService.getCustomers(storeName);
         return ApplicationResponse.ok(response);
     }
-//    @PostMapping("/add")
-//    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId){
-//
-//    }
+    @PostMapping("/add")
+    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALIDE_QRCODE));
+        qrCodeService.addStamp(store.getId(), userId);
+        return ApplicationResponse.ok("성공적으로 적립되었습니다.");
+    }
 }
