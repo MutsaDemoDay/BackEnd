@@ -57,6 +57,9 @@ public class ManagerController {
     public ApplicationResponse<List<StampCustomerResponse>> getCustomers(@RequestParam String storeName){
         List<StampCustomerResponse> response = managerService.getCustomers(storeName);
         return ApplicationResponse.ok(response);
-
     }
+//    @PostMapping("/add")
+//    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId){
+//
+//    }
 }
