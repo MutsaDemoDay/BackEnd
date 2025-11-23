@@ -61,6 +61,8 @@ public class Users {
 
     private String profileImageUrl;
 
+    @Column(name = "representative_badge_name")
+    private String representativeBadgeName;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Coupon> coupons = new ArrayList<>();
