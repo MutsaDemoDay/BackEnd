@@ -65,7 +65,7 @@ public class ManagerController {
         List<StampCustomerResponse> response = managerService.getCustomers(storeName);
         return ApplicationResponse.ok(response);
     }
-    @PostMapping("/add")
+    @PostMapping("/addByNum")
     public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId){
         Store store = storeRepository.findByName(storeName)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALIDE_QRCODE));
