@@ -50,6 +50,10 @@ public enum ErrorCode {
     EVENT_NOT_FOUND(HttpStatus.BAD_REQUEST,422,"등록된 이벤트가 없습니다."),
     EVENT_ALREADY_APPLIED(HttpStatus.BAD_REQUEST, 423,"이미 이번 달에 해당 이벤트를 신청했습니다."),
     INVALID_EVENT_MENUS(HttpStatus.BAD_REQUEST,424,"이벤트 신청을 위해서는 대표 메뉴 3개가 필요합니다."),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, 425, "잘못된 요청입니다."),
+    BUSINESS_HOUR_NOT_FOUND(HttpStatus.BAD_REQUEST, 426, "영업시간이 없습니다."),
+    MENU_NOT_FOUND(HttpStatus.BAD_REQUEST, 427, "메뉴가 없습니다."),
+    MENU_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, 428, "메뉴 추가는 10개까지 가능합니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
