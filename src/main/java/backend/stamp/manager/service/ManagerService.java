@@ -62,25 +62,19 @@ public class ManagerService {
 
 
     public List<StampCustomerResponse> getCustomers(String storeName) {
-
         // 1. 스토어 존재하는지 체크
         Store store = storeRepository.findByName(storeName)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
-
         // 2. 해당 store에 찍은 모든 userId 조회
         List<Long> userIds = stampRepository.findUserIdsByStoreName(storeName);
-
         // 3. userId 각각의 상세 정보 조회
         List<StampCustomerResponse> list = new ArrayList<>();
 
         for (Long userId : userIds) {
-
             Users user = usersRepository.findUserWithAccountAndLevel(userId)
                     .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-
             Account account = user.getAccount();
             Level level = user.getLevel();
-
             list.add(
                     new StampCustomerResponse(
                             user.getUserId(),
@@ -90,7 +84,6 @@ public class ManagerService {
                     )
             );
         }
-
         return list;
     }
 }

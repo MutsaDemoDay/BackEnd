@@ -25,7 +25,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stamps")
-
 @Tag(name = "점주 페이지", description = "점주 페이지 API")
 public class ManagerController {
     private final ManagerService managerService;
