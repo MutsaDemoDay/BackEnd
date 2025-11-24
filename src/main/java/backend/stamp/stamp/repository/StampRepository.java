@@ -73,4 +73,8 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
             @feign.Param("start") LocalDateTime start,
             @feign.Param("end") LocalDateTime end
     );
+
+    List<Stamp> findByUsersAndIsFavoriteTrue(Users users);
+
+
 }

@@ -4,6 +4,7 @@ package backend.stamp.stamp.controller;
 import backend.stamp.account.entity.Account;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.security.PrincipalDetails;
+import backend.stamp.stamp.dto.StampFavoriteListResponseDto;
 import backend.stamp.stamp.service.StampFavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,6 +74,17 @@ public class StampFavoriteController {
     ) { Account account = userDetail.getAccount();
         stampFavoriteService.deleteFavoriteStamp(account, stampId);
         return ResponseEntity.ok(ApplicationResponse.ok(null));
+    }
+
+
+    //스탬프 즐겨찾기 리스트 조회
+    @Operation(summary = "스탬프 즐겨찾기 리스트 조회 api", description = "유저의 스탬프 즐겨찾기 리스트를 조회합니다. ")
+    @GetMapping
+    public ApplicationResponse<List<StampFavoriteListResponseDto>> getFavoriteStampLists(@AuthenticationPrincipal PrincipalDetails userDetails)
+    {
+        Account account = userDetails.getAccount();
+        List<StampFavoriteListResponseDto> response =stampFavoriteService.getFavoriteStampLists(account);
+        return ApplicationResponse.ok(response);
     }
 
 }
