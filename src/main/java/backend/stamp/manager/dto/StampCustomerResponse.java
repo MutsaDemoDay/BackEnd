@@ -6,6 +6,6 @@ public record StampCustomerResponse(
         Long userId,
         String nickname,
         LocalDateTime createdAt,
-        int level
+        Integer level
 ) {
 }
