@@ -63,6 +63,18 @@ public class StoreService {
                 .collect(Collectors.toList());
     }
 
+
+    //DB에 존재하는 전체 매장 조회
+
+    @Transactional
+    public List<StoreSearchResponseDto> getAllStores() {
+        List<Store> stores = storeRepository.findAll();
+
+        return stores.stream().map(StoreSearchResponseDto::from)
+                .collect(Collectors.toList());
+
+    }
+
     // 3) 이름 기반 + 거리순 검색
     @Transactional(readOnly = true)
     public List<StoreSearchResponseDto> getSearchedStoresByDistance(String storeName, Double latitude, Double longitude) {
@@ -91,16 +103,17 @@ public class StoreService {
         return calculateDistance(userLat, userLon, storeLat, storeLon);
     }
 
-    private Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
-        final int R = 6_371_000;
 
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
+private Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
+    final int R = 6_371_000;
+
+    double latDistance = Math.toRadians(lat2 - lat1);
+    double lonDistance = Math.toRadians(lon2 - lon1);
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
 
 }

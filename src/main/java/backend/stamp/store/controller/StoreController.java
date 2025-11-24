@@ -1,6 +1,7 @@
 package backend.stamp.store.controller;
 
 
+import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.store.dto.StoreSearchResponseDto;
 import backend.stamp.store.repository.StoreRepository;
 import backend.stamp.store.service.StoreService;
@@ -33,5 +34,13 @@ public class StoreController {
     }
 
 
+    //매장 전체 조회
+    @Operation(summary = "매장 전체 조회 api", description = "DB에 있는 전체 매장을 조회합니다.")
+
+    @GetMapping
+    public ApplicationResponse<List<StoreSearchResponseDto>> getAllStores() {
+        List<StoreSearchResponseDto> response = storeService.getAllStores();
+        return ApplicationResponse.ok(response);
+    }
 }
 
