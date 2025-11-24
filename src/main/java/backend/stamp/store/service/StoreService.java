@@ -3,10 +3,6 @@ package backend.stamp.store.service;
 import backend.stamp.account.entity.Account;
 import backend.stamp.businesshour.entity.BusinessHour;
 import backend.stamp.coupon.repository.CouponRepository;
-import backend.stamp.global.exception.ApplicationException;
-import backend.stamp.global.exception.ErrorCode;
-import backend.stamp.review.repository.ReviewRepository;
-import backend.stamp.store.dto.StoreDetailHomeResponse;
 import backend.stamp.store.dto.StoreSearchResponseDto;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -31,7 +27,6 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final UsersRepository usersRepository;
-    private final ReviewRepository reviewRepository;
     private final CouponRepository couponRepository;
 
     private record OperationStatusResponse(String status, String message) {
