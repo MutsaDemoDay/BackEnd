@@ -14,4 +14,6 @@ public class SignUpResponse {
     private String userType;
     private String accessToken;
     private String refreshToken;
+    private boolean userOnboarded;
+    private boolean managerOnboarded;
 }

@@ -59,6 +59,10 @@ public class Users {
     @Builder.Default
     private Integer totalStampSum = 0;
 
+    private String profileImageUrl;
+
+    @Column(name = "representative_badge_name")
+    private String representativeBadgeName;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Coupon> coupons = new ArrayList<>();

@@ -1,11 +1,14 @@
 package backend.stamp.manager.controller;
 
 
+import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ApplicationResponse;
-import backend.stamp.manager.dto.StampCustomerResponse;
-import backend.stamp.manager.dto.StampSettingRequest;
-import backend.stamp.manager.dto.StampSettingResponse;
+import backend.stamp.global.exception.ErrorCode;
+import backend.stamp.manager.dto.dashboard.*;
 import backend.stamp.manager.service.ManagerService;
+import backend.stamp.stamp.service.qr.QRCodeService;
+import backend.stamp.store.entity.Store;
+import backend.stamp.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,15 +18,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stamps")
-
+@RequestMapping("/api/v1/stamps/manager")
 @Tag(name = "점주 페이지", description = "점주 페이지 API")
 public class ManagerController {
     private final ManagerService managerService;
+    private final QRCodeService qrCodeService;
+    private final StoreRepository storeRepository;
 
     /**
      * 점주가 stamp 설정값 세팅
@@ -57,6 +62,64 @@ public class ManagerController {
     public ApplicationResponse<List<StampCustomerResponse>> getCustomers(@RequestParam String storeName){
         List<StampCustomerResponse> response = managerService.getCustomers(storeName);
         return ApplicationResponse.ok(response);
-
     }
+    @PostMapping("/addByNum")
+    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALIDE_QRCODE));
+        qrCodeService.addStamp(store.getId(), userId);
+        return ApplicationResponse.ok("성공적으로 적립되었습니다.");
+    }
+    @GetMapping("/statics")
+    public ApplicationResponse<StampStatisticsResponse> getStatics(@RequestParam String storeName, @RequestParam String type){
+        StampStatisticsResponse response = managerService.getStampStatics(storeName, type);
+        return ApplicationResponse.ok(response);
+    }
+    @GetMapping("/totals")
+    public ApplicationResponse<StampStatisticsResponse> getTotals(@RequestParam String storeName, @RequestParam String type){
+        StampStatisticsResponse response = managerService.getCustomerStatics(storeName, type);
+        return ApplicationResponse.ok(response);
+    }
+    @GetMapping("/gender/weekly")
+    public ApplicationResponse<GenderStatisticsResponse> getWeeklyGender(
+            @RequestParam String storeName,
+            @RequestParam(required = false) String baseDate
+    ){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        LocalDate date = baseDate != null
+                ? LocalDate.parse(baseDate)
+                : LocalDate.now();
+        GenderStatisticsResponse response =
+                managerService.getWeeklyGenderStatistics(store.getId(), date);
+        return ApplicationResponse.ok(response);
+    }
+
+    /**
+     * 기간 내 스탬프 적립 수
+     * @param storeName
+     * @return
+     */
+    @GetMapping("/weekly/event")
+    public ApplicationResponse<WeeklyCompareResponse> getWeeklyEventCompare(
+            @RequestParam String storeName
+    ){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        WeeklyCompareResponse resp =
+                managerService.getEventWeeklyCompare(store.getId());
+        return ApplicationResponse.ok(resp);
+    }
+    @GetMapping("/weekly/customers")
+    public ApplicationResponse<WeeklyCustomerCompareResponse> getWeeklyCustomerCompare(
+            @RequestParam String storeName
+    ){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        WeeklyCustomerCompareResponse resp = managerService.getWeeklyCustomerCompare(store.getId());
+        return ApplicationResponse.ok(resp);
+    }
+
+
+
 }

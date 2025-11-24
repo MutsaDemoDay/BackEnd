@@ -27,13 +27,25 @@ public class StoreMenu {
     @Lob
     private String content;
 
+    private String imageUrl;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="store_id", nullable = false)
     private Store store;
 
+    public static StoreMenu create(Store store,
+                                   String name,
+                                   int price,
+                                   String content,
+                                   String imageUrl) {
 
-    //대표 메뉴 3개 설정
-    @Column(name = "representative_order")
-    private Integer representativeOrder;
+        StoreMenu menu = new StoreMenu(); // 같은 클래스 안이라 protected 생성자 사용 가능
+        menu.store = store;
+        menu.name = name;
+        menu.price = price;
+        menu.content = content;
+        menu.imageUrl = imageUrl;
+        return menu;
+    }
+
 }

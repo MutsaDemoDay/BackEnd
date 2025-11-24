@@ -33,6 +33,19 @@ public class Account {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
-    //private Boolean loginBefore;
+
+    private boolean userOnboarded = false;
+
+    private boolean managerOnboarded = false;
+
+    public void completeUserOnboarding() {
+        this.userOnboarded = true;
+    }
+
+    public void completeManagerOnboarding() {
+        this.managerOnboarded = true;
+    }
+
+
 
 }

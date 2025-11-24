@@ -11,7 +11,9 @@ import backend.stamp.event.entity.Event;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventStoreRepository extends JpaRepository<EventStore, Long> {
 
@@ -33,5 +35,16 @@ public interface EventStoreRepository extends JpaRepository<EventStore, Long> {
 
     List<EventStore> findByActiveIsTrueAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
             LocalDate start, LocalDate end);
+    @Query("""
+        SELECT es FROM EventStore es
+        WHERE es.store.id = :storeId
+          AND es.active = true
+          AND es.startDate <= :today
+          AND es.endDate >= :today
+        """)
+    Optional<EventStore> findActiveEventByStoreId(
+            @Param("storeId") Long storeId,
+            @Param("today") LocalDate today
+    );
 
 }
