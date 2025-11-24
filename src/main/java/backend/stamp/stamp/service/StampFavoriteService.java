@@ -5,6 +5,7 @@ import backend.stamp.account.entity.Account;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.order.repository.OrderRepository;
+import backend.stamp.stamp.dto.StampFavoriteListResponseDto;
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.stamp.repository.StampRepository;
 import backend.stamp.store.repository.StoreRepository;
@@ -13,6 +14,8 @@ import backend.stamp.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -88,4 +91,30 @@ public class StampFavoriteService {
         // 즐겨찾기 취소
         stamp.setFavorite(false);
     }
+
+    //스탬프 즐겨찾기 리스트 조회
+    @Transactional
+    public List<StampFavoriteListResponseDto> getFavoriteStampLists(Account account)
+    {
+        //유저 조회
+        if(account == null)
+        {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+
+        }
+        //유저 조회
+        Users users = usersRepository.findByAccount(account)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        //유저가 좋아요 한것만 조회해오기
+        List<Stamp> favoriteStamps = stampRepository.findByUsersAndIsFavoriteTrue(users);
+
+        //DTO 변환
+        return favoriteStamps.stream()
+                .map(StampFavoriteListResponseDto::from)
+                .toList();
+
+
+    }
+
 }
