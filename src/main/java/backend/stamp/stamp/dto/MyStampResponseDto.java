@@ -16,6 +16,7 @@ private String storeName;
 private String StampImageUrl;
 private Integer currentCount;
 private Integer maxCount;
+private boolean isFavorite;
 
 public static MyStampResponseDto from(Stamp stamp) {
     return MyStampResponseDto.builder()
@@ -24,6 +25,7 @@ public static MyStampResponseDto from(Stamp stamp) {
             .StampImageUrl(stamp.getStore().getStampImageUrl())
             .currentCount(stamp.getCurrentCount())
             .maxCount(stamp.getStore().getMaxCount())
+            .isFavorite(stamp.isFavorite())
             .build();
 }
 
