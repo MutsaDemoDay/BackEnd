@@ -4,10 +4,7 @@ package backend.stamp.manager.controller;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.exception.ErrorCode;
-import backend.stamp.manager.dto.StampCustomerResponse;
-import backend.stamp.manager.dto.StampSettingRequest;
-import backend.stamp.manager.dto.StampSettingResponse;
-import backend.stamp.manager.dto.StampStatisticsResponse;
+import backend.stamp.manager.dto.*;
 import backend.stamp.manager.service.ManagerService;
 import backend.stamp.stamp.service.qr.QRCodeService;
 import backend.stamp.store.entity.Store;
@@ -21,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -80,6 +78,20 @@ public class ManagerController {
     @GetMapping("/totals")
     public ApplicationResponse<StampStatisticsResponse> getTotals(@RequestParam String storeName, @RequestParam String type){
         StampStatisticsResponse response = managerService.getCustomerStatics(storeName, type);
+        return ApplicationResponse.ok(response);
+    }
+    @GetMapping("/gender/weekly")
+    public ApplicationResponse<GenderStatisticsResponse> getWeeklyGender(
+            @RequestParam String storeName,
+            @RequestParam(required = false) String baseDate
+    ){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        LocalDate date = baseDate != null
+                ? LocalDate.parse(baseDate)
+                : LocalDate.now();
+        GenderStatisticsResponse response =
+                managerService.getWeeklyGenderStatistics(store.getId(), date);
         return ApplicationResponse.ok(response);
     }
 

@@ -10,6 +10,7 @@ import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.stamp.repository.StampRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
+import backend.stamp.users.entity.Gender;
 import backend.stamp.users.entity.Users;
 import backend.stamp.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -306,6 +307,46 @@ public class ManagerService {
                 avg,
                 periodText,
                 chart
+        );
+    }
+    public GenderStatisticsResponse getWeeklyGenderStatistics(Long storeId, LocalDate baseDate) {
+
+        LocalDate weekStart = baseDate.with(DayOfWeek.MONDAY);
+        LocalDate weekEnd = weekStart.plusDays(6);
+        LocalDateTime start = weekStart.atStartOfDay();
+        LocalDateTime end = weekEnd.atTime(23, 59, 59);
+
+        List<Long> userIds = stampRepository.findDistinctUserIdsByStoreAndDateRange(
+                storeId, start, end
+        );
+
+        if (userIds.isEmpty()) {
+            return new GenderStatisticsResponse(0L, 0L, 0L, 0.0, 0.0);
+        }
+
+        List<Object[]> genderRows = usersRepository.findGenderByUserIds(userIds);
+
+        long womanCount = 0;
+        long manCount = 0;
+
+        for (Object[] row : genderRows) {
+            Gender gender = (Gender) row[1];
+            if (gender == Gender.FEMALE) {
+                womanCount++;
+            } else if (gender == Gender.MALE) {
+                manCount++;
+            }
+        }
+
+        long total = womanCount + manCount;
+
+        double womanRatio = total == 0 ? 0.0 : (womanCount * 100.0 / total);
+        double manRatio  = total == 0 ? 0.0 : (manCount * 100.0 / total);
+
+        return new GenderStatisticsResponse(
+                total, womanCount, manCount,
+                Math.round(womanRatio * 10) / 10.0,
+                Math.round(manRatio * 10) / 10.0
         );
     }
 

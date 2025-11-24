@@ -41,4 +41,13 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     List<Object[]> countDailyUniqueUsers(Long storeId,
                                          LocalDateTime start,
                                          LocalDateTime end);
+    @Query("SELECT DISTINCT s.users.userId " +
+            "FROM Stamp s " +
+            "WHERE s.store.id = :storeId " +
+            "AND s.date BETWEEN :start AND :end")
+    List<Long> findDistinctUserIdsByStoreAndDateRange(
+            Long storeId,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 }
