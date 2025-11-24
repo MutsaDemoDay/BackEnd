@@ -7,6 +7,7 @@ import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.manager.dto.StampCustomerResponse;
 import backend.stamp.manager.dto.StampSettingRequest;
 import backend.stamp.manager.dto.StampSettingResponse;
+import backend.stamp.manager.dto.StampStatisticsResponse;
 import backend.stamp.manager.service.ManagerService;
 import backend.stamp.stamp.service.qr.QRCodeService;
 import backend.stamp.store.entity.Store;
@@ -71,4 +72,16 @@ public class ManagerController {
         qrCodeService.addStamp(store.getId(), userId);
         return ApplicationResponse.ok("성공적으로 적립되었습니다.");
     }
+    @GetMapping("/statics")
+    public ApplicationResponse<StampStatisticsResponse> getStatics(@RequestParam String storeName, @RequestParam String type){
+        StampStatisticsResponse response = managerService.getStampStatics(storeName, type);
+        return ApplicationResponse.ok(response);
+    }
+    @GetMapping("/totals")
+    public ApplicationResponse<StampStatisticsResponse> getTotals(@RequestParam String storeName, @RequestParam String type){
+        StampStatisticsResponse response = managerService.getCustomerStatics(storeName, type);
+        return ApplicationResponse.ok(response);
+    }
+
+
 }

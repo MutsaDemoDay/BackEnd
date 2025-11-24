@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +28,17 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     List<Stamp> findByUsers(Users users);
     @Query("SELECT s.users.userId FROM Stamp s WHERE s.store.name = :storeName")
     List<Long> findUserIdsByStoreName(@Param("storeName") String storeName);
-
+    List<Stamp> findByStoreIdAndDateBetween(Long storeId, LocalDateTime start, LocalDateTime end);
+    @Query(value = """
+        SELECT DATE(s.created_date) AS d,
+               COUNT(DISTINCT s.user_id) AS cnt
+        FROM stamps s
+        WHERE s.store_id = :storeId
+          AND s.created_date BETWEEN :start AND :end
+        GROUP BY DATE(s.created_date)
+        ORDER BY d
+    """, nativeQuery = true)
+    List<Object[]> countDailyUniqueUsers(Long storeId,
+                                         LocalDateTime start,
+                                         LocalDateTime end);
 }
