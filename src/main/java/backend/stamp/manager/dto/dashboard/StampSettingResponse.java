@@ -1,4 +1,4 @@
-package backend.stamp.manager.dto;
+package backend.stamp.manager.dto.dashboard;
 
 public record StampSettingResponse(
         String storeName,

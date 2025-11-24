@@ -50,4 +50,27 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
             LocalDateTime start,
             LocalDateTime end
     );
+
+    @Query("""
+        SELECT COUNT(DISTINCT s.users.userId)
+        FROM Stamp s
+        WHERE s.store.id = :storeId
+        AND s.date BETWEEN :startDt AND :endDt
+    """)
+    Long countWeeklyUsers(
+            @Param("storeId") Long storeId,
+            @Param("startDt") LocalDateTime startDt,
+            @Param("endDt") LocalDateTime endDt
+    );
+    @Query("""
+    SELECT COUNT(DISTINCT s.users.id)
+    FROM Stamp s
+    WHERE s.store.id = :storeId
+      AND s.date BETWEEN :start AND :end
+    """)
+    Long countRegisteredCustomers(
+            @feign.Param("storeId") Long storeId,
+            @feign.Param("start") LocalDateTime start,
+            @feign.Param("end") LocalDateTime end
+    );
 }

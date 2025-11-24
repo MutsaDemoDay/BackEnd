@@ -4,7 +4,7 @@ package backend.stamp.manager.controller;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.exception.ErrorCode;
-import backend.stamp.manager.dto.*;
+import backend.stamp.manager.dto.dashboard.*;
 import backend.stamp.manager.service.ManagerService;
 import backend.stamp.stamp.service.qr.QRCodeService;
 import backend.stamp.store.entity.Store;
@@ -94,6 +94,32 @@ public class ManagerController {
                 managerService.getWeeklyGenderStatistics(store.getId(), date);
         return ApplicationResponse.ok(response);
     }
+
+    /**
+     * 기간 내 스탬프 적립 수
+     * @param storeName
+     * @return
+     */
+    @GetMapping("/weekly/event")
+    public ApplicationResponse<WeeklyCompareResponse> getWeeklyEventCompare(
+            @RequestParam String storeName
+    ){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        WeeklyCompareResponse resp =
+                managerService.getEventWeeklyCompare(store.getId());
+        return ApplicationResponse.ok(resp);
+    }
+    @GetMapping("/weekly/customers")
+    public ApplicationResponse<WeeklyCustomerCompareResponse> getWeeklyCustomerCompare(
+            @RequestParam String storeName
+    ){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        WeeklyCustomerCompareResponse resp = managerService.getWeeklyCustomerCompare(store.getId());
+        return ApplicationResponse.ok(resp);
+    }
+
 
 
 }

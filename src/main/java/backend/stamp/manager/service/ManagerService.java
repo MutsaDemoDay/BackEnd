@@ -1,10 +1,12 @@
 package backend.stamp.manager.service;
 
 import backend.stamp.account.entity.Account;
+import backend.stamp.eventstore.entity.EventStore;
+import backend.stamp.eventstore.repository.EventStoreRepository;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.level.entity.Level;
-import backend.stamp.manager.dto.*;
+import backend.stamp.manager.dto.dashboard.*;
 import backend.stamp.manager.object.ObjectStorageService;
 import backend.stamp.stamp.entity.Stamp;
 import backend.stamp.stamp.repository.StampRepository;
@@ -23,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -33,6 +36,7 @@ public class ManagerService {
     private final UsersRepository usersRepository;
     private final StampRepository stampRepository;
     private final ObjectStorageService objectStorageService;
+    private final EventStoreRepository eventStoreRepository;
     public String setStamp(StampSettingRequest request, MultipartFile image){
         Store store = storeRepository.findByName(request.storeName())
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
@@ -350,4 +354,113 @@ public class ManagerService {
         );
     }
 
+    /**
+     * 이벤트 기간 별 주간 비교
+     */
+    public WeeklyCompareResponse getEventWeeklyCompare(Long storeId) {
+        LocalDate today = LocalDate.now();
+        EventStore event = eventStoreRepository.findActiveEventByStoreId(storeId, today)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.EVENT_NOT_FOUND));
+
+        LocalDate start = event.getStartDate();
+        LocalDate end = event.getEndDate();
+        LocalDate currentWeekStart = today.with(DayOfWeek.MONDAY);
+        LocalDate lastWeekStart = currentWeekStart.minusWeeks(1);
+        Long currentAvg = calcWeeklyAvgInEventPeriod(storeId, currentWeekStart, start, end);
+        Long lastAvg = calcWeeklyAvgInEventPeriod(storeId, lastWeekStart, start, end);
+
+        return buildCompareResult(event.getEvent().getTitle(), currentAvg, lastAvg);
+    }
+
+
+    /**
+     * 이벤트 기간 내에서 겹치는 날짜만 주간 평균 계산
+     */
+    private Long calcWeeklyAvgInEventPeriod(
+            Long storeId,
+            LocalDate weekStart,
+            LocalDate eventStart,
+            LocalDate eventEnd
+    ) {
+        LocalDate weekEnd = weekStart.plusDays(6);
+
+        // 주간 전체가 이벤트 기간과 안 겹치면 → 0
+        if (weekEnd.isBefore(eventStart) || weekStart.isAfter(eventEnd)) {
+            return 0L;
+        }
+
+        LocalDate realStart = weekStart.isBefore(eventStart) ? eventStart : weekStart;
+        LocalDate realEnd = weekEnd.isAfter(eventEnd) ? eventEnd : weekEnd;
+        LocalDateTime startDt = realStart.atStartOfDay();
+        LocalDateTime endDt = realEnd.atTime(23, 59, 59);
+
+        Long total = stampRepository.countWeeklyUsers(storeId, startDt, endDt);
+        long days = ChronoUnit.DAYS.between(realStart, realEnd) + 1;
+
+        return total / days;
+    }
+
+
+    /**
+     * 비교 결과 DTO 생성
+     */
+    private WeeklyCompareResponse buildCompareResult(
+            String title,
+            Long currentAvg,
+            Long lastAvg
+    ) {
+        double diff = 0.0;
+        if (lastAvg != 0) {
+            diff = ((currentAvg - lastAvg) * 100.0) / lastAvg;
+        }
+        String diffText;
+        if (diff > 0) diffText = String.format("%.0f%% 늘었습니다.", diff);
+        else if (diff < 0) diffText = String.format("%.0f%% 줄었습니다.", Math.abs(diff));
+        else diffText = "변화 없음";
+        return new WeeklyCompareResponse(
+                title,
+                currentAvg,
+                lastAvg,
+                Math.round(diff * 10) / 10.0,
+                diffText
+        );
+    }
+    public WeeklyCustomerCompareResponse getWeeklyCustomerCompare(Long storeId) {
+
+        LocalDate today = LocalDate.now();
+
+        LocalDate currentWeekStart = today.with(DayOfWeek.MONDAY);
+        LocalDate lastWeekStart = currentWeekStart.minusWeeks(1);
+
+        Long currentCount = calcWeeklyCustomers(storeId, currentWeekStart);
+        Long lastCount = calcWeeklyCustomers(storeId, lastWeekStart);
+
+        return buildCustomerCompare(currentCount, lastCount);
+    }
+    private Long calcWeeklyCustomers(Long storeId, LocalDate weekStart) {
+        LocalDateTime start = weekStart.atStartOfDay();
+        LocalDateTime end = weekStart.plusDays(6).atTime(23, 59, 59);
+        return stampRepository.countRegisteredCustomers(storeId, start, end);
+    }
+    private WeeklyCustomerCompareResponse buildCustomerCompare(
+            Long current, Long last
+    ) {
+        double diff = 0.0;
+
+        if (last != 0) {
+            diff = ((current - last) * 100.0) / last;
+        }
+
+        String diffText;
+        if (diff > 0) diffText = String.format("%.0f%% 늘었습니다.", diff);
+        else if (diff < 0) diffText = String.format("%.0f%% 줄었습니다.", Math.abs(diff));
+        else diffText = "변화 없음";
+
+        return new WeeklyCustomerCompareResponse(
+                current,
+                last,
+                Math.round(diff * 10) / 10.0,
+                diffText
+        );
+    }
 }
