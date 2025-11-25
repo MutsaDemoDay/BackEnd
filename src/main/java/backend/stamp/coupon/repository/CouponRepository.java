@@ -17,16 +17,14 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
       List<Coupon> findByUsers_Account_AccountId(Long accountId);
       List<Coupon> findByUsers_Account_AccountIdAndUsedFalse(Long userId);
       List<Coupon> findByUsersAndUsedFalse(Users users);
-<<<<<<< HEAD
 
       boolean existsByUsersAndStore(Users users, Store store);
-=======
+
       long countByStoreIdAndUsedAndUsedDateBetween(
               Long storeId,
               boolean used,
               LocalDateTime start,
               LocalDateTime end
       );
->>>>>>> 903e3b0 ([fix] couponCnt 적립 + reward 개수 + statics 총개수)
 
 }
