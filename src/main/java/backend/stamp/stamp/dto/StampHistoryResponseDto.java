@@ -14,6 +14,7 @@ import java.util.Date;
 
 public class StampHistoryResponseDto {
 
+    private Long storeId;
     private String storeName;
     private String storeAddress;
 
@@ -23,6 +24,7 @@ public class StampHistoryResponseDto {
 
     public static StampHistoryResponseDto from(Coupon coupon) {
         return StampHistoryResponseDto.builder()
+                .storeId(coupon.getStore().getId())
                 .storeName(coupon.getStore().getName())
                 .storeAddress(coupon.getStore().getAddress())
                 .issuedDate(coupon.getCreatedDate()) // BaseEntity에서 가지고 오기
