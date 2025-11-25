@@ -74,7 +74,7 @@ Account account = userDetails.getAccount();
         return ResponseEntity.ok(myStamps);
     }
 
-    // 내 스탬프 히스토리 조회
+    // 내 스탬프 히스토리 조회 ( 유저 )
 
     @Operation(summary = "내 스탬프 히스토리 조회 api", description = "유저가 자신의 스탬프 히스토리를 조회합니다.")
     @ApiResponses({
