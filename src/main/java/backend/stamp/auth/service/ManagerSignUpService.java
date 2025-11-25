@@ -44,6 +44,11 @@ public class ManagerSignUpService {
             throw new ApplicationException(ErrorCode.DUPLICATE_EMAIL);
         }
 
+        emailService.validateVerificationTokenOrThrow(
+                request.getEmail(),
+                request.getEmailVerificationToken()
+        );
+
         NtsStatusData statusData = businessStatusClient.inquireStatus(request.getBusinessNum());
 
         if (!"계속사업자".equals(statusData.getStatus())) {

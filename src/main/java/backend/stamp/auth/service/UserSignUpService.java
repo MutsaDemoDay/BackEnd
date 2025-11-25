@@ -27,6 +27,7 @@ public class UserSignUpService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final EmailService emailService;
 
 
     public SignUpResponse signUp(UserSignUpRequest request) {
@@ -40,6 +41,11 @@ public class UserSignUpService {
         if (accountRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new ApplicationException(ErrorCode.DUPLICATE_EMAIL);
         }
+
+        emailService.validateVerificationTokenOrThrow(
+                request.getEmail(),
+                request.getEmailVerificationToken()
+        );
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
