@@ -32,10 +32,12 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
+    //stamp
     @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
     private Stamp stamp;
 
     //user
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private Users users;
