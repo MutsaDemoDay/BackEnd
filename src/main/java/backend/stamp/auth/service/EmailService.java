@@ -32,7 +32,7 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("[STAMP] 이메일 인증번호 안내");
+            message.setSubject("[DANGO] 이메일 인증번호 안내");
             message.setText("인증번호는 " + code + " 입니다.");
             mailSender.send(message);
         } catch (Exception e) {
@@ -63,5 +63,22 @@ public class EmailService {
 
     private String generateCode() {
         return String.format("%06d", new Random().nextInt(1_000_000));
+    }
+
+    public void sendBusinessVerifiedMail(String email) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("[DANGO] 사업자 등록 인증이 완료되었습니다.");
+            message.setText(
+                    "안녕하세요.\n\n" +
+                            "요청하신 사업자 등록 인증이 정상적으로 완료되었습니다.\n" +
+                            "이제 STAMP에서 매장 정보를 등록하고, 서비스를 이용하실 수 있습니다.\n\n" +
+                            "감사합니다."
+            );
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
