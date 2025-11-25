@@ -21,5 +21,6 @@ public class EventListResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private String buttonImageUrl;
+    private S
 
 }

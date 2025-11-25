@@ -26,7 +26,7 @@ public class Stamp {
 
     //주문
     //nullable =true  -> 빈 스탬프판일때 예외 방지
-    @ManyToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="order_id",nullable = true)
     private Order order;
     //유저
