@@ -1,6 +1,7 @@
 package backend.stamp.manager.controller;
 
 
+import backend.stamp.coupon.service.CouponService;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.exception.ErrorCode;
@@ -23,11 +24,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stamps/manager")
+@RequestMapping("/api/v1/manager")
 @Tag(name = "점주 페이지", description = "점주 페이지 API")
 public class ManagerController {
     private final ManagerService managerService;
     private final QRCodeService qrCodeService;
+    private final CouponService couponService;
     private final StoreRepository storeRepository;
 
     /**
@@ -64,18 +66,35 @@ public class ManagerController {
         return ApplicationResponse.ok(response);
     }
     @PostMapping("/addByNum")
-    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId){
+    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId, @RequestParam int stampCount){
         Store store = storeRepository.findByName(storeName)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALIDE_QRCODE));
-        qrCodeService.addStamp(store.getId(), userId);
+        qrCodeService.addStamp(store.getId(), userId, stampCount);
         return ApplicationResponse.ok("성공적으로 적립되었습니다.");
     }
-    @GetMapping("/statics")
-    public ApplicationResponse<StampStatisticsResponse> getStatics(@RequestParam String storeName, @RequestParam String type){
-        StampStatisticsResponse response = managerService.getStampStatics(storeName, type);
+    @GetMapping("/stamps/statics")
+    public ApplicationResponse<StampStatisticsTotalResponse> getStatics(
+            @RequestParam String storeName,
+            @RequestParam String type
+    ) {
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        StampStatisticsTotalResponse response = switch (type.toLowerCase()) {
+            case "weekly" -> managerService.getWeeklyStats(store.getId());
+            case "monthly" -> managerService.getMonthlyStats(store.getId());
+            default -> throw new ApplicationException(ErrorCode.INVALID_REQUEST);
+        };
         return ApplicationResponse.ok(response);
     }
-    @GetMapping("/totals")
+    @GetMapping("/stamps/statics/daily")
+    public ApplicationResponse<?> getDailyStatics(@RequestParam String storeName){
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        StampStatisticsResponse response =managerService.getDailyStats(store.getId());
+        return ApplicationResponse.ok(response);
+    }
+
+    @GetMapping("/customers/statics")
     public ApplicationResponse<StampStatisticsResponse> getTotals(@RequestParam String storeName, @RequestParam String type){
         StampStatisticsResponse response = managerService.getCustomerStatics(storeName, type);
         return ApplicationResponse.ok(response);
@@ -119,7 +138,11 @@ public class ManagerController {
         WeeklyCustomerCompareResponse resp = managerService.getWeeklyCustomerCompare(store.getId());
         return ApplicationResponse.ok(resp);
     }
-
+    @GetMapping("/reward")
+    public ApplicationResponse<Long> getTodayUsedCount(@RequestParam String storeName) {
+        long count = couponService.countTodayUsedCoupons(storeName);
+        return ApplicationResponse.ok(count);
+    }
 
 
 }

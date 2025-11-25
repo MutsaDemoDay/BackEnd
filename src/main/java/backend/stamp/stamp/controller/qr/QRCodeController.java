@@ -21,9 +21,10 @@ public class QRCodeController {
     @PostMapping("/scan")
     public ApplicationResponse<String> scanQrCode(
             @RequestParam Long storeId,
-            @RequestParam Long userId)
+            @RequestParam Long userId,
+            @RequestParam int stampCount)
     {
-        qrservice.addStamp(storeId, userId);
+        qrservice.addStamp(storeId, userId, stampCount);
         return ApplicationResponse.ok("스탬프가 정상적으로 적립되었습니다.");
     }
     @GetMapping("/generate")
