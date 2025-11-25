@@ -54,6 +54,9 @@ public enum ErrorCode {
     BUSINESS_HOUR_NOT_FOUND(HttpStatus.BAD_REQUEST, 426, "영업시간이 없습니다."),
     MENU_NOT_FOUND(HttpStatus.BAD_REQUEST, 427, "메뉴가 없습니다."),
     MENU_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, 428, "메뉴 추가는 10개까지 가능합니다."),
+    REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,429, "이미 리뷰를 작성하셨습니다."),
+    STAMP_NOT_COMPLETED(HttpStatus.BAD_REQUEST, 430, "스탬프판을 완성하지 않아 리뷰 작성 권한이 없습니다."),
+
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
