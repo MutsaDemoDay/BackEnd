@@ -65,7 +65,7 @@ public class MypageController {
     }
 
     @Operation(summary = "유저 설정 수정", description = "유저의 설정 정보를 수정합니다.")
-    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value="/settings",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApplicationResponse<UserSettingsDto> updateUserSettings(
             @RequestPart("data") String data,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
