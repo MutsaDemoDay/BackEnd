@@ -98,6 +98,7 @@ public class MypageService {
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         UserSettingsDto dto = new UserSettingsDto();
+        dto.setNickname(user.getNickname());
         dto.setProfileImageUrl(user.getProfileImageUrl());
         dto.setRepresentativeBadgeName(user.getRepresentativeBadgeName());
         dto.setGender(user.getGender());
@@ -144,6 +145,10 @@ public class MypageService {
             }
         }
 
+        if (requestDto.getNickname() != null) {
+            user.setNickname(requestDto.getNickname());
+        }
+
         if (requestDto.getRepresentativeBadgeName() != null) {
             user.setRepresentativeBadgeName(requestDto.getRepresentativeBadgeName());
         }
@@ -161,6 +166,7 @@ public class MypageService {
         }
 
         UserSettingsDto response = new UserSettingsDto();
+        response.setNickname(user.getNickname());
         response.setProfileImageUrl(user.getProfileImageUrl());
         response.setRepresentativeBadgeName(user.getRepresentativeBadgeName());
         response.setGender(user.getGender());

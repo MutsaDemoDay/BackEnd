@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 public class UserSettingsDto {
 
+    private String nickname;
+
     private String profileImageUrl;
     private String representativeBadgeName;
     private Gender gender;
