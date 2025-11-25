@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import backend.stamp.event.entity.EventType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -21,6 +22,8 @@ public class EventListResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private String buttonImageUrl;
-    private S
+
+    private List<Long> participatingStores;  // 이 이벤트에 참여중인 storeId 목록
+
 
 }

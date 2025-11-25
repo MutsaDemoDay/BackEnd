@@ -102,11 +102,10 @@ public class StampService {
         }
 
         //+ 추가 ))이미 이주문으로 스탬프 적립된적 있는지 확인
-        boolean alreadyAdded = stampRepository.existsByOrder(order);
-        if (alreadyAdded) {
+
+        if (order.isUsed()) {
             throw new ApplicationException(ErrorCode.STAMP_ALREADY_ADDED_FOR_ORDER);
         }
-
         // 4)  총 주문 금액 확인
         Integer totalPrice = order.getTotalPrice();
 
@@ -149,6 +148,10 @@ public class StampService {
         //해당 주문과 연결
         stamp.setOrder(order);
         stampRepository.save(stamp);
+
+        //주문 사용처리
+        order.setUsed(true);
+        orderRepository.save(order);
 
         //누적 스탬프 수 반영한 유저 정보 저장
         usersRepository.save(users);

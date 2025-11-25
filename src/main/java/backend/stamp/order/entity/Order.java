@@ -45,5 +45,8 @@ public class Order {
     @JoinColumn(name="store_id", nullable = false)
     private Store store;
 
+    //사용여부
+    @Column(nullable = false)
+    private boolean used = false;
 
 }
