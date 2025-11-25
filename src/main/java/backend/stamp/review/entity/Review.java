@@ -47,4 +47,7 @@ public class Review {
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
+    @Column
+    private String reviewImageUrl;
+
 }
