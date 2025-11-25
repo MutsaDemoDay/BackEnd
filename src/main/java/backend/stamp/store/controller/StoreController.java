@@ -4,6 +4,14 @@ package backend.stamp.store.controller;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ApplicationResponse;
 import backend.stamp.global.exception.ErrorCode;
+import backend.stamp.account.entity.Account;
+import backend.stamp.global.exception.ApplicationException;
+import backend.stamp.global.exception.ErrorCode;
+import backend.stamp.global.security.PrincipalDetails;
+import backend.stamp.review.service.ReviewService;
+import backend.stamp.store.dto.StoreDetailHomeResponse;
+import backend.stamp.store.dto.StoreDetailReviewsResponse;
+import backend.stamp.review.service.ReviewService;
 import backend.stamp.store.dto.StoreSearchResponseDto;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -13,6 +21,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +38,7 @@ import java.util.List;
 
 public class StoreController {
     private final StoreService storeService;
+    private final ReviewService reviewService;
     private final StoreShareService storeShareService;
 
     //매장 검색 ( 부분 검색 )
@@ -35,6 +49,41 @@ public class StoreController {
         return storeService.getSearchedStores(storeName);
     }
 
+    // 가게 상세 - 홈
+    @Operation(summary = "가게 상세 홈 조회", description = "가게 기본 정보, 가게 스탬프, 대표 메뉴 등을 조회합니다.")
+    @GetMapping("/{storeId}")
+    public ResponseEntity<StoreDetailHomeResponse> getStoreDetailHome(
+            @PathVariable Long storeId,
+            @RequestParam(required = false) Double latitude,
+            @RequestParam(required = false) Double longitude,
+            @AuthenticationPrincipal PrincipalDetails userDetails) {
+
+        if (userDetails == null || userDetails.getAccount() == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        final Account account = userDetails.getAccount();
+
+        StoreDetailHomeResponse response = storeService.getStoreDetailHome(storeId, account, latitude, longitude);
+        return ResponseEntity.ok(response);
+    }
+
+    // 가게 상세 - 리뷰
+    @Operation(summary = "가게 상세 리뷰 탭 조회", description = "가게의 전체 리뷰 목록과 평점 통계를 조회합니다.")
+    @GetMapping("/{storeId}/reviews")
+    public ResponseEntity<StoreDetailReviewsResponse> getStoreDetailReviews(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal PrincipalDetails userDetails) {
+
+        if (userDetails == null || userDetails.getAccount() == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        final Account account = userDetails.getAccount();
+
+        StoreDetailReviewsResponse response = reviewService.getStoreDetailReviews(storeId, account);
+        return ResponseEntity.ok(response);
+    }
 
     //매장 전체 조회
     @Operation(summary = "매장 전체 조회 api", description = "DB에 있는 전체 매장을 조회합니다.")

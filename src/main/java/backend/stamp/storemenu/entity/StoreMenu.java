@@ -27,7 +27,7 @@ public class StoreMenu {
     @Lob
     private String content;
 
-    private String imageUrl;
+    private String menuImageUrl;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="store_id", nullable = false)
@@ -37,14 +37,14 @@ public class StoreMenu {
                                    String name,
                                    int price,
                                    String content,
-                                   String imageUrl) {
+                                   String menuImageUrl) {
 
         StoreMenu menu = new StoreMenu(); // 같은 클래스 안이라 protected 생성자 사용 가능
         menu.store = store;
         menu.name = name;
         menu.price = price;
         menu.content = content;
-        menu.imageUrl = imageUrl;
+        menu.menuImageUrl = menuImageUrl;
         return menu;
     }
 
