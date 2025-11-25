@@ -63,7 +63,7 @@ public class MypageService {
         return UserProfileResponse.builder()
                 .nickname(user.getNickname())
                 .totalStampCount(user.getTotalStampSum() != null ? user.getTotalStampSum() : 0)
-                .reviewCount(reviews.size())
+                .couponNum(user.getCouponNum())
                 .stamps(stampInfos)
                 .reviews(reviews)
                 .build();

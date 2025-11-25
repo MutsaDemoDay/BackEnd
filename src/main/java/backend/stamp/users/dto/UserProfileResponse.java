@@ -13,7 +13,8 @@ public class UserProfileResponse {
     private String nickname;
 
     private int totalStampCount;
-    private int reviewCount;
+
+    private Integer couponNum;
 
     private List<UserProfileResponse.StampInfo> stamps;
     private List<UserProfileResponse.ReviewInfo> reviews;
