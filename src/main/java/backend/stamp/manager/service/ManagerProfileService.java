@@ -89,7 +89,7 @@ public class ManagerProfileService {
                     dto.setName(m.getName());
                     dto.setPrice(m.getPrice());
                     dto.setContent(m.getContent());
-                    dto.setImageUrl(m.getImageUrl());
+                    dto.setImageUrl(m.getMenuImageUrl());
                     // 응답에서는 action 비워둠
                     return dto;
                 })
@@ -294,7 +294,7 @@ public class ManagerProfileService {
 
                     if (imageFile != null && !imageFile.isEmpty()) {
                         String url = objectStorageService.uploadFile(imageFile);
-                        menu.setImageUrl(url);
+                        menu.setMenuImageUrl(url);
                     }
                 }
                 case "CREATE" -> {
