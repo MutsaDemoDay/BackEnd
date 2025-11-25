@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class EmailService {
 
     // 임시 저장소
     private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
+    private final Map<String, String> verificationTokens = new ConcurrentHashMap<>();
 
     /**
      * 인증번호 이메일 발송
@@ -47,7 +50,7 @@ public class EmailService {
      * - 코드가 없으면 EMAIL_CODE_NOT_FOUND
      * - 코드가 불일치하면 INVALID_EMAIL_CODE
      */
-    public void verifyCodeOrThrow(String email, String inputCode) {
+    public String verifyCodeAndIssueToken(String email, String inputCode) {
         String savedCode = verificationCodes.get(email);
 
         if (savedCode == null) {
@@ -59,6 +62,25 @@ public class EmailService {
         }
 
         verificationCodes.remove(email);
+
+        String token = UUID.randomUUID().toString();
+        verificationTokens.put(token, email);
+
+        return token;
+    }
+
+    public void validateVerificationTokenOrThrow(String email, String token) {
+        if (token == null || token.isBlank()) {
+            throw new ApplicationException(ErrorCode.INVALID_EMAIL_VERIFICATION_TOKEN);
+        }
+
+        String emailFromToken = verificationTokens.get(token);
+
+        if (emailFromToken == null || !emailFromToken.equals(email)) {
+            throw new ApplicationException(ErrorCode.INVALID_EMAIL_VERIFICATION_TOKEN);
+        }
+
+        verificationTokens.remove(token);
     }
 
     private String generateCode() {

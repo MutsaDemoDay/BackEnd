@@ -153,9 +153,15 @@ public class AuthController {
 
     @Operation(summary = "이메일 인증번호 검증 api", description = "입력한 인증번호가 맞는지 검증합니다.")
     @PostMapping("/email/verify")
-    public ApplicationResponse<String> verifyEmailCode(@Valid @RequestBody EmailVerifyRequest request) {
-        emailService.verifyCodeOrThrow(request.getEmail(), request.getCode());
-        return ApplicationResponse.ok("이메일 인증이 완료되었습니다.");
+    public ApplicationResponse<EmailVerifyResponse> verifyEmailCode(@Valid @RequestBody EmailVerifyRequest request) {
+        String token = emailService.verifyCodeAndIssueToken(request.getEmail(), request.getCode());
+        EmailVerifyResponse response = new EmailVerifyResponse(token);
+
+        return ApplicationResponse.<EmailVerifyResponse>builder()
+                .code(ErrorCode.SUCCESS.getCode())
+                .message("이메일 인증이 완료되었습니다.")
+                .data(response)
+                .build();
     }
 
     @Operation(summary = "유저 아이디 찾기 api", description = "유저가 자신의 아이디를 찾습니다.")
