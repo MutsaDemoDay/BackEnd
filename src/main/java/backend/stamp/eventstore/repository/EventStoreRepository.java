@@ -47,4 +47,6 @@ public interface EventStoreRepository extends JpaRepository<EventStore, Long> {
             @Param("today") LocalDate today
     );
 
+    List<EventStore> findByEventAndActiveIsTrue(Event event);
+
 }
