@@ -1,5 +1,6 @@
 package backend.stamp.auth.service;
 
+import backend.stamp.auth.dto.external.NtsStatusData;
 import backend.stamp.account.entity.Account;
 import backend.stamp.account.entity.UserType;
 import backend.stamp.account.repository.AccountRepository;
@@ -28,6 +29,8 @@ public class ManagerSignUpService {
     private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final BusinessStatusClient businessStatusClient;
+    private final EmailService emailService;
 
     public SignUpResponse signUp(ManagerSignUpRequest request) {
 
@@ -39,6 +42,12 @@ public class ManagerSignUpService {
         }
         if (accountRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new ApplicationException(ErrorCode.DUPLICATE_EMAIL);
+        }
+
+        NtsStatusData statusData = businessStatusClient.inquireStatus(request.getBusinessNum());
+
+        if (!"계속사업자".equals(statusData.getStatus())) {
+            throw new ApplicationException(ErrorCode.INVALID_BUSINESS_NUMBER);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -70,6 +79,7 @@ public class ManagerSignUpService {
 
         storeRepository.save(newStore);
 
+        emailService.sendBusinessVerifiedMail(request.getEmail());
 
         String accessToken = tokenProvider.createAccessToken(savedAccount);
         String refreshToken = tokenProvider.createRefreshToken(savedAccount);
@@ -83,5 +93,7 @@ public class ManagerSignUpService {
                 .refreshToken(refreshToken)
                 .build();
     }
-
+    private String cleanBizNo(String rawBusinessNumber) {
+        return rawBusinessNumber.replaceAll("[^0-9]", "");
+    }
 }
