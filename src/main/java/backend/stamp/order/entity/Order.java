@@ -32,9 +32,8 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Stamp> stamps= new ArrayList<>();
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    private Stamp stamp;
 
     //user
     @ManyToOne(fetch=FetchType.LAZY)
