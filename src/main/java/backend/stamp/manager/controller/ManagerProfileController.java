@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/managers/profile")
 @RequiredArgsConstructor
-@Tag(name = "매장 프로필", description = "점주가 매장 프로필 조회/수정하는 api")
+@Tag(name = "Manager (매장 프로필)", description = "점주가 매장 프로필 조회/수정하는 api")
 public class ManagerProfileController {
 
     private final ManagerProfileService managerProfileService;

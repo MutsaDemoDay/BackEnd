@@ -2,6 +2,7 @@ package backend.stamp.ai.controller;
 
 import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.AiResponse;
+import backend.stamp.ai.ai.subdtos.AiRequestForm;
 import backend.stamp.ai.service.AiService;
 import backend.stamp.ai.service.RecommendService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +23,7 @@ public class AiController {
 
     @PostMapping("/call")
     public Mono<AiResponse> callAi(@RequestBody AiRequest partialRequest) {
-        AiRequest fullRequest = recommendService.buildFullAiRequest(partialRequest);
-
+        AiRequestForm fullRequest = recommendService.buildFullAiRequest(partialRequest);
         try {
             System.out.println("AI 요청 JSON 직전 = " +
                     objectMapper.writeValueAsString(fullRequest));

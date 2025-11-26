@@ -3,6 +3,10 @@ package backend.stamp.store.service;
 import backend.stamp.account.entity.Account;
 import backend.stamp.businesshour.entity.BusinessHour;
 import backend.stamp.coupon.repository.CouponRepository;
+import backend.stamp.global.exception.ApplicationException;
+import backend.stamp.global.exception.ErrorCode;
+import backend.stamp.review.repository.ReviewRepository;
+import backend.stamp.store.dto.StoreDetailHomeResponse;
 import backend.stamp.store.dto.StoreSearchResponseDto;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -28,6 +32,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final UsersRepository usersRepository;
     private final CouponRepository couponRepository;
+    private final ReviewRepository reviewRepository;
 
     private record OperationStatusResponse(String status, String message) {
     }
@@ -115,5 +120,115 @@ private Double calculateDistance(Double lat1, Double lon1, Double lat2, Double l
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 }
+
+    // 4) 가게 상세 - 홈
+    @Transactional(readOnly = true)
+    public StoreDetailHomeResponse getStoreDetailHome(Long storeId, Account account, Double userLatitude, Double userLongitude) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        Users user = usersRepository.findByAccount(account)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        boolean stampCompleted = couponRepository.existsByUsersAndStore(user, store);
+        boolean reviewAlreadyWritten = reviewRepository.existsByUsersAndStore(user, store);
+        boolean isReviewAvailable = stampCompleted && !reviewAlreadyWritten;
+
+        List<StoreDetailHomeResponse.StoreMenuInfo> menus = store.getStoreMenus().stream()
+                .map(menu -> StoreDetailHomeResponse.StoreMenuInfo.builder()
+                        .menuName(menu.getName())
+                        .content(menu.getContent())
+                        .price(menu.getPrice())
+                        .menuImageUrl(menu.getMenuImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+
+        OperationStatusResponse operationStatus = getOperationStatus(store);
+
+        Double distanceMeters = null;
+        if (userLatitude != null && userLongitude != null && store.getLatitude() != null && store.getLongitude() != null) {
+            distanceMeters = calculateDistance(userLatitude, userLongitude, store.getLatitude(), store.getLongitude());
+        }
+
+        String stampRewardStr = store.getStampReward();
+
+        return StoreDetailHomeResponse.builder()
+                .storeId(store.getId())
+                .name(store.getName())
+                .category(store.getCategory())
+                .address(store.getAddress())
+                .storeImageUrl(store.getStoreImageUrl())
+                .phone(store.getPhone())
+                .storeUrl(store.getStoreUrl())
+                .sns(store.getSns())
+                .distanceMeters(distanceMeters)
+                .status(operationStatus.status())
+                .message(operationStatus.message())
+                .reward(store.getReward())
+                .stampReward(stampRewardStr)
+                .stampImageUrl(store.getStampImageUrl())
+                .maxCount(store.getMaxCount())
+                .isReviewAvailable(isReviewAvailable)
+                .signatureMenus(menus)
+                .build();
+    }
+
+    // 헬퍼: 영업 상태 계산
+    private OperationStatusResponse getOperationStatus(Store store) {
+        if (store.getBusinessHours() == null || store.getBusinessHours().isEmpty()) {
+            return new OperationStatusResponse("정보 없음", null);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        DayOfWeek todayOfWeek = now.getDayOfWeek();
+        LocalTime currentTime = now.toLocalTime();
+
+        // BusinessHour#day 컬럼이 "MON", "TUE" 같은 3글자 포맷
+        String todayString = todayOfWeek.toString().substring(0, 3);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<BusinessHour> todayHours = store.getBusinessHours().stream()
+                .filter(bh -> bh.getDay() != null && bh.getDay().equalsIgnoreCase(todayString))
+                .collect(Collectors.toList());
+
+        if (todayHours.isEmpty()) {
+            return new OperationStatusResponse("정보 없음", null);
+        }
+
+        boolean isHoliday = todayHours.stream().anyMatch(BusinessHour::isHoliday);
+        if (isHoliday) {
+            return new OperationStatusResponse("영업 종료", "오늘은 휴무일입니다.");
+        }
+
+        Optional<BusinessHour> currentStatus = todayHours.stream()
+                .filter(bh -> {
+                    LocalTime open = bh.getOpenTime();
+                    LocalTime close = bh.getCloseTime();
+                    if (open == null || close == null) return false;
+                    // 영업 시작 시각 포함, 종료 시각은 미포함 (open <= now < close)
+                    return !currentTime.isBefore(open) && currentTime.isBefore(close);
+                })
+                .findFirst();
+
+        if (currentStatus.isPresent()) {
+            LocalTime closeTime = currentStatus.get().getCloseTime();
+            return new OperationStatusResponse("영업중", closeTime.format(formatter) + "까지");
+        } else {
+            Optional<BusinessHour> nextOpen = todayHours.stream()
+                    .filter(bh -> {
+                        LocalTime open = bh.getOpenTime();
+                        return open != null && currentTime.isBefore(open);
+                    })
+                    .sorted(Comparator.comparing(BusinessHour::getOpenTime))
+                    .findFirst();
+
+            if (nextOpen.isPresent()) {
+                LocalTime openTime = nextOpen.get().getOpenTime();
+                return new OperationStatusResponse("영업 종료", openTime.format(formatter) + "에 시작");
+            } else {
+                return new OperationStatusResponse("영업 종료", "금일 영업이 종료되었습니다.");
+            }
+        }
+    }
 
 }

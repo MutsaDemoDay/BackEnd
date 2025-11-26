@@ -7,7 +7,6 @@ public record PopularStore(
 
         @JsonProperty("store_address")
         String storeAddress,
-
         @JsonProperty("visit_count")
         int visitCount
 

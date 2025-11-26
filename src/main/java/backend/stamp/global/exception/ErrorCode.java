@@ -54,6 +54,11 @@ public enum ErrorCode {
     BUSINESS_HOUR_NOT_FOUND(HttpStatus.BAD_REQUEST, 426, "영업시간이 없습니다."),
     MENU_NOT_FOUND(HttpStatus.BAD_REQUEST, 427, "메뉴가 없습니다."),
     MENU_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, 428, "메뉴 추가는 10개까지 가능합니다."),
+    REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,429, "이미 리뷰를 작성하셨습니다."),
+    STAMP_NOT_COMPLETED(HttpStatus.BAD_REQUEST, 430, "스탬프판을 완성하지 않아 리뷰 작성 권한이 없습니다."),
+    INVALID_BUSINESS_NUMBER(HttpStatus.BAD_REQUEST, 431, "사업자번호를 다시 확인해 주세요."),
+    INVALID_EMAIL_VERIFICATION_TOKEN(HttpStatus.BAD_REQUEST, 432, "이메일 인증이 완료되지 않았습니다."),
+
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),
@@ -63,6 +68,7 @@ public enum ErrorCode {
     EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, 504, "요청하신 이메일의 인증번호가 존재하지 않습니다."),
     INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, 505, "이메일 인증번호가 일치하지 않습니다."),
 
+    BUSINESS_STATUS_CHECK_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 506, "사업자 상태 조회 중 오류가 발생했습니다."),
 
     // object 업로드 실패
     OBJECT_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 600, "이미지 업로드에 실패했습니다.");

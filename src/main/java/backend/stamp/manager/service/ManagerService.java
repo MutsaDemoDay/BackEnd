@@ -88,20 +88,9 @@ public class ManagerService {
         }
         return list;
     }
-    // 가게 스탬프 통계
-    public StampStatisticsResponse getStampStatics(String storeName, String type) {
-        Store store = storeRepository.findByName(storeName)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
-        Long storeId = store.getId();
-        return switch (type.toLowerCase()) {
-            case "daily" -> getDailyStats(storeId);
-            case "weekly" -> getWeeklyStats(storeId);
-            case "monthly" -> getMonthlyStats(storeId);
-            default -> throw new ApplicationException(ErrorCode.INVALID_REQUEST);
-        };
-    }
 
-    private StampStatisticsResponse getDailyStats(Long storeId) {
+
+    public StampStatisticsResponse getDailyStats(Long storeId) {
         LocalDate today = LocalDate.now();
         LocalDateTime start = today.atStartOfDay();
         LocalDateTime end = today.atTime(23, 59, 59);
@@ -128,7 +117,7 @@ public class ManagerService {
         );
     }
 
-    private StampStatisticsResponse getWeeklyStats(Long storeId) {
+    public StampStatisticsTotalResponse getWeeklyStats(Long storeId) {
 
         LocalDate today = LocalDate.now();
         LocalDate weekStart = today.with(DayOfWeek.MONDAY);
@@ -161,15 +150,16 @@ public class ManagerService {
                 + " - "
                 + weekEnd.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
-        return new StampStatisticsResponse(
+        return new StampStatisticsTotalResponse(
                 "weekly",
                 avg,
+                stamps.size(),
                 periodText,
                 chartData
         );
     }
 
-    private StampStatisticsResponse getMonthlyStats(Long storeId) {
+    public StampStatisticsTotalResponse getMonthlyStats(Long storeId) {
 
         LocalDate today = LocalDate.now();
         YearMonth ym = YearMonth.from(today);
@@ -200,9 +190,10 @@ public class ManagerService {
 
         String periodText = today.format(DateTimeFormatter.ofPattern("yyyy년 MM월"));
 
-        return new StampStatisticsResponse(
+        return new StampStatisticsTotalResponse(
                 "monthly",
                 avg,
+                stamps.size(),
                 periodText,
                 chartData
         );
@@ -250,12 +241,10 @@ public class ManagerService {
 
         List<String> labels = List.of("월","화","수","목","금","토","일");
         List<StampChartData> chart = new ArrayList<>();
-
         for (int i = 0; i < 7; i++) {
             DayOfWeek d = DayOfWeek.MONDAY.plus(i);
             chart.add(new StampChartData(labels.get(i), map.get(d)));
         }
-
         long total = map.values().stream().mapToLong(Long::longValue).sum();
         long avg = total / 7;
 

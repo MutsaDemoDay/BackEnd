@@ -4,6 +4,7 @@ import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.store.EventStoreDto;
 import backend.stamp.ai.ai.store.NewStore;
 import backend.stamp.ai.ai.store.PopularStore;
+import backend.stamp.ai.ai.subdtos.AiRequestForm;
 import backend.stamp.ai.ai.subdtos.VisitStatics;
 import backend.stamp.order.repository.OrderRepository;
 import backend.stamp.store.entity.Store;
@@ -23,7 +24,7 @@ public class RecommendService {
     private final StoreRepository storeRepository;
     private final OrderRepository orderRepository;
 
-    public AiRequest buildFullAiRequest(AiRequest request) {
+    public AiRequestForm buildFullAiRequest(AiRequest request) {
         List<EventStoreDto> eventStoreDtos = storeRepository.findByEventApplyIsNotNull()
                 .stream()
                 .map(EventStoreDto::fromEntity)
@@ -41,7 +42,7 @@ public class RecommendService {
                 .toList();
         List<VisitStatics> statics = orderRepository.findVisitStaticsByUserId(request.getUserId());
 
-        AiRequest aiRequest = new AiRequest(
+        AiRequestForm aiRequest = new AiRequestForm(
                 request.getUserId(),
                 request.getLocation(),
                 eventStoreDtos,

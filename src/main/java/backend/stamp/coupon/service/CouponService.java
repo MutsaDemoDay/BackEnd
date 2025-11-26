@@ -9,12 +9,14 @@ import backend.stamp.coupon.repository.CouponRepository;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.store.entity.Store;
+import backend.stamp.store.repository.StoreRepository;
 import backend.stamp.users.entity.Users;
 import backend.stamp.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class CouponService {
 
     private final CouponRepository couponRepository;
     private final UsersRepository usersRepository;
+    private final StoreRepository storeRepository;
 
     //max Count 달성시 쿠폰 발급
     @Transactional
@@ -111,6 +114,19 @@ public class CouponService {
         // 5. 사용 처리
         coupon.use();
 
+    }
+    public long countTodayUsedCoupons(String storeName) {
+        Store store = storeRepository.findByName(storeName)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.atTime(23, 59, 59);
+        return couponRepository.countByStoreIdAndUsedAndUsedDateBetween(
+                store.getId(),
+                true,
+                start,
+                end
+        );
     }
 
     //쿠폰 개별조회

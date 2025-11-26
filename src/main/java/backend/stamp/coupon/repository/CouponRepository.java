@@ -1,10 +1,12 @@
 package backend.stamp.coupon.repository;
 
 import backend.stamp.coupon.entity.Coupon;
+import backend.stamp.store.entity.Store;
 import backend.stamp.users.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +19,13 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
       List<Coupon> findByUsersAndUsedFalse(Users users);
 
       Optional<Coupon> findById(Long couponId);
+      boolean existsByUsersAndStore(Users users, Store store);
+
+      long countByStoreIdAndUsedAndUsedDateBetween(
+              Long storeId,
+              boolean used,
+              LocalDateTime start,
+              LocalDateTime end
+      );
+
 }
