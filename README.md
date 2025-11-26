@@ -126,6 +126,7 @@ MySQL / S3 / Mail Service
 ### 🎫 Coupon 관련 기능
 
 - 쿠폰 사용 확인 → `POST /api/v1/coupons/{couponId}/confirm`
+- 쿠폰 개별 조회 -> GET /api/v1/coupons/{couponId}
 
 ---
 
