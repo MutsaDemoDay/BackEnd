@@ -343,6 +343,6 @@ Developer (push main)
 | --- | --- | --- |
 | [@Mymyseoyoung](https://github.com/Mymyseoyoung) | 백엔드 | **스탬프 시스템 전반**(스탬프 즐겨찾기, 등록·적립 로직), **매장 기능**(조회·검색·공유), **쿠폰 기능**(사용 처리·코드 검증), **이벤트 조회**(신청 매장 조회, 유저/점주 이벤트 조회), 즐겨찾는 매장, 유저 정보 및 히스토리 조회, Swagger 설정 |
 | [@alissa159](https://github.com/alissa159) | 백엔드 | **인증(Auth)**(회원가입, 이메일 인증, JWT/Security), **사업자등록번호 인증**, **마이페이지** 기능 구현, 지도 페이지 API, 리워드 페이지 API |
-| [@rossenzii](https://github.com/rossenzii) | 백엔드 | **CI/CD 설정 및 서버 배포**, **S3 이미지 업로드 설정**, **QR 생성 및 검증 로직**, 점주 페이지 통계 API, **AI 요약·추천 기능 구현** |
+| [@rossenzii](https://github.com/rossenzii) | 백엔드 | **CI/CD 설정 및 서버 배포**, **S3 이미지 업로드 설정**, **QR 생성 및 검증 로직**, 점주 페이지 통계 API, **AI 모델 생성·추천 기능 구현**, **카카오 로그인 구현** |
 
 ---
