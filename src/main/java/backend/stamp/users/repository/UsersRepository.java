@@ -15,8 +15,8 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     @Query("SELECT u.userId FROM Users u WHERE u.account.email = :email")
     Optional<Long> findUserIdByEmail(@Param("email") String email);
-    @Query("SELECT u.userId FROM Users u WHERE u.account.loginId = :loginId")
-    Optional<Long> findUserIdByLoginId(@Param("email") String email);
+    @Query("SELECT a.accountId FROM Account a WHERE a.loginId = :loginId")
+    Optional<Long> findUserIdByLoginId(@Param("loginId") String loginId);
 
     Optional<Users>findByAccount_AccountId(Long accountId);
 
