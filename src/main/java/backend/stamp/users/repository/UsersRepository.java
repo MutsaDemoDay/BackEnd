@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByAccount(Account account);
+    Optional<Users> findByEmail(String email);
+
     Optional<Users>findByAccount_AccountId(Long accountId);
 
     @Query("SELECT u FROM Users u " +

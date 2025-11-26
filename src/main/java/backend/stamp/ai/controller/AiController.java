@@ -23,7 +23,6 @@ public class AiController {
     @PostMapping("/call")
     public Mono<AiResponse> callAi(@RequestBody AiRequest partialRequest) {
         AiRequest fullRequest = recommendService.buildFullAiRequest(partialRequest);
-
         try {
             System.out.println("AI 요청 JSON 직전 = " +
                     objectMapper.writeValueAsString(fullRequest));
