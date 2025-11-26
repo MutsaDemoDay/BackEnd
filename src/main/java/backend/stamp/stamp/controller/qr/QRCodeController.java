@@ -29,9 +29,9 @@ public class QRCodeController {
             @RequestParam String email,
             @RequestParam int stampCount)
     {
-        Users users = usersRepository.findByEmail(email)
+        Long userId = usersRepository.findUserIdByEmail(email)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        qrservice.addStamp(storeId, users.getUserId(), stampCount);
+        qrservice.addStamp(storeId, userId, stampCount);
         return ApplicationResponse.ok("스탬프가 정상적으로 적립되었습니다.");
     }
     @GetMapping("/generate")

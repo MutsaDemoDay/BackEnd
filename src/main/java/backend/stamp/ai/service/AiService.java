@@ -2,6 +2,7 @@ package backend.stamp.ai.service;
 import backend.stamp.ai.ai.AiApiResponse;
 import backend.stamp.ai.ai.AiRequest;
 import backend.stamp.ai.ai.AiResponse;
+import backend.stamp.ai.ai.subdtos.AiRequestForm;
 import backend.stamp.global.config.WebClientConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -29,7 +30,7 @@ public class AiService {
                 .build();
     }
 
-    public Mono<AiResponse> callAiServer(AiRequest request) {
+    public Mono<AiResponse> callAiServer(AiRequestForm request) {
         return webClient.post()
                 .uri("/api/v1/recommendations")
                 .contentType(MediaType.APPLICATION_JSON)

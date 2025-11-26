@@ -12,7 +12,11 @@ import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByAccount(Account account);
-    Optional<Users> findByEmail(String email);
+
+    @Query("SELECT u.userId FROM Users u WHERE u.account.email = :email")
+    Optional<Long> findUserIdByEmail(@Param("email") String email);
+    @Query("SELECT u.userId FROM Users u WHERE u.account.loginId = :loginId")
+    Optional<Long> findUserIdByLoginId(@Param("email") String email);
 
     Optional<Users>findByAccount_AccountId(Long accountId);
 

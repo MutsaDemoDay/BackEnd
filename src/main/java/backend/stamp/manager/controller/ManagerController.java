@@ -10,6 +10,7 @@ import backend.stamp.manager.service.ManagerService;
 import backend.stamp.stamp.service.qr.QRCodeService;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
+import backend.stamp.users.repository.UsersRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,7 @@ public class ManagerController {
     private final QRCodeService qrCodeService;
     private final CouponService couponService;
     private final StoreRepository storeRepository;
+    private final UsersRepository usersRepository;
 
     /**
      * 점주가 stamp 설정값 세팅
@@ -66,7 +68,9 @@ public class ManagerController {
         return ApplicationResponse.ok(response);
     }
     @PostMapping("/addByNum")
-    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam Long userId, @RequestParam int stampCount){
+    public ApplicationResponse<String> addStamp(@RequestParam String storeName, @RequestParam String loginId, @RequestParam int stampCount){
+        Long userId = usersRepository.findUserIdByLoginId(loginId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         Store store = storeRepository.findByName(storeName)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALIDE_QRCODE));
         qrCodeService.addStamp(store.getId(), userId, stampCount);
