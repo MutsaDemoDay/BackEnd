@@ -129,6 +129,44 @@ public class CouponService {
         );
     }
 
+    //쿠폰 개별조회
+
+    @Transactional
+    public CouponResponseDto getCoupon(Long couponId,Account account) {
+
+        //account 조회
+        if(account == null) {
+            throw new ApplicationException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+
+        //로그인한 사용자 조회
+        Users users = usersRepository.findByAccount(account)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        //쿠폰 조회
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
+
+
+        //쿠폰 소유자 체크
+        Users couponOwner = coupon.getUsers();
+
+        if (couponOwner == null) {
+            throw new ApplicationException(ErrorCode.FORBIDDEN);
+        }
+
+        if (!couponOwner.getUserId().equals(users.getUserId())) {
+            throw new ApplicationException(ErrorCode.FORBIDDEN);
+        }
+
+
+        // DTO 변환 후 반환
+        return CouponResponseDto.from(coupon);
+
+    }
+
+
 }
 
 

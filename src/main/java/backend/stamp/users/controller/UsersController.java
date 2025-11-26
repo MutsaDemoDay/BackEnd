@@ -54,6 +54,8 @@ Account account = userDetails.getAccount();
         return ResponseEntity.ok(couponService.getUserCoupons(account));
     }
 
+
+
     //내 현재 스탬프 목록 조회
 
     @Operation(summary = "유저의 현재 스탬프 목록 조회 api", description = "유저가 자신의 스탬프 목록을 조회합니다.")
