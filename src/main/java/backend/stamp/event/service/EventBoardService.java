@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,6 +37,9 @@ public class EventBoardService {
         //오늘 날짜 조회
         LocalDate today = LocalDate.now();
 
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+        LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
         //현재 진행중인 이벤트 있는지 조회
         List<Event> events = eventRepository.findAll();
 
@@ -56,6 +60,8 @@ public class EventBoardService {
                             .eventType(event.getEventType())
                             .buttonDescription(event.getButtonDescription())
                             .buttonImageUrl(event.getButtonImageUrl())
+                            .startDate(startOfMonth)
+                            .endDate(endOfMonth)
                             .participatingStores(participatingStoreIds)
                             .build();
                 })
