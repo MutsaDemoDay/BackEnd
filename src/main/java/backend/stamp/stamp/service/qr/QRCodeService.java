@@ -66,6 +66,7 @@ public class QRCodeService {
         stamp.setCurrentCount(stamp.getCurrentCount() + stampCount);
         stampRepository.save(stamp);
         users.setStampSum(users.getStampSum() + 1);
+        users.setTotalStampSum(users.getTotalStampSum() + stampCount);
         usersRepository.save(users);
     }
 
