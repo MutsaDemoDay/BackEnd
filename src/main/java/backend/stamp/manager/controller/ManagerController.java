@@ -49,7 +49,7 @@ public class ManagerController {
      * @return
      */
     @GetMapping("/settings")
-    public ResponseEntity<?> getSetting(@RequestParam String storeName) {
+    public ResponseEntity<StampSettingResponse> getSetting(@RequestParam String storeName) {
         StampSettingResponse response = managerService.getStamp(storeName);
         return ResponseEntity.ok(response);
     }
