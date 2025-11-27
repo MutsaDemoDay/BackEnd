@@ -2,6 +2,7 @@ package backend.stamp.stamp.service.qr;
 
 import backend.stamp.coupon.entity.Coupon;
 import backend.stamp.coupon.repository.CouponRepository;
+import backend.stamp.coupon.service.CouponService;
 import backend.stamp.global.exception.ApplicationException;
 import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.order.entity.Order;
@@ -38,6 +39,7 @@ public class QRCodeService {
     private final UsersRepository usersRepository;
     private final StoreRepository storeRepository;
     private final OrderRepository orderRepository;
+    private final CouponService couponService;
 
     /**
      * 적립 로직
@@ -63,10 +65,26 @@ public class QRCodeService {
             stamp.setDate(LocalDateTime.now());
             stamp.setName(store.getName());
         }
-        stamp.setCurrentCount(stamp.getCurrentCount() + stampCount);
+        int updatedCount = stamp.getCurrentCount() + stampCount;
+        stamp.setCurrentCount(updatedCount);
         stampRepository.save(stamp);
-        users.setStampSum(users.getStampSum() + 1);
         users.setTotalStampSum(users.getTotalStampSum() + stampCount);
+        creatCouponByQR(updatedCount, store, users, stamp, recentOrder);
+        usersRepository.save(users);
+    }
+    public void creatCouponByQR(int updatedCount, Store store, Users users, Stamp stamp, Order order) {
+        int maxCount = store.getMaxCount();
+        while (updatedCount >= maxCount) {
+            couponService.createCoupon(users, store);
+            users.setCouponNum(users.getCouponNum() + 1);
+            updatedCount -= maxCount;
+        }
+        stamp.setCurrentCount(updatedCount);
+        stamp.setOrder(order);
+        stampRepository.save(stamp);
+
+        order.setUsed(true);
+        orderRepository.save(order);
         usersRepository.save(users);
     }
 
