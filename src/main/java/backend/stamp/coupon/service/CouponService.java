@@ -114,6 +114,15 @@ public class CouponService {
         // 5. 사용 처리
         coupon.use();
 
+        //쿠폰 사용 개수 줄어들게 설정 + 예외 처리
+
+        if (couponOwner.getCouponNum() <= 0) {
+            throw new ApplicationException(ErrorCode.INVALID_COUPON_COUNT);
+        }
+        couponOwner.decreaseCouponCount();
+
+
+
     }
     public long countTodayUsedCoupons(String storeName) {
         Store store = storeRepository.findByName(storeName)
