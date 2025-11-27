@@ -69,10 +69,10 @@ public class QRCodeService {
         stamp.setCurrentCount(updatedCount);
         stampRepository.save(stamp);
         users.setTotalStampSum(users.getTotalStampSum() + stampCount);
-        creatCouponByQR(updatedCount, store, users, stamp, recentOrder);
+        creatCouponByQR(updatedCount, store, users, stamp);
         usersRepository.save(users);
     }
-    public void creatCouponByQR(int updatedCount, Store store, Users users, Stamp stamp, Order order) {
+    public void creatCouponByQR(int updatedCount, Store store, Users users, Stamp stamp) {
         int maxCount = store.getMaxCount();
         while (updatedCount >= maxCount) {
             couponService.createCoupon(users, store);
@@ -80,12 +80,7 @@ public class QRCodeService {
             updatedCount -= maxCount;
         }
         stamp.setCurrentCount(updatedCount);
-        stamp.setOrder(order);
         stampRepository.save(stamp);
-
-        order.setUsed(true);
-        orderRepository.save(order);
-        usersRepository.save(users);
     }
 
     /**
