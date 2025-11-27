@@ -58,7 +58,7 @@ public enum ErrorCode {
     STAMP_NOT_COMPLETED(HttpStatus.BAD_REQUEST, 430, "스탬프판을 완성하지 않아 리뷰 작성 권한이 없습니다."),
     INVALID_BUSINESS_NUMBER(HttpStatus.BAD_REQUEST, 431, "사업자번호를 다시 확인해 주세요."),
     INVALID_EMAIL_VERIFICATION_TOKEN(HttpStatus.BAD_REQUEST, 432, "이메일 인증이 완료되지 않았습니다."),
-
+    INVALID_COUPON_COUNT(HttpStatus.BAD_REQUEST,433,"쿠폰 개수가 음수가 될 수 없습니다."),
     // 500: Internal Error
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 501, "예기치 못한 오류가 발생했습니다."),
     INVALIDE_QRCODE(HttpStatus.NOT_FOUND, 502, "잘못된 qr코드 입니다."),

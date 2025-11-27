@@ -90,6 +90,9 @@ public class Users {
                 .stampSum(0)
                 .build();
     }
+    public void decreaseCouponCount() {
+        this.couponNum -= 1;
+    }
 
 
 }
