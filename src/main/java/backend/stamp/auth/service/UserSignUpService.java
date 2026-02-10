@@ -29,6 +29,10 @@ public class UserSignUpService {
     private final TokenProvider tokenProvider;
     private final EmailService emailService;
 
+    @Transactional(readOnly = true)
+    public boolean isLoginIdDuplicate(String loginId) {
+        return accountRepository.findByLoginId(loginId).isPresent();
+    }
 
     public SignUpResponse signUp(UserSignUpRequest request) {
 

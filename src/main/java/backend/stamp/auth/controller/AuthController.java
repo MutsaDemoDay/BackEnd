@@ -42,6 +42,13 @@ public class AuthController {
     private final ResetPasswordService resetPasswordService;
     private final ObjectMapper objectMapper;
 
+    @Operation(summary = "아이디 중복 확인 api", description = "true: 중복됨(사용불가), false: 중복안됨(사용가능)")
+    @GetMapping("/check-id")
+    public ApplicationResponse<Boolean> checkIdDuplicate(@RequestParam(name = "loginId") String loginId) {
+        boolean isDuplicate = userSignUpService.isLoginIdDuplicate(loginId);
+        return ApplicationResponse.ok(isDuplicate);
+    }
+
     @GetMapping("/login")
     public ResponseEntity<?> redirectLoginPage(
             @RequestParam(name="redirectUri", required = false) String redirectUri){
