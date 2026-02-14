@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 public class ReviewerProfileResponse {
     private String nickname;
+    private String profileImageUrl;
 
     private int totalStampCount;
     private int reviewCount;

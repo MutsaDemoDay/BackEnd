@@ -66,7 +66,25 @@ public class AuthController {
     public ApplicationResponse<KakaoUser> loginKakao(@RequestParam(name="code") String authorizationCode,
                                                      @RequestParam(name="redirectUri", required = false) String redirectUri){
         KakaoInfo info = kakaoService.loginKakao(authorizationCode, redirectUri);
-        return ApplicationResponse.ok(kakaoService.register(info.kakao_account().email(), info.properties().nickname()));
+
+String email = null;
+String nickname = null;
+
+if (info.kakao_account() != null) {
+    email = info.kakao_account().email();
+}
+if (info.properties() != null) {
+    nickname = info.properties().nickname();
+}
+
+if (email == null) {
+    email = "kakao_" + info.id() + "@kakao.com";
+}
+if (nickname == null) {
+    nickname = "사용자" + info.id();
+}
+
+return ApplicationResponse.ok(kakaoService.register(email, nickname));
     }
 
     @Operation(summary = "유저 회원가입 api", description = "일반 유저로 회원가입을 진행합니다.")
