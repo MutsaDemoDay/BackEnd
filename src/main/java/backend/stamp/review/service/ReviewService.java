@@ -66,6 +66,7 @@ public class ReviewService {
 
         return ReviewerProfileResponse.builder()
                 .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
                 .totalStampCount(user.getTotalStampSum() != null ? user.getTotalStampSum() : 0)
                 .reviewCount(reviews.size())
                 .stamps(stampInfos)

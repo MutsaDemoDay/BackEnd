@@ -31,5 +31,8 @@ public class StoreDetailReviewsResponse {
         private byte rate;
         private LocalDateTime reviewDate;
         private String representativeBadgeName;
+        private String profileImageUrl;
+        private String reviewImageUrl;
+        private boolean isMyReview;
     }
 }
