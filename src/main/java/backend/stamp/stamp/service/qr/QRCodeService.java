@@ -8,6 +8,8 @@ import backend.stamp.global.exception.ErrorCode;
 import backend.stamp.order.entity.Order;
 import backend.stamp.order.repository.OrderRepository;
 import backend.stamp.stamp.entity.Stamp;
+import backend.stamp.stamp.entity.StampHistory;
+import backend.stamp.stamp.repository.StampHistoryRepository;
 import backend.stamp.stamp.repository.StampRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -40,6 +42,7 @@ public class QRCodeService {
     private final StoreRepository storeRepository;
     private final OrderRepository orderRepository;
     private final CouponService couponService;
+    private final StampHistoryRepository stampHistoryRepository;
 
     /**
      * 적립 로직
@@ -68,6 +71,19 @@ public class QRCodeService {
         int updatedCount = stamp.getCurrentCount() + stampCount;
         stamp.setCurrentCount(updatedCount);
         stampRepository.save(stamp);
+
+        // 적립 내역 저장
+        StampHistory history = StampHistory.builder()
+            .store(store)
+            .users(users)
+            .amount(stampCount)
+            .createdAt(LocalDateTime.now())
+            .build();
+        if (history != null) {
+            stampHistoryRepository.save(history);
+        }
+        // ----------------------------------------------------
+        
         users.setTotalStampSum(users.getTotalStampSum() + stampCount);
         creatCouponByQR(updatedCount, store, users, stamp);
         usersRepository.save(users);
