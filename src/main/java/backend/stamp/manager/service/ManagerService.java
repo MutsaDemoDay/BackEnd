@@ -9,6 +9,8 @@ import backend.stamp.level.entity.Level;
 import backend.stamp.manager.dto.dashboard.*;
 import backend.stamp.manager.object.ObjectStorageService;
 import backend.stamp.stamp.entity.Stamp;
+import backend.stamp.stamp.entity.StampHistory;
+import backend.stamp.stamp.repository.StampHistoryRepository;
 import backend.stamp.stamp.repository.StampRepository;
 import backend.stamp.store.entity.Store;
 import backend.stamp.store.repository.StoreRepository;
@@ -37,6 +39,7 @@ public class ManagerService {
     private final StampRepository stampRepository;
     private final ObjectStorageService objectStorageService;
     private final EventStoreRepository eventStoreRepository;
+    private final StampHistoryRepository stampHistoryRepository;
     public String setStamp(StampSettingRequest request, MultipartFile image){
         Store store = storeRepository.findByName(request.storeName())
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
@@ -95,13 +98,16 @@ public class ManagerService {
         LocalDateTime start = today.atStartOfDay();
         LocalDateTime end = today.atTime(23, 59, 59);
 
-        List<Stamp> stamps = stampRepository.findByStoreIdAndDateBetween(storeId, start, end);
+        List<StampHistory> histories = stampHistoryRepository.findByStoreIdAndCreatedAtBetween(storeId, start, end);
         Map<Integer, Long> hourlyCount = new HashMap<>();
         for (int i = 0; i < 24; i++) hourlyCount.put(i, 0L);
 
-        for (Stamp s : stamps) {
-            int hour = s.getDate().getHour();
-            hourlyCount.put(hour, hourlyCount.get(hour) + 1);
+        long totalStamps = 0;
+        for (StampHistory h : histories) {
+            int hour = h.getCreatedAt().getHour();
+            int added = h.getAmount();
+            hourlyCount.put(hour, hourlyCount.get(hour) + added);
+            totalStamps += added; // 총 적립 개수 계산
         }
 
         List<StampChartData> chartData = new ArrayList<>();
@@ -110,11 +116,11 @@ public class ManagerService {
         }
 
         return new StampStatisticsResponse(
-                "daily",
-                (long) stamps.size(),
-                today.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")),
-                chartData
-        );
+            "daily",
+            totalStamps, // 배열 사이즈가 아니라 실제 총합을 반환
+            today.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")),
+            chartData
+    );
     }
 
     public StampStatisticsTotalResponse getWeeklyStats(Long storeId) {
