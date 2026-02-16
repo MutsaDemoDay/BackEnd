@@ -150,7 +150,7 @@ public class ManagerService {
             chartData.add(new StampChartData(labels.get(i), weekdayCount.get(day)));
         }
 
-        long avg = stamps.size() / 7;
+        long avg = Math.round((double) stamps.size() / 7);
 
         String periodText = weekStart.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
                 + " - "
@@ -192,7 +192,7 @@ public class ManagerService {
             chartData.add(new StampChartData(i + "일", dailyCount.get(i)));
         }
 
-        long avg = (days == 0) ? 0 : stamps.size() / days;
+        long avg = (days == 0) ? 0 : Math.round((double) stamps.size() / days);
 
         String periodText = today.format(DateTimeFormatter.ofPattern("yyyy년 MM월"));
 
@@ -252,7 +252,7 @@ public class ManagerService {
             chart.add(new StampChartData(labels.get(i), map.get(d)));
         }
         long total = map.values().stream().mapToLong(Long::longValue).sum();
-        long avg = total / 7;
+        long avg = Math.round((double) total / 7);
 
         String periodText = weekStart.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
                 + " - " +
@@ -297,7 +297,7 @@ public class ManagerService {
         }
 
         long total = map.values().stream().mapToLong(Long::longValue).sum();
-        long avg = total / days;
+        long avg = Math.round((double) total / days);
 
         String periodText = today.format(DateTimeFormatter.ofPattern("yyyy년 MM월"));
 
