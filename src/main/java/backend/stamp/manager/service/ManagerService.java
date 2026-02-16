@@ -233,7 +233,7 @@ public class ManagerService {
         LocalDateTime start = weekStart.atStartOfDay();
         LocalDateTime end = weekEnd.atTime(23, 59, 59);
 
-        List<Object[]> data = stampRepository.countDailyUniqueUsers(storeId, start, end);
+        List<Object[]> data = stampHistoryRepository.countDailyUniqueUsers(storeId, start, end);
         Map<DayOfWeek, Long> map = new EnumMap<>(DayOfWeek.class);
         for (DayOfWeek d : DayOfWeek.values()) map.put(d, 0L);
 
@@ -277,7 +277,7 @@ public class ManagerService {
         LocalDateTime end = monthEnd.atTime(23, 59, 59);
 
         // DB 조회 (1일~31일별 unique user count)
-        List<Object[]> data = stampRepository.countDailyUniqueUsers(storeId, start, end);
+        List<Object[]> data = stampHistoryRepository.countDailyUniqueUsers(storeId, start, end);
 
         int days = ym.lengthOfMonth();
         Map<Integer, Long> map = new HashMap<>();
