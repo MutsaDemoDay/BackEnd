@@ -123,50 +123,49 @@ public class ManagerService {
     );
     }
 
+// [적립 통계] 주간
     public StampStatisticsTotalResponse getWeeklyStats(Long storeId) {
-
         LocalDate today = LocalDate.now();
         LocalDate weekStart = today.with(DayOfWeek.MONDAY);
-        LocalDate weekEnd = weekStart.plusDays(6);
+        LocalDate weekEnd = today.with(DayOfWeek.SUNDAY);
+        
         LocalDateTime start = weekStart.atStartOfDay();
         LocalDateTime end = weekEnd.atTime(23, 59, 59);
 
-        List<Stamp> stamps = stampRepository.findByStoreIdAndDateBetween(storeId, start, end);
+        // StampHistory에서 진짜 적립 내역을 가져옵니다.
+        List<StampHistory> histories = stampHistoryRepository.findByStoreIdAndCreatedAtBetween(storeId, start, end);
 
         Map<DayOfWeek, Long> weekdayCount = new EnumMap<>(DayOfWeek.class);
         for (DayOfWeek day : DayOfWeek.values()) weekdayCount.put(day, 0L);
 
-        for (Stamp s : stamps) {
-            DayOfWeek day = s.getDate().getDayOfWeek();
-            weekdayCount.put(day, weekdayCount.get(day) + 1);
+        long totalStamps = 0;
+
+        for (StampHistory h : histories) {
+            DayOfWeek day = h.getCreatedAt().getDayOfWeek();
+            long amount = h.getAmount(); // 스탬프 낱개 개수 합산
+            weekdayCount.put(day, weekdayCount.get(day) + amount);
+            totalStamps += amount;
         }
 
-        // 차트 데이터 (월~일 순)
         List<String> labels = List.of("월", "화", "수", "목", "금", "토", "일");
-
         List<StampChartData> chartData = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             DayOfWeek day = DayOfWeek.MONDAY.plus(i);
             chartData.add(new StampChartData(labels.get(i), weekdayCount.get(day)));
         }
 
-        long avg = Math.round((double) stamps.size() / 7);
+        // 🌟 요청하신 대로 무조건 7로 나눕니다. (정수 나눗셈 에러 방지를 위해 double 캐스팅 유지)
+        long avg = Math.round((double) totalStamps / 7);
 
         String periodText = weekStart.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
                 + " - "
                 + weekEnd.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
-        return new StampStatisticsTotalResponse(
-                "weekly",
-                avg,
-                stamps.size(),
-                periodText,
-                chartData
-        );
+        return new StampStatisticsTotalResponse("weekly", avg, (int) totalStamps, periodText, chartData);
     }
 
+    // [적립 통계] 월간
     public StampStatisticsTotalResponse getMonthlyStats(Long storeId) {
-
         LocalDate today = LocalDate.now();
         YearMonth ym = YearMonth.from(today);
 
@@ -176,15 +175,19 @@ public class ManagerService {
         LocalDateTime start = monthStart.atStartOfDay();
         LocalDateTime end = monthEnd.atTime(23, 59, 59);
 
-        List<Stamp> stamps = stampRepository.findByStoreIdAndDateBetween(storeId, start, end);
+        List<StampHistory> histories = stampHistoryRepository.findByStoreIdAndCreatedAtBetween(storeId, start, end);
 
-        // 일자별 카운트
         int days = ym.lengthOfMonth();
         Map<Integer, Long> dailyCount = new HashMap<>();
         for (int i = 1; i <= days; i++) dailyCount.put(i, 0L);
-        for (Stamp s : stamps) {
-            int dayOfMonth = s.getDate().getDayOfMonth();
-            dailyCount.put(dayOfMonth, dailyCount.get(dayOfMonth) + 1);
+
+        long totalStamps = 0;
+
+        for (StampHistory h : histories) {
+            int dayOfMonth = h.getCreatedAt().getDayOfMonth();
+            long amount = h.getAmount(); // 스탬프 낱개 개수 합산
+            dailyCount.put(dayOfMonth, dailyCount.get(dayOfMonth) + amount);
+            totalStamps += amount;
         }
 
         List<StampChartData> chartData = new ArrayList<>();
@@ -192,17 +195,12 @@ public class ManagerService {
             chartData.add(new StampChartData(i + "일", dailyCount.get(i)));
         }
 
-        long avg = (days == 0) ? 0 : Math.round((double) stamps.size() / days);
+        // 🌟 요청하신 대로 무조건 이번 달 일수(days)로 나눕니다.
+        long avg = (days == 0) ? 0 : Math.round((double) totalStamps / days);
 
         String periodText = today.format(DateTimeFormatter.ofPattern("yyyy년 MM월"));
 
-        return new StampStatisticsTotalResponse(
-                "monthly",
-                avg,
-                stamps.size(),
-                periodText,
-                chartData
-        );
+        return new StampStatisticsTotalResponse("monthly", avg, (int) totalStamps, periodText, chartData);
     }
 
     /**
