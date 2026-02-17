@@ -23,7 +23,7 @@ public class StoreShareService {
                 .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
         // 2. 프론트에서 접근 가능한 공유용 URL 생성
-        return "https://daango.site/store/" + storeId;
+        return "https://dango.co.kr/store/info/" + storeId;
 
     }
 }
